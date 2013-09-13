@@ -1,0 +1,125 @@
+From 3ac3d3248cdbcf5a6f931a1486c0e1f9586569b2 Mon Sep 17 00:00:00 2001
+From: David Woodhouse <David.Woodhouse@intel.com>
+Date: Fri, 8 Feb 2013 21:44:08 +0000
+Subject: [PATCH] OvmfPkg: Don't build in QemuVideoDxe when we have CSM
+
+Windows 2008r2 will stupidly try to use int 10h calls even when booted
+via EFI. If we don't have a VGA BIOS installed, it doesn't work very well.
+
+So where we can, just use BiosVideoDxe instead of the native QemuVideoDxe
+and then Windows will work fine.
+
+Contributed-under: TianoCore Contribution Agreement 1.0
+Signed-off-by: David Woodhouse <David.Woodhouse@intel.com>
+Reviewed-by: Laszlo Ersek <lersek@redhat.com>
+---
+ OvmfPkg/OvmfPkgIa32.dsc    |    2 ++
+ OvmfPkg/OvmfPkgIa32.fdf    |    4 ++--
+ OvmfPkg/OvmfPkgIa32X64.dsc |    2 ++
+ OvmfPkg/OvmfPkgIa32X64.fdf |    4 ++--
+ OvmfPkg/OvmfPkgX64.dsc     |    2 ++
+ OvmfPkg/OvmfPkgX64.fdf     |    4 ++--
+ 6 files changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/OvmfPkg/OvmfPkgIa32.dsc b/OvmfPkg/OvmfPkgIa32.dsc
+index 28b1815..a759066 100644
+--- a/OvmfPkg/OvmfPkgIa32.dsc
++++ b/OvmfPkg/OvmfPkgIa32.dsc
+@@ -439,10 +439,12 @@
+   MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe.inf
+   MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
+ 
++!ifndef $(CSM_ENABLE)
+   OvmfPkg/QemuVideoDxe/QemuVideoDxe.inf {
+     <LibraryClasses>
+       BltLib|OptionRomPkg/Library/FrameBufferBltLib/FrameBufferBltLib.inf
+   }
++!endif
+ 
+   #
+   # ISA Support
+diff --git a/OvmfPkg/OvmfPkgIa32.fdf b/OvmfPkg/OvmfPkgIa32.fdf
+index 7acd167..66701d3 100644
+--- a/OvmfPkg/OvmfPkgIa32.fdf
++++ b/OvmfPkg/OvmfPkgIa32.fdf
+@@ -283,9 +283,9 @@ INF  MdeModulePkg/Bus/Usb/UsbMassStorageDxe/UsbMassStorageDxe.inf
+ INF  IntelFrameworkModulePkg/Csm/BiosThunk/VideoDxe/VideoDxe.inf
+ INF  IntelFrameworkModulePkg/Csm/LegacyBiosDxe/LegacyBiosDxe.inf
+ INF  RuleOverride=CSM OvmfPkg/Csm/Csm16/Csm16.inf
+-!endif
+-
++!else
+ INF  OvmfPkg/QemuVideoDxe/QemuVideoDxe.inf
++!endif
+ 
+ ################################################################################
+ 
+diff --git a/OvmfPkg/OvmfPkgIa32X64.dsc b/OvmfPkg/OvmfPkgIa32X64.dsc
+index 2b35027..d440e49 100644
+--- a/OvmfPkg/OvmfPkgIa32X64.dsc
++++ b/OvmfPkg/OvmfPkgIa32X64.dsc
+@@ -451,10 +451,12 @@
+   MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe.inf
+   MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
+ 
++!ifndef $(CSM_ENABLE)
+   OvmfPkg/QemuVideoDxe/QemuVideoDxe.inf {
+     <LibraryClasses>
+       BltLib|OptionRomPkg/Library/FrameBufferBltLib/FrameBufferBltLib.inf
+   }
++!endif
+ 
+   #
+   # ISA Support
+diff --git a/OvmfPkg/OvmfPkgIa32X64.fdf b/OvmfPkg/OvmfPkgIa32X64.fdf
+index 2bd31f6..551f5ee 100644
+--- a/OvmfPkg/OvmfPkgIa32X64.fdf
++++ b/OvmfPkg/OvmfPkgIa32X64.fdf
+@@ -284,9 +284,9 @@ INF  MdeModulePkg/Bus/Usb/UsbMassStorageDxe/UsbMassStorageDxe.inf
+ INF  IntelFrameworkModulePkg/Csm/BiosThunk/VideoDxe/VideoDxe.inf
+ INF  IntelFrameworkModulePkg/Csm/LegacyBiosDxe/LegacyBiosDxe.inf
+ INF  RuleOverride=CSM OvmfPkg/Csm/Csm16/Csm16.inf
+-!endif
+-
++!else
+ INF  OvmfPkg/QemuVideoDxe/QemuVideoDxe.inf
++!endif
+ 
+ ################################################################################
+ 
+diff --git a/OvmfPkg/OvmfPkgX64.dsc b/OvmfPkg/OvmfPkgX64.dsc
+index cd09beb..3a79964 100644
+--- a/OvmfPkg/OvmfPkgX64.dsc
++++ b/OvmfPkg/OvmfPkgX64.dsc
+@@ -444,10 +444,12 @@
+   MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe.inf
+   MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
+ 
++!ifndef $(CSM_ENABLE)
+   OvmfPkg/QemuVideoDxe/QemuVideoDxe.inf {
+     <LibraryClasses>
+       BltLib|OptionRomPkg/Library/FrameBufferBltLib/FrameBufferBltLib.inf
+   }
++!endif
+ 
+   #
+   # ISA Support
+diff --git a/OvmfPkg/OvmfPkgX64.fdf b/OvmfPkg/OvmfPkgX64.fdf
+index 7db09ca..3753063 100644
+--- a/OvmfPkg/OvmfPkgX64.fdf
++++ b/OvmfPkg/OvmfPkgX64.fdf
+@@ -283,9 +283,9 @@ INF  MdeModulePkg/Bus/Usb/UsbMassStorageDxe/UsbMassStorageDxe.inf
+ INF  IntelFrameworkModulePkg/Csm/BiosThunk/VideoDxe/VideoDxe.inf
+ INF  IntelFrameworkModulePkg/Csm/LegacyBiosDxe/LegacyBiosDxe.inf
+ INF  RuleOverride=CSM OvmfPkg/Csm/Csm16/Csm16.inf
+-!endif
+-
++!else
+ INF  OvmfPkg/QemuVideoDxe/QemuVideoDxe.inf
++!endif
+ 
+ ################################################################################
+ 
+-- 
+1.7.9.7
+

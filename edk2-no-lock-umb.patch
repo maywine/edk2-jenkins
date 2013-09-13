@@ -1,0 +1,15 @@
+diff --git a/IntelFrameworkModulePkg/Csm/LegacyBiosDxe/LegacyBootSupport.c b/IntelFrameworkModulePkg/Csm/LegacyBiosDxe/LegacyBootSupport.c
+index dfdac35..bca37d4 100644
+--- a/IntelFrameworkModulePkg/Csm/LegacyBiosDxe/LegacyBootSupport.c
++++ b/IntelFrameworkModulePkg/Csm/LegacyBiosDxe/LegacyBootSupport.c
+@@ -1180,8 +1180,8 @@ GenericLegacyBoot (
+   //
+   Private->LegacyRegion->Lock (
+                            Private->LegacyRegion,
+-                           0xc0000,
+-                           0x40000,
++                           0xe0000,
++                           0x10000,
+                            &Granularity
+                            );
+   //
