@@ -56,13 +56,13 @@ Open Virtual Machine Firmware
 64bit version
 %endif
 
-%package coreboot
-Summary:	coreboot payloads
-Requires:       %{name}
-License:	BSD License (no advertising) with restrictions on use and redistribution
-%description coreboot
-EFI Development Kit II
-coreboot payloads
+#%package coreboot
+#Summary:	coreboot payloads
+#Requires:       %{name}
+#License:	BSD License (no advertising) with restrictions on use and redistribution
+#%description coreboot
+#EFI Development Kit II
+#coreboot payloads
 
 %prep
 %setup -q -n %{name}
@@ -71,7 +71,7 @@ coreboot payloads
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
-%patch90 -p1
+#%patch90 -p1
 
 # add openssl
 tar -C CryptoPkg/Library/OpensslLib -xf %{SOURCE1}
@@ -126,10 +126,10 @@ for cfg in pure-efi with-csm; do
 	cp Build/OvmfIa32/DEBUG_*/FV/OVMF.fd ovmf-ia32/OVMF-${cfg}.fd
 	rm -rf Build/OvmfIa32
 
-	build $CORE_FLAGS -a IA32 -p corebootPkg/corebootPkg.dsc
-	mkdir -p "coreboot-ia32"
-	cp Build/corebootIA32/DEBUG_*/FV/COREBOOT.fd coreboot-ia32/COREBOOT-${cfg}.fd
-	rm -rf Build/corebootIa32
+#	build $CORE_FLAGS -a IA32 -p corebootPkg/corebootPkg.dsc
+#	mkdir -p "coreboot-ia32"
+#	cp Build/corebootIA32/DEBUG_*/FV/COREBOOT.fd coreboot-ia32/COREBOOT-${cfg}.fd
+#	rm -rf Build/corebootIa32
 
 %ifarch x86_64
 	build $OVMF_FLAGS -a X64 -p OvmfPkg/OvmfPkgX64.dsc
@@ -225,8 +225,8 @@ for vga in stdvga cirrus vmware qxl; do
 done
 %endif
 
-cp -a	coreboot-* \
-	%{buildroot}/usr/share/%{name}
+#cp -a	coreboot-* \
+#	%{buildroot}/usr/share/%{name}
 
 %files
 %doc OvmfPkg/README
@@ -248,7 +248,7 @@ cp -a	coreboot-* \
 /usr/share/%{name}/ovmf-x64
 %endif
 
-%files coreboot
-/usr/share/%{name}/coreboot-*
+#%files coreboot
+#/usr/share/%{name}/coreboot-*
 
 %changelog
