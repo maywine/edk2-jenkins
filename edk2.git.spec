@@ -103,7 +103,7 @@ fi
 
 # prepare
 cp /usr/share/seabios.git-csm/bios-csm.bin OvmfPkg/Csm/Csm16/Csm16.bin
-cp /usr/share/seabios.git-csm/bios-csm.bin corebootPkg/Csm/Csm16/Csm16.bin
+#cp /usr/share/seabios.git-csm/bios-csm.bin corebootPkg/Csm/Csm16/Csm16.bin
 make -C BaseTools
 
 # go build
