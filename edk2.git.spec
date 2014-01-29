@@ -73,6 +73,10 @@ Open Virtual Machine Firmware
 %patch12 -p1
 #%patch90 -p1
 
+if test -f /opt/rh/devtoolset-2/enable; then
+        source /opt/rh/devtoolset-2/enable
+fi
+
 # add openssl
 tar -C CryptoPkg/Library/OpensslLib -xf %{SOURCE1}
 (cd CryptoPkg/Library/OpensslLib/openssl-0.9.8w;
@@ -156,6 +160,8 @@ cp	ovmf-ia32/* \
 	%{buildroot}/usr/share/%{name}/ovmf-ia32
 ln -s	OVMF-with-csm.fd \
 	%{buildroot}/usr/share/%{name}/ovmf-ia32/bios.bin
+ln -s	OVMF-with-csm.fd \
+	%{buildroot}/usr/share/%{name}/ovmf-ia32/bios-256k.bin
 
 for ext in rom bin; do
   ln -s	../../ipxe.git/combined/8086100e.rom \
