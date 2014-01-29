@@ -75,6 +75,9 @@ Open Virtual Machine Firmware
 
 if test -f /opt/rh/devtoolset-2/enable; then
         source /opt/rh/devtoolset-2/enable
+	prefix=$(dirname $(which gcc))
+else
+	prefix=/usr/bin
 fi
 
 # add openssl
@@ -92,10 +95,11 @@ case "$GCCVER" in
 4.4*)	CC_FLAGS="-t GCC44";;
 4.5*)	CC_FLAGS="-t GCC45";;
 4.6*)	CC_FLAGS="-t GCC46";;
-4.7*)	CC_FLAGS="-t GCC46";;	# have no GCC47 yet
-4.8*)	CC_FLAGS="-t GCC46";;	# have no GCC48 yet
+4.7*)	CC_FLAGS="-t GCC47";;
+4.8*)	CC_FLAGS="-t GCC48";;
 esac
-sed -i.bak -e 's| -melf_x86_64||' Conf/tools_def.txt
+#sed -i.bak -e 's| -melf_x86_64||' Conf/tools_def.txt
+sed -i.bak -e "s|\(^DEFINE GCC48_.*_PREFIX.*=\).*|\1 $prefix|" Conf/tools_def.txt
 
 # parallel builds
 SMP_MFLAGS="%{?_smp_mflags}"
