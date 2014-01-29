@@ -98,9 +98,7 @@ case "$GCCVER" in
 4.7*)	CC_FLAGS="-t GCC47";;
 4.8*)	CC_FLAGS="-t GCC48";;
 esac
-#sed -i.bak -e 's| -melf_x86_64||' Conf/tools_def.txt
 sed -i.bak -e "s|\(^DEFINE GCC48_.*_PREFIX.*=\).*|\1 $prefix|" Conf/tools_def.txt
-grep "^DEFINE GCC48" Conf/tools_def.txt
 
 # parallel builds
 SMP_MFLAGS="%{?_smp_mflags}"
