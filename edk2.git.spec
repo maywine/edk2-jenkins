@@ -73,13 +73,6 @@ Open Virtual Machine Firmware
 %patch12 -p1
 #%patch90 -p1
 
-if test -f /opt/rh/devtoolset-2/enable; then
-        source /opt/rh/devtoolset-2/enable
-	prefix=$(dirname $(which gcc))
-else
-	prefix=/usr/bin
-fi
-
 # add openssl
 tar -C CryptoPkg/Library/OpensslLib -xf %{SOURCE1}
 (cd CryptoPkg/Library/OpensslLib/openssl-0.9.8w;
@@ -88,6 +81,13 @@ tar -C CryptoPkg/Library/OpensslLib -xf %{SOURCE1}
 
 %build
 source ./edksetup.sh
+
+if test -f /opt/rh/devtoolset-2/enable; then
+        source /opt/rh/devtoolset-2/enable
+	prefix=$(dirname $(which gcc))
+else
+	prefix=/usr/bin
+fi
 
 # figure tools switch
 GCCVER=$(gcc --version | awk '{ print $3; exit}')
@@ -100,6 +100,7 @@ case "$GCCVER" in
 esac
 #sed -i.bak -e 's| -melf_x86_64||' Conf/tools_def.txt
 sed -i.bak -e "s|\(^DEFINE GCC48_.*_PREFIX.*=\).*|\1 $prefix|" Conf/tools_def.txt
+grep "^DEFINE GCC48" Conf/tools_def.txt
 
 # parallel builds
 SMP_MFLAGS="%{?_smp_mflags}"
