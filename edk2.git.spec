@@ -84,9 +84,9 @@ source ./edksetup.sh
 
 if test -f /opt/rh/devtoolset-2/enable; then
         source /opt/rh/devtoolset-2/enable
-	prefix=$(dirname $(which gcc))
+	prefix=$(dirname $(which gcc))/
 else
-	prefix=/usr/bin
+	prefix=/usr/bin/
 fi
 
 # figure tools switch
