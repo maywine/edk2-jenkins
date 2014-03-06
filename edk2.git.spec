@@ -191,7 +191,7 @@ for ext in rom; do
 	%{buildroot}/usr/share/%{name}/ovmf-ia32/efi-virtio.$ext
 done
 
-for vga in stdvga cirrus vmware qxl; do
+for vga in stdvga cirrus vmware qxl virtio; do
 	ln -s	../../seavgabios.git/vgabios-$vga.bin \
 		%{buildroot}/usr/share/%{name}/ovmf-ia32/vgabios-$vga.bin
 done
@@ -228,7 +228,7 @@ for ext in rom; do
 	%{buildroot}/usr/share/%{name}/ovmf-x64/efi-virtio.$ext
 done
 
-for vga in stdvga cirrus vmware qxl; do
+for vga in stdvga cirrus vmware qxl virtio; do
 	ln -s	../../seavgabios.git/vgabios-$vga.bin \
 		%{buildroot}/usr/share/%{name}/ovmf-x64/vgabios-$vga.bin
 done
