@@ -11,6 +11,7 @@ URL:		http://sourceforge.net/apps/mediawiki/tianocore/index.php?title=EDK2
 Source0:	edk2.git-g9b141c5.tar.xz
 Source1:	openssl-0.9.8w.tar.gz
 Patch1:         0001-OvmfPkg-Don-t-build-in-QemuVideoDxe-when-we-have-CSM.patch
+Patch2:         0001-pick-up-any-display-device-not-only-vga.patch
 Patch3:         edk2-no-lock-umb.patch
 
 Patch10:	0001-OvmfPkg-SmbiosPlatformDxe-install-tables-and-save-fi.patch
@@ -67,6 +68,7 @@ Open Virtual Machine Firmware
 %prep
 %setup -q -n %{name}
 %patch1 -p1
+%patch2 -p1
 %patch3 -p1
 %patch10 -p1
 %patch11 -p1
