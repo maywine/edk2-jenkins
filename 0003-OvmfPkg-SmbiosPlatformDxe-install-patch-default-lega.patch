@@ -1,4 +1,4 @@
-From aa0862dee5c9dbafaf17bd84b18c4c64df0ca4de Mon Sep 17 00:00:00 2001
+From 6a8046ce1f2a5a253e2ce9b806e1a800d5ee834b Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Wed, 5 Jun 2013 10:28:09 +0200
 Subject: [PATCH 3/3] OvmfPkg/SmbiosPlatformDxe: install+patch default legacy
@@ -16,7 +16,7 @@ Signed-off-by: Laszlo Ersek <lersek@redhat.com>
  create mode 100644 OvmfPkg/SmbiosPlatformDxe/QemuType1.c
 
 diff --git a/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c b/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c
-index 5d2166d..10bddf4 100644
+index ed75a01..6507cc0 100644
 --- a/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c
 +++ b/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c
 @@ -631,6 +631,11 @@ InstallDefaultTables (
@@ -32,7 +32,7 @@ index 5d2166d..10bddf4 100644
  }
  
 diff --git a/OvmfPkg/SmbiosPlatformDxe/QemuLegacyInternal.h b/OvmfPkg/SmbiosPlatformDxe/QemuLegacyInternal.h
-index 6ab528e..0cdfb27 100644
+index ca776b5..4a2e824 100644
 --- a/OvmfPkg/SmbiosPlatformDxe/QemuLegacyInternal.h
 +++ b/OvmfPkg/SmbiosPlatformDxe/QemuLegacyInternal.h
 @@ -248,4 +248,34 @@ InstallSmbiosType0 (
@@ -72,7 +72,7 @@ index 6ab528e..0cdfb27 100644
  #endif
 diff --git a/OvmfPkg/SmbiosPlatformDxe/QemuType1.c b/OvmfPkg/SmbiosPlatformDxe/QemuType1.c
 new file mode 100644
-index 0000000..0c1c5d6
+index 0000000..ff48164
 --- /dev/null
 +++ b/OvmfPkg/SmbiosPlatformDxe/QemuType1.c
 @@ -0,0 +1,178 @@
@@ -255,7 +255,7 @@ index 0000000..0c1c5d6
 +  return EFI_SUCCESS;
 +}
 diff --git a/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf b/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf
-index bc9902c..97bb6cc 100644
+index 8e673eb..4849713 100644
 --- a/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf
 +++ b/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf
 @@ -36,6 +36,7 @@
