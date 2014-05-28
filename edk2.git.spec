@@ -15,9 +15,9 @@ Patch2:         0001-pick-up-any-display-device-not-only-vga.patch
 Patch3:         edk2-no-lock-umb.patch
 Patch4:		0001-MdeModulePkg-TerminalDxe-add-other-text-resolutions.patch
 
-Patch10:	0001-OvmfPkg-SmbiosPlatformDxe-install-tables-and-save-fi.patch
-Patch11:	0002-OvmfPkg-SmbiosPlatformDxe-install-and-patch-default-.patch
-Patch12:	0003-OvmfPkg-SmbiosPlatformDxe-install-and-patch-default-.patch
+Patch10:	0001-OvmfPkg-SmbiosPlatformDxe-install-legacy-QEMU-tables.patch
+Patch11:	0002-OvmfPkg-SmbiosPlatformDxe-install-patch-default-lega.patch
+Patch12:	0003-OvmfPkg-SmbiosPlatformDxe-install-patch-default-lega.patch
 
 Patch90:        coreboot-pkg.patch
 

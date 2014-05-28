@@ -1,24 +1,24 @@
-From ad1c307578961cebf8f5f7ef6021534580389c5a Mon Sep 17 00:00:00 2001
+From acc69a44c01e93d2ec3ecd314b376109aca09668 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Wed, 5 Jun 2013 10:25:13 +0200
-Subject: [PATCH 2/3] OvmfPkg/SmbiosPlatformDxe: install and patch default
- table for SMBIOS Type 0
+Subject: [PATCH 2/3] OvmfPkg/SmbiosPlatformDxe: install+patch default legacy
+ type0 table
 
 Contributed-under: TianoCore Contribution Agreement 1.0
 
 Signed-off-by: Laszlo Ersek <lersek@redhat.com>
 ---
- OvmfPkg/SmbiosPlatformDxe/Qemu.c                |   5 +-
- OvmfPkg/SmbiosPlatformDxe/QemuInternal.h        |  30 ++++
+ OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c          |   5 +-
+ OvmfPkg/SmbiosPlatformDxe/QemuLegacyInternal.h  |  30 ++++
  OvmfPkg/SmbiosPlatformDxe/QemuType0.c           | 180 ++++++++++++++++++++++++
  OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf |   1 +
  4 files changed, 215 insertions(+), 1 deletion(-)
  create mode 100644 OvmfPkg/SmbiosPlatformDxe/QemuType0.c
 
-diff --git a/OvmfPkg/SmbiosPlatformDxe/Qemu.c b/OvmfPkg/SmbiosPlatformDxe/Qemu.c
-index 12eec90..8b3b18c 100644
---- a/OvmfPkg/SmbiosPlatformDxe/Qemu.c
-+++ b/OvmfPkg/SmbiosPlatformDxe/Qemu.c
+diff --git a/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c b/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c
+index 81476bc..5d2166d 100644
+--- a/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c
++++ b/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c
 @@ -628,7 +628,10 @@ InstallDefaultTables (
    IN OUT BUILD_CONTEXT       *Context
    )
@@ -31,10 +31,10 @@ index 12eec90..8b3b18c 100644
  }
  
  
-diff --git a/OvmfPkg/SmbiosPlatformDxe/QemuInternal.h b/OvmfPkg/SmbiosPlatformDxe/QemuInternal.h
-index c864e9d..ddcd918 100644
---- a/OvmfPkg/SmbiosPlatformDxe/QemuInternal.h
-+++ b/OvmfPkg/SmbiosPlatformDxe/QemuInternal.h
+diff --git a/OvmfPkg/SmbiosPlatformDxe/QemuLegacyInternal.h b/OvmfPkg/SmbiosPlatformDxe/QemuLegacyInternal.h
+index 3e75752..6ab528e 100644
+--- a/OvmfPkg/SmbiosPlatformDxe/QemuLegacyInternal.h
++++ b/OvmfPkg/SmbiosPlatformDxe/QemuLegacyInternal.h
 @@ -218,4 +218,34 @@ PatchSmbiosUnformatted (
    IN  UINT8               *TableBase
    );
@@ -72,7 +72,7 @@ index c864e9d..ddcd918 100644
  #endif
 diff --git a/OvmfPkg/SmbiosPlatformDxe/QemuType0.c b/OvmfPkg/SmbiosPlatformDxe/QemuType0.c
 new file mode 100644
-index 0000000..d0c26f2
+index 0000000..e8443f4
 --- /dev/null
 +++ b/OvmfPkg/SmbiosPlatformDxe/QemuType0.c
 @@ -0,0 +1,180 @@
@@ -91,7 +91,7 @@ index 0000000..d0c26f2
 +  WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 +**/
 +
-+#include "QemuInternal.h"
++#include "QemuLegacyInternal.h"
 +
 +
 +//
@@ -257,13 +257,13 @@ index 0000000..d0c26f2
 +  return EFI_SUCCESS;
 +}
 diff --git a/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf b/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf
-index 7172028..d8f1717 100644
+index e00fddb..bc9902c 100644
 --- a/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf
 +++ b/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf
-@@ -34,6 +34,7 @@
-   SmbiosPlatformDxe.c
+@@ -35,6 +35,7 @@
    Xen.c
    Qemu.c
+   QemuLegacy.c
 +  QemuType0.c
  
  [Packages]
