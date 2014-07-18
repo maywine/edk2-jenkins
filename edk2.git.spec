@@ -79,8 +79,8 @@ Open Virtual Machine Firmware
 
 # add openssl
 tar -C CryptoPkg/Library/OpensslLib -xf %{SOURCE1}
-(cd CryptoPkg/Library/OpensslLib/openssl-0.9.8w;
- patch -p0 < ../EDKII_openssl-0.9.8w.patch)
+(cd CryptoPkg/Library/OpensslLib/openssl-0.9.8za;
+ patch -p0 < ../EDKII_openssl-0.9.8za.patch)
 (cd CryptoPkg/Library/OpensslLib; ./Install.sh)
 
 %build
