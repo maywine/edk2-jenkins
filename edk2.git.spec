@@ -135,6 +135,8 @@ for cfg in pure-efi with-csm; do
 	build $OVMF_FLAGS -a IA32 -p OvmfPkg/OvmfPkgIa32.dsc
 	mkdir -p "ovmf-ia32"
 	cp Build/OvmfIa32/DEBUG_*/FV/OVMF.fd ovmf-ia32/OVMF-${cfg}.fd
+	cp Build/OvmfIa32/DEBUG_*/FV/OVMF_CODE.fd ovmf-ia32/OVMF_CODE-${cfg}.fd
+	cp Build/OvmfIa32/DEBUG_*/FV/OVMF_VARS.fd ovmf-ia32/OVMF_VARS-${cfg}.fd
 	rm -rf Build/OvmfIa32
 
 #	build $CORE_FLAGS -a IA32 -p corebootPkg/corebootPkg.dsc
@@ -146,6 +148,8 @@ for cfg in pure-efi with-csm; do
 	build $OVMF_FLAGS -a X64 -p OvmfPkg/OvmfPkgX64.dsc
 	mkdir -p "ovmf-x64"
 	cp Build/OvmfX64/DEBUG_*/FV/OVMF.fd ovmf-x64/OVMF-${cfg}.fd
+	cp Build/OvmfX64/DEBUG_*/FV/OVMF_CODE.fd ovmf-x64/OVMF_CODE-${cfg}.fd
+	cp Build/OvmfX64/DEBUG_*/FV/OVMF_VARS.fd ovmf-x64/OVMF_VARS-${cfg}.fd
 	rm -rf Build/OvmfX64
 
 #	build $CORE_FLAGS -a X64 -p corebootPkg/corebootPkg.dsc
