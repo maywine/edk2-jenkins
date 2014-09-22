@@ -192,14 +192,13 @@ for cfg in pure-efi with-csm; do
 %endif
 done
 
-build $CROSS_CC_FLAGS -a ARM \
+ARM_FLAGS="$CROSS_CC_FLAGS -D BUILD_NEW_SHELL"
+build $ARM_FLAGS -a ARM \
     -p ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
-mkdir -p "arm"
+build $ARM_FLAGS -a AARCH64 \
+    -p ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
+mkdir -p "arm" "aarch64"
 cp Build/ArmVirtualizationQemu-ARM/DEBUG_*/FV/*.fd arm
-
-build $CROSS_CC_FLAGS -a AARCH64 \
-    -p ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
-mkdir -p "aarch64"
 cp Build/ArmVirtualizationQemu-AARCH64/DEBUG_*/FV/*.fd aarch64
 
 %install
