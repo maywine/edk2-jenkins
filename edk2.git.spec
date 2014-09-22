@@ -284,13 +284,9 @@ for vga in stdvga cirrus vmware qxl virtio; do
 		%{buildroot}/usr/share/%{name}/ovmf-x64/vgabios-$vga.bin
 done
 
-mkdir -p	%{buildroot}/usr/share/%{name}/arm
-cp arm/*	%{buildroot}/usr/share/%{name}/arm
-
-mkdir -p	%{buildroot}/usr/share/%{name}/aarch64
-cp aarch64/*	%{buildroot}/usr/share/%{name}/aarch64
-
 %endif
+
+cp -a arm aarch64 %{buildroot}/usr/share/%{name}
 
 #cp -a	coreboot-* \
 #	%{buildroot}/usr/share/%{name}
