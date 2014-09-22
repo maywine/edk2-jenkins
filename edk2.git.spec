@@ -42,28 +42,29 @@ Requires:       %{name}
 Requires:       ipxe.git-combined
 Requires:       seavgabios.git
 License:	BSD License (no advertising) with restrictions on use and redistribution
+BuildArch:      noarch
 %description ovmf-ia32
 EFI Development Kit II
 Open Virtual Machine Firmware
 32bit version
 
-%ifarch x86_64
 %package ovmf-x64
 Summary:	Open Virtual Machine Firmware
 Requires:       %{name}
 Requires:       ipxe.git-combined
 Requires:       seavgabios.git
 License:	BSD License (no advertising) with restrictions on use and redistribution
+BuildArch:      noarch
 %description ovmf-x64
 EFI Development Kit II
 Open Virtual Machine Firmware
 64bit version
-%endif
 
 %package arm
 Summary:	Open Virtual Machine Firmware
 Requires:       %{name}
 License:	BSD License (no advertising) with restrictions on use and redistribution
+BuildArch:      noarch
 %description arm
 EFI Development Kit II
 ARM UEFI Firmware
@@ -72,6 +73,7 @@ ARM UEFI Firmware
 Summary:	Open Virtual Machine Firmware
 Requires:       %{name}
 License:	BSD License (no advertising) with restrictions on use and redistribution
+BuildArch:      noarch
 %description aarch64
 EFI Development Kit II
 AARCH64 UEFI Firmware
@@ -177,7 +179,6 @@ for cfg in pure-efi with-csm; do
 #	cp Build/corebootIA32/DEBUG_*/FV/COREBOOT.fd coreboot-ia32/COREBOOT-${cfg}.fd
 #	rm -rf Build/corebootIa32
 
-%ifarch x86_64
 	build $OVMF_FLAGS -a X64 -p OvmfPkg/OvmfPkgX64.dsc
 	mkdir -p "ovmf-x64"
 	cp Build/OvmfX64/DEBUG_*/FV/OVMF.fd ovmf-x64/OVMF-${cfg}.fd
@@ -189,7 +190,6 @@ for cfg in pure-efi with-csm; do
 #	mkdir -p "coreboot-x64"
 #	cp Build/corebootX64/DEBUG_*/FV/COREBOOT.fd coreboot-x64/COREBOOT-${cfg}.fd
 #	rm -rf Build/corebootX64
-%endif
 done
 
 ARM_FLAGS="$CROSS_CC_FLAGS -D BUILD_NEW_SHELL"
@@ -246,7 +246,6 @@ for vga in stdvga cirrus vmware qxl virtio; do
 		%{buildroot}/usr/share/%{name}/ovmf-ia32/vgabios-$vga.bin
 done
 
-%ifarch x86_64
 mkdir -p %{buildroot}/usr/share/%{name}/ovmf-x64
 cp	ovmf-x64/* \
 	%{buildroot}/usr/share/%{name}/ovmf-x64
@@ -283,39 +282,41 @@ for vga in stdvga cirrus vmware qxl virtio; do
 		%{buildroot}/usr/share/%{name}/ovmf-x64/vgabios-$vga.bin
 done
 
-%endif
-
 cp -a arm aarch64 %{buildroot}/usr/share/%{name}
 
 #cp -a	coreboot-* \
 #	%{buildroot}/usr/share/%{name}
 
 %files
-%doc OvmfPkg/README
 %dir /usr/share/%{name}
 
 %files tools
-%doc OvmfPkg/License.txt
 %doc BaseTools/UserManuals/EfiRom_Utility_Man_Page.rtf
 %doc BaseTools/UserManuals/VolInfo_Utility_Man_Page.rtf
 %{_bindir}/*
 
 %files ovmf-ia32
+%doc OvmfPkg/README
+%doc OvmfPkg/License.txt
 %doc FatBinPkg/License.txt
+%dir /usr/share/%{name}
 /usr/share/%{name}/ovmf-ia32
 
-%ifarch x86_64
 %files ovmf-x64
+%doc OvmfPkg/README
+%doc OvmfPkg/License.txt
 %doc FatBinPkg/License.txt
+%dir /usr/share/%{name}
 /usr/share/%{name}/ovmf-x64
-%endif
 
 %files arm
 %doc FatBinPkg/License.txt
+%dir /usr/share/%{name}
 /usr/share/%{name}/arm
 
 %files aarch64
 %doc FatBinPkg/License.txt
+%dir /usr/share/%{name}
 /usr/share/%{name}/aarch64
 
 #%files coreboot
