@@ -25,6 +25,8 @@ BuildRequires:	iasl
 BuildRequires:	python
 BuildRequires:	libuuid-devel
 BuildRequires:	seabios.git-csm
+BuildRequires:	gcc-arm-linux-gnu binutils-arm-linux-gnu
+BuildRequires:	gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
 
 %description
 EFI Development Kit II
@@ -57,6 +59,22 @@ EFI Development Kit II
 Open Virtual Machine Firmware
 64bit version
 %endif
+
+%package arm
+Summary:	Open Virtual Machine Firmware
+Requires:       %{name}
+License:	BSD License (no advertising) with restrictions on use and redistribution
+%description arm
+EFI Development Kit II
+ARM UEFI Firmware
+
+%package aarch64
+Summary:	Open Virtual Machine Firmware
+Requires:       %{name}
+License:	BSD License (no advertising) with restrictions on use and redistribution
+%description aarch64
+EFI Development Kit II
+AARCH64 UEFI Firmware
 
 #%package coreboot
 #Summary:	coreboot payloads
@@ -101,15 +119,30 @@ case "$GCCVER" in
 4.6*)	CC_FLAGS="-t GCC46";;
 4.7*)	CC_FLAGS="-t GCC47";;
 4.8*)	CC_FLAGS="-t GCC48";;
+4.9*)	CC_FLAGS="-t GCC49";;
 esac
-sed -i.bak -e "s|\(^DEFINE GCC48_.*_PREFIX.*=\).*|\1 $prefix|" Conf/tools_def.txt
+#sed -i.bak -e "s|\(^DEFINE GCC48_.*_PREFIX.*=\).*|\1 $prefix|" Conf/tools_def.txt
+
+CROSSGCCVER=$(arm-linux-gnu-gcc --version | awk '{ print $3; exit}')
+case "$CROSSGCCVER" in
+4.8*)	CROSS_CC_FLAGS="-t GCC48"
+        export GCC48_ARM_PREFIX="arm-linux-gnu-"
+        export GCC48_AARCH64_PREFIX="aarch64-linux-gnu-"
+        ;;
+4.9*)	CROSS_CC_FLAGS="-t GCC49"
+        export GCC49_ARM_PREFIX="arm-linux-gnu-"
+        export GCC49_AARCH64_PREFIX="aarch64-linux-gnu-"
+        ;;
+esac
 
 # parallel builds
 SMP_MFLAGS="%{?_smp_mflags}"
 if [[ x"$SMP_MFLAGS" = x-j* ]]; then
 	CC_FLAGS="$CC_FLAGS -n ${SMP_MFLAGS#-j}"
+	CROSS_CC_FLAGS="$CROSS_CC_FLAGS -n ${SMP_MFLAGS#-j}"
 elif [ -n "%{?jobs}" ]; then
 	CC_FLAGS="$CC_FLAGS -n %{?jobs}"
+	CROSS_CC_FLAGS="$CROSS_CC_FLAGS -n %{?jobs}"
 fi
 
 # prepare
@@ -158,6 +191,16 @@ for cfg in pure-efi with-csm; do
 #	rm -rf Build/corebootX64
 %endif
 done
+
+build $CROSS_CC_FLAGS -a ARM \
+    -p ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
+mkdir -p "arm"
+cp Build/ArmVirtualizationQemu-ARM/DEBUG_*/FV/*.fd arm
+
+build $CROSS_CC_FLAGS -a AARCH64 \
+    -p ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
+mkdir -p "aarch64"
+cp Build/ArmVirtualizationQemu-AARCH64/DEBUG_*/FV/*.fd aarch64
 
 %install
 mkdir -p %{buildroot}%{_bindir}
@@ -240,6 +283,13 @@ for vga in stdvga cirrus vmware qxl virtio; do
 	ln -s	../../seavgabios.git/vgabios-$vga.bin \
 		%{buildroot}/usr/share/%{name}/ovmf-x64/vgabios-$vga.bin
 done
+
+mkdir -p	%{buildroot}/usr/share/%{name}/arm
+cp arm/*	%{buildroot}/usr/share/%{name}/arm
+
+mkdir -p	%{buildroot}/usr/share/%{name}/aarch64
+cp aarch64/*	%{buildroot}/usr/share/%{name}/aarch64
+
 %endif
 
 #cp -a	coreboot-* \
@@ -264,6 +314,14 @@ done
 %doc FatBinPkg/License.txt
 /usr/share/%{name}/ovmf-x64
 %endif
+
+%files arm
+%doc FatBinPkg/License.txt
+/usr/share/%{name}/arm
+
+%files aarch64
+%doc FatBinPkg/License.txt
+/usr/share/%{name}/aarch64
 
 #%files coreboot
 #/usr/share/%{name}/coreboot-*
