@@ -38,7 +38,6 @@ EFI Development Kit II Tools
 
 %package ovmf-ia32
 Summary:	Open Virtual Machine Firmware
-Requires:       %{name}
 Requires:       ipxe.git-combined
 Requires:       seavgabios.git
 License:	BSD License (no advertising) with restrictions on use and redistribution
@@ -50,7 +49,6 @@ Open Virtual Machine Firmware
 
 %package ovmf-x64
 Summary:	Open Virtual Machine Firmware
-Requires:       %{name}
 Requires:       ipxe.git-combined
 Requires:       seavgabios.git
 License:	BSD License (no advertising) with restrictions on use and redistribution
@@ -62,7 +60,6 @@ Open Virtual Machine Firmware
 
 %package arm
 Summary:	Open Virtual Machine Firmware
-Requires:       %{name}
 License:	BSD License (no advertising) with restrictions on use and redistribution
 BuildArch:      noarch
 %description arm
@@ -71,7 +68,6 @@ ARM UEFI Firmware
 
 %package aarch64
 Summary:	Open Virtual Machine Firmware
-Requires:       %{name}
 License:	BSD License (no advertising) with restrictions on use and redistribution
 BuildArch:      noarch
 %description aarch64
