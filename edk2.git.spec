@@ -19,6 +19,8 @@ Patch10:	0001-OvmfPkg-SmbiosPlatformDxe-install-legacy-QEMU-tables.patch
 Patch11:	0002-OvmfPkg-SmbiosPlatformDxe-install-patch-default-lega.patch
 Patch12:	0003-OvmfPkg-SmbiosPlatformDxe-install-patch-default-lega.patch
 
+Patch20:	0001-OvmfPkg-EnrollDefaultKeys-application-for-enrolling-.patch
+
 Patch90:        coreboot-pkg.patch
 
 BuildRequires:	iasl
@@ -94,6 +96,7 @@ AARCH64 UEFI Firmware
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
+%patch20 -p1
 #%patch90 -p1
 
 # add openssl
@@ -160,6 +163,7 @@ build_iso()
 		echo $ARCH | tr '[:lower:'] '[:upper:]'
 	)
 	local UEFI_SHELL_BINARY=$UEFI_BINDIR/Shell.efi
+	local ENROLLER_BINARY=$UEFI_BINDIR/EnrollDefaultKeys.efi
 	local UEFI_SHELL_IMAGE=uefi_shell_${ARCH}.img
 	local ISO_IMAGE=ovmf-$(
 		echo $ARCH | tr '[:upper:]' '[:lower:']
@@ -167,10 +171,12 @@ build_iso()
 
 	local UEFI_SHELL_BINARY_BNAME=$(basename -- "$UEFI_SHELL_BINARY")
 	local UEFI_SHELL_SIZE=$(stat --format=%s -- "$UEFI_SHELL_BINARY")
+	local ENROLLER_SIZE=$(stat --format=%s -- "$ENROLLER_BINARY")
 
 	# add 1MB then 10% for metadata
 	local UEFI_SHELL_IMAGE_KB=$((
-		(UEFI_SHELL_SIZE + 1 * 1024 * 1024) * 11 / 10 / 1024
+		(UEFI_SHELL_SIZE + ENROLLER_SIZE +
+		 1 * 1024 * 1024) * 11 / 10 / 1024
 	))
 
 	# create non-partitioned FAT image
@@ -186,6 +192,7 @@ build_iso()
 		copy-in "$UEFI_SHELL_BINARY" /efi/boot/ : \
 		mv /efi/boot/"$UEFI_SHELL_BINARY_BNAME" \
 			/efi/boot/bootx64.efi : \
+		copy-in "$ENROLLER_BINARY" / : \
 		find / : \
 		df-h
 
