@@ -150,7 +150,7 @@ make -C BaseTools
 
 # go build
 for cfg in pure-efi with-csm; do
-	OVMF_FLAGS="$CC_FLAGS -D BUILD_NEW_SHELL -D SECURE_BOOT_ENABLE -D FD_SIZE_2MB"
+	OVMF_FLAGS="$CC_FLAGS -D SECURE_BOOT_ENABLE"
 	CORE_FLAGS="$CC_FLAGS -D BUILD_NEW_SHELL -D NETWORK_ENABLE=TRUE"
 
 	case "$cfg" in
@@ -188,7 +188,7 @@ for cfg in pure-efi with-csm; do
 #	rm -rf Build/corebootX64
 done
 
-ARM_FLAGS="$CROSS_CC_FLAGS -D BUILD_NEW_SHELL"
+ARM_FLAGS="$CROSS_CC_FLAGS"
 build $ARM_FLAGS -a ARM \
     -p ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
 build $ARM_FLAGS -a AARCH64 \
