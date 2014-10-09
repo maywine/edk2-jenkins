@@ -27,6 +27,9 @@ BuildRequires:	libuuid-devel
 BuildRequires:	seabios.git-csm
 BuildRequires:	gcc-arm-linux-gnu binutils-arm-linux-gnu
 BuildRequires:	gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
+BuildRequires:	dosfstools
+BuildRequires:	libguestfs-tools-c
+BuildRequires:	genisoimage
 
 %description
 EFI Development Kit II
@@ -149,6 +152,49 @@ cp /usr/share/seabios.git-csm/bios-csm.bin OvmfPkg/Csm/Csm16/Csm16.bin
 make -C BaseTools
 
 # go build
+build_iso()
+{
+	local ARCH="$1"
+	local UEFI_BINDIR=$(
+		echo -n Build/Ovmf${ARCH}/DEBUG_*/
+		echo $ARCH | tr '[:lower:'] '[:upper:]'
+	)
+	local UEFI_SHELL_BINARY=$UEFI_BINDIR/Shell.efi
+	local UEFI_SHELL_IMAGE=uefi_shell_${ARCH}.img
+	local ISO_IMAGE=ovmf-$(
+		echo $ARCH | tr '[:upper:]' '[:lower:']
+	)/UefiShell.iso
+
+	local UEFI_SHELL_BINARY_BNAME=$(basename -- "$UEFI_SHELL_BINARY")
+	local UEFI_SHELL_SIZE=$(stat --format=%s -- "$UEFI_SHELL_BINARY")
+
+	# add 1MB then 10% for metadata
+	local UEFI_SHELL_IMAGE_KB=$((
+		(UEFI_SHELL_SIZE + 1 * 1024 * 1024) * 11 / 10 / 1024
+	))
+
+	# create non-partitioned FAT image
+	rm -f -- "$UEFI_SHELL_IMAGE"
+	mkdosfs -C "$UEFI_SHELL_IMAGE" -n UEFI_SHELL -- "$UEFI_SHELL_IMAGE_KB"
+
+	# copy the shell binary into the FAT image
+	LIBGUESTFS_BACKEND=direct guestfish -- \
+		add "$UEFI_SHELL_IMAGE" : \
+		run : \
+		mount /dev/sda / : \
+		mkdir-p /efi/boot : \
+		copy-in "$UEFI_SHELL_BINARY" /efi/boot/ : \
+		mv /efi/boot/"$UEFI_SHELL_BINARY_BNAME" \
+			/efi/boot/bootx64.efi : \
+		find / : \
+		df-h
+
+	# build ISO with FAT image file as El Torito EFI boot image
+	genisoimage -input-charset ASCII -J -rational-rock \
+		-efi-boot "$UEFI_SHELL_IMAGE" -no-emul-boot \
+		-o "$ISO_IMAGE" -- "$UEFI_SHELL_IMAGE"
+}
+
 for cfg in pure-efi with-csm; do
 	OVMF_FLAGS="$CC_FLAGS -D SECURE_BOOT_ENABLE"
 	CORE_FLAGS="$CC_FLAGS -D BUILD_NEW_SHELL -D NETWORK_ENABLE=TRUE"
@@ -168,6 +214,9 @@ for cfg in pure-efi with-csm; do
 	cp Build/OvmfIa32/DEBUG_*/FV/OVMF.fd ovmf-ia32/OVMF-${cfg}.fd
 	cp Build/OvmfIa32/DEBUG_*/FV/OVMF_CODE.fd ovmf-ia32/OVMF_CODE-${cfg}.fd
 	cp Build/OvmfIa32/DEBUG_*/FV/OVMF_VARS.fd ovmf-ia32/OVMF_VARS-${cfg}.fd
+	if [ "$cfg" = pure-efi ]; then
+		build_iso Ia32
+	fi
 	rm -rf Build/OvmfIa32
 
 #	build $CORE_FLAGS -a IA32 -p corebootPkg/corebootPkg.dsc
@@ -180,6 +229,9 @@ for cfg in pure-efi with-csm; do
 	cp Build/OvmfX64/DEBUG_*/FV/OVMF.fd ovmf-x64/OVMF-${cfg}.fd
 	cp Build/OvmfX64/DEBUG_*/FV/OVMF_CODE.fd ovmf-x64/OVMF_CODE-${cfg}.fd
 	cp Build/OvmfX64/DEBUG_*/FV/OVMF_VARS.fd ovmf-x64/OVMF_VARS-${cfg}.fd
+	if [ "$cfg" = pure-efi ]; then
+		build_iso X64
+	fi
 	rm -rf Build/OvmfX64
 
 #	build $CORE_FLAGS -a X64 -p corebootPkg/corebootPkg.dsc
