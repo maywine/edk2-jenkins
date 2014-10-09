@@ -293,14 +293,12 @@ cp -a arm aarch64 %{buildroot}/usr/share/%{name}
 
 %files ovmf-ia32
 %doc OvmfPkg/README
-%doc OvmfPkg/License.txt
 %doc FatBinPkg/License.txt
 %dir /usr/share/%{name}
 /usr/share/%{name}/ovmf-ia32
 
 %files ovmf-x64
 %doc OvmfPkg/README
-%doc OvmfPkg/License.txt
 %doc FatBinPkg/License.txt
 %dir /usr/share/%{name}
 /usr/share/%{name}/ovmf-x64
