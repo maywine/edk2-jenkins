@@ -21,6 +21,8 @@ Patch12:	0003-OvmfPkg-SmbiosPlatformDxe-install-patch-default-lega.patch
 
 Patch20:	0001-OvmfPkg-EnrollDefaultKeys-application-for-enrolling-.patch
 
+Patch30:	0001-tools_def.template-take-GCC4-_-IA32-X64-prefixes-fro.patch
+
 Patch90:        coreboot-pkg.patch
 
 BuildRequires:	iasl
@@ -97,6 +99,7 @@ AARCH64 UEFI Firmware
 %patch11 -p1
 %patch12 -p1
 %patch20 -p1
+%patch30 -p1
 #%patch90 -p1
 
 # add openssl
@@ -108,13 +111,6 @@ tar -C CryptoPkg/Library/OpensslLib -xf %{SOURCE1}
 %build
 source ./edksetup.sh
 
-if test -f /opt/rh/devtoolset-2/enable; then
-        source /opt/rh/devtoolset-2/enable
-	prefix=$(dirname $(which gcc))/
-else
-	prefix=/usr/bin/
-fi
-
 # figure tools switch
 GCCVER=$(gcc --version | awk '{ print $3; exit}')
 case "$GCCVER" in
@@ -125,7 +121,6 @@ case "$GCCVER" in
 4.8*)	CC_FLAGS="-t GCC48";;
 4.9*)	CC_FLAGS="-t GCC49";;
 esac
-#sed -i.bak -e "s|\(^DEFINE GCC48_.*_PREFIX.*=\).*|\1 $prefix|" Conf/tools_def.txt
 
 CROSSGCCVER=$(arm-linux-gnu-gcc --version | awk '{ print $3; exit}')
 case "$CROSSGCCVER" in
