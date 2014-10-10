@@ -1,8 +1,8 @@
-From 76d9dd84299e03030704d972988c07dfd3f17095 Mon Sep 17 00:00:00 2001
+From 24812748de9eb53656b4843021090d9f8507c4fe Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Wed, 29 Jan 2014 13:13:11 +0100
-Subject: [PATCH] tools_def.template: take GCC4?_(IA32|X64) prefixes from
- the environment
+Subject: [PATCH] tools_def.template: take GCC4?_(IA32|X64) prefixes from the
+ environment
 
 The default BaseTools compiler configuration hard-codes the prefix for gcc
 (== /usr/bin). While this matches the gcc-4.x installation path on most
@@ -22,7 +22,7 @@ Signed-off-by: Laszlo Ersek <lersek@redhat.com>
  1 file changed, 12 insertions(+), 12 deletions(-)
 
 diff --git a/BaseTools/Conf/tools_def.template b/BaseTools/Conf/tools_def.template
-index f88f860..a08a650 100644
+index f88f860..4b6cd39 100644
 --- a/BaseTools/Conf/tools_def.template
 +++ b/BaseTools/Conf/tools_def.template
 @@ -165,25 +165,25 @@ DEFINE CYGWIN_BINIA32          = c:/cygwin/opt/tiano/i386-tiano-pe/i386-tiano-pe

@@ -1,8 +1,8 @@
-From 454eacc1eab7b57fc9447ec4c53ae15226392b2e Mon Sep 17 00:00:00 2001
+From c8fe70adff69ae68ba70c588d45928bc162cc0a1 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Wed, 1 Oct 2014 21:11:19 +0200
-Subject: [PATCH] OvmfPkg: EnrollDefaultKeys: application for enrolling
- default keys
+Subject: [PATCH] OvmfPkg: EnrollDefaultKeys: application for enrolling default
+ keys
 
 (A port of the <https://bugzilla.redhat.com/show_bug.cgi?id=1148296> patch
 to Gerd's public RPMs.)
@@ -43,74 +43,18 @@ DB:
 
 Signed-off-by: Laszlo Ersek <lersek@redhat.com>
 ---
- OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf |  50 ++
  OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c   | 961 ++++++++++++++++++++++++
+ OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf |  50 ++
  OvmfPkg/OvmfPkgIa32.dsc                         |   4 +
  OvmfPkg/OvmfPkgIa32X64.dsc                      |   4 +
  OvmfPkg/OvmfPkgX64.dsc                          |   4 +
  5 files changed, 1023 insertions(+)
- create mode 100644 OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf
  create mode 100644 OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c
+ create mode 100644 OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf
 
-diff --git a/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf b/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf
-new file mode 100644
-index 0000000..555358e
---- /dev/null
-+++ b/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf
-@@ -0,0 +1,50 @@
-+## @file
-+#  Enroll default PK, KEK, DB.
-+#
-+#  Copyright (C) 2014, Red Hat, Inc.
-+#
-+#  This program and the accompanying materials are licensed and made available
-+#  under the terms and conditions of the BSD License which accompanies this
-+#  distribution. The full text of the license may be found at
-+#  http://opensource.org/licenses/bsd-license.
-+#
-+#  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
-+#  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR
-+#  IMPLIED.
-+##
-+
-+[Defines]
-+  INF_VERSION                    = 0x00010006
-+  BASE_NAME                      = EnrollDefaultKeys
-+  FILE_GUID                      = D5C1DF0B-1BAC-4EDF-BA48-08834009CA5A
-+  MODULE_TYPE                    = UEFI_APPLICATION
-+  VERSION_STRING                 = 0.1
-+  ENTRY_POINT                    = ShellCEntryLib
-+
-+#
-+#  VALID_ARCHITECTURES           = IA32 X64
-+#
-+
-+[Sources]
-+  EnrollDefaultKeys.c
-+
-+[Packages]
-+  MdePkg/MdePkg.dec
-+  SecurityPkg/SecurityPkg.dec
-+  ShellPkg/ShellPkg.dec
-+
-+[Guids]
-+  gEfiCertPkcs7Guid
-+  gEfiCertX509Guid
-+  gEfiCustomModeEnableGuid
-+  gEfiGlobalVariableGuid
-+  gEfiImageSecurityDatabaseGuid
-+  gEfiSecureBootEnableDisableGuid
-+
-+[LibraryClasses]
-+  BaseMemoryLib
-+  DebugLib
-+  MemoryAllocationLib
-+  ShellCEntryLib
-+  UefiLib
-+  UefiRuntimeServicesTableLib
 diff --git a/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c b/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c
 new file mode 100644
-index 0000000..0c434ac
+index 0000000..29de6e2
 --- /dev/null
 +++ b/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c
 @@ -0,0 +1,961 @@
@@ -1075,8 +1019,64 @@ index 0000000..0c434ac
 +  AsciiPrint ("info: success\n");
 +  return 0;
 +}
+diff --git a/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf b/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf
+new file mode 100644
+index 0000000..34c9f26
+--- /dev/null
++++ b/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf
+@@ -0,0 +1,50 @@
++## @file
++#  Enroll default PK, KEK, DB.
++#
++#  Copyright (C) 2014, Red Hat, Inc.
++#
++#  This program and the accompanying materials are licensed and made available
++#  under the terms and conditions of the BSD License which accompanies this
++#  distribution. The full text of the license may be found at
++#  http://opensource.org/licenses/bsd-license.
++#
++#  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
++#  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR
++#  IMPLIED.
++##
++
++[Defines]
++  INF_VERSION                    = 0x00010006
++  BASE_NAME                      = EnrollDefaultKeys
++  FILE_GUID                      = D5C1DF0B-1BAC-4EDF-BA48-08834009CA5A
++  MODULE_TYPE                    = UEFI_APPLICATION
++  VERSION_STRING                 = 0.1
++  ENTRY_POINT                    = ShellCEntryLib
++
++#
++#  VALID_ARCHITECTURES           = IA32 X64
++#
++
++[Sources]
++  EnrollDefaultKeys.c
++
++[Packages]
++  MdePkg/MdePkg.dec
++  SecurityPkg/SecurityPkg.dec
++  ShellPkg/ShellPkg.dec
++
++[Guids]
++  gEfiCertPkcs7Guid
++  gEfiCertX509Guid
++  gEfiCustomModeEnableGuid
++  gEfiGlobalVariableGuid
++  gEfiImageSecurityDatabaseGuid
++  gEfiSecureBootEnableDisableGuid
++
++[LibraryClasses]
++  BaseMemoryLib
++  DebugLib
++  MemoryAllocationLib
++  ShellCEntryLib
++  UefiLib
++  UefiRuntimeServicesTableLib
 diff --git a/OvmfPkg/OvmfPkgIa32.dsc b/OvmfPkg/OvmfPkgIa32.dsc
-index 8527ece..02fda6d 100644
+index 8527ece..fe75268 100644
 --- a/OvmfPkg/OvmfPkgIa32.dsc
 +++ b/OvmfPkg/OvmfPkgIa32.dsc
 @@ -563,6 +563,10 @@
@@ -1091,7 +1091,7 @@ index 8527ece..02fda6d 100644
  
    OvmfPkg/PlatformDxe/Platform.inf
 diff --git a/OvmfPkg/OvmfPkgIa32X64.dsc b/OvmfPkg/OvmfPkgIa32X64.dsc
-index 823f005..69c4e93 100644
+index 823f005..eca3973 100644
 --- a/OvmfPkg/OvmfPkgIa32X64.dsc
 +++ b/OvmfPkg/OvmfPkgIa32X64.dsc
 @@ -570,6 +570,10 @@
@@ -1106,7 +1106,7 @@ index 823f005..69c4e93 100644
  
    OvmfPkg/PlatformDxe/Platform.inf
 diff --git a/OvmfPkg/OvmfPkgX64.dsc b/OvmfPkg/OvmfPkgX64.dsc
-index 40c18de..2279d8c 100644
+index 40c18de..5c200e3 100644
 --- a/OvmfPkg/OvmfPkgX64.dsc
 +++ b/OvmfPkg/OvmfPkgX64.dsc
 @@ -568,6 +568,10 @@
