@@ -179,6 +179,7 @@ build_iso()
 	rm -f -- "$UEFI_SHELL_IMAGE"
 	mkdosfs -C "$UEFI_SHELL_IMAGE" -n UEFI_SHELL -- "$UEFI_SHELL_IMAGE_KB"
 
+	export MTOOLS_SKIP_CHECK=1
 	mmd	-i "$UEFI_SHELL_IMAGE"				::efi
 	mmd	-i "$UEFI_SHELL_IMAGE"				::efi/boot
 	mcopy	-i "$UEFI_SHELL_IMAGE"	"$UEFI_SHELL_BINARY"	::efi/boot/bootx64.efi
