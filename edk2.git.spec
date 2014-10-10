@@ -32,7 +32,7 @@ BuildRequires:	seabios.git-csm
 BuildRequires:	gcc-arm-linux-gnu binutils-arm-linux-gnu
 BuildRequires:	gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
 BuildRequires:	dosfstools
-BuildRequires:	libguestfs-tools-c
+BuildRequires:	mtools
 BuildRequires:	genisoimage
 
 %description
@@ -178,18 +178,11 @@ build_iso()
 	rm -f -- "$UEFI_SHELL_IMAGE"
 	mkdosfs -C "$UEFI_SHELL_IMAGE" -n UEFI_SHELL -- "$UEFI_SHELL_IMAGE_KB"
 
-	# copy the shell binary into the FAT image
-	LIBGUESTFS_BACKEND=direct guestfish -- \
-		add "$UEFI_SHELL_IMAGE" : \
-		run : \
-		mount /dev/sda / : \
-		mkdir-p /efi/boot : \
-		copy-in "$UEFI_SHELL_BINARY" /efi/boot/ : \
-		mv /efi/boot/"$UEFI_SHELL_BINARY_BNAME" \
-			/efi/boot/bootx64.efi : \
-		copy-in "$ENROLLER_BINARY" / : \
-		find / : \
-		df-h
+	mmd	-i "$UEFI_SHELL_IMAGE"				::efi
+	mmd	-i "$UEFI_SHELL_IMAGE"				::efi/boot
+	mcopy	-i "$UEFI_SHELL_IMAGE"	"$UEFI_SHELL_BINARY"	::efi/boot/bootx64.efi
+	mcopy	-i "$UEFI_SHELL_IMAGE"	"$ENROLLER_BINARY"	::
+	mdir	-i "$UEFI_SHELL_IMAGE"	-/			::
 
 	# build ISO with FAT image file as El Torito EFI boot image
 	genisoimage -input-charset ASCII -J -rational-rock \
