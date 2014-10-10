@@ -19,7 +19,7 @@ Patch10:	0001-OvmfPkg-SmbiosPlatformDxe-install-legacy-QEMU-tables.patch
 Patch11:	0002-OvmfPkg-SmbiosPlatformDxe-install-patch-default-lega.patch
 Patch12:	0003-OvmfPkg-SmbiosPlatformDxe-install-patch-default-lega.patch
 
-#Patch20:	0001-OvmfPkg-EnrollDefaultKeys-application-for-enrolling-.patch
+Patch20:	0001-OvmfPkg-EnrollDefaultKeys-application-for-enrolling-.patch
 
 Patch30:	0001-tools_def.template-take-GCC4-_-IA32-X64-prefixes-fro.patch
 
@@ -98,7 +98,7 @@ AARCH64 UEFI Firmware
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
-#%patch20 -p1
+%patch20 -p1
 %patch30 -p1
 #%patch90 -p1
 
@@ -166,8 +166,7 @@ build_iso()
 
 	local UEFI_SHELL_BINARY_BNAME=$(basename -- "$UEFI_SHELL_BINARY")
 	local UEFI_SHELL_SIZE=$(stat --format=%s -- "$UEFI_SHELL_BINARY")
-#	local ENROLLER_SIZE=$(stat --format=%s -- "$ENROLLER_BINARY")
-	local ENROLLER_SIZE=0
+	local ENROLLER_SIZE=$(stat --format=%s -- "$ENROLLER_BINARY")
 
 	# add 1MB then 10% for metadata
 	local UEFI_SHELL_IMAGE_KB=$((
@@ -183,7 +182,7 @@ build_iso()
 	mmd	-i "$UEFI_SHELL_IMAGE"				::efi
 	mmd	-i "$UEFI_SHELL_IMAGE"				::efi/boot
 	mcopy	-i "$UEFI_SHELL_IMAGE"	"$UEFI_SHELL_BINARY"	::efi/boot/bootx64.efi
-#	mcopy	-i "$UEFI_SHELL_IMAGE"	"$ENROLLER_BINARY"	::
+	mcopy	-i "$UEFI_SHELL_IMAGE"	"$ENROLLER_BINARY"	::
 	mdir	-i "$UEFI_SHELL_IMAGE"	-/			::
 
 	# build ISO with FAT image file as El Torito EFI boot image
