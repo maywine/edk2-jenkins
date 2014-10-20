@@ -1,0 +1,27 @@
+From f66ba03cbeecd873524c409776c7e58b30862703 Mon Sep 17 00:00:00 2001
+From: Laszlo Ersek <lersek@redhat.com>
+Date: Sun, 21 Sep 2014 23:12:09 +0200
+Subject: [PATCH 1/4] ArmPlatformPkg/ArmVirtualizationPkg: enable DEBUG_VERBOSE
+
+Contributed-under: TianoCore Contribution Agreement 1.0
+Signed-off-by: Laszlo Ersek <lersek@redhat.com>
+---
+ ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc b/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
+index c7066b0..276cce7 100644
+--- a/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
++++ b/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
+@@ -82,7 +82,7 @@
+   gEfiMdeModulePkgTokenSpaceGuid.PcdConOutGopSupport|FALSE
+ 
+ [PcdsFixedAtBuild.common]
+-  gEfiMdePkgTokenSpaceGuid.PcdDebugPrintErrorLevel|0x8000004F
++  gEfiMdePkgTokenSpaceGuid.PcdDebugPrintErrorLevel|0x8040004F
+ 
+   gArmPlatformTokenSpaceGuid.PcdFirmwareVendor|"QEMU"
+ 
+-- 
+1.8.3.1
+

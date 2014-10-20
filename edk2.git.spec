@@ -23,6 +23,11 @@ Patch20:	0001-OvmfPkg-EnrollDefaultKeys-application-for-enrolling-.patch
 
 Patch30:	0001-tools_def.template-take-GCC4-_-IA32-X64-prefixes-fro.patch
 
+Patch40:	0001-ArmPlatformPkg-ArmVirtualizationPkg-enable-DEBUG_VER.patch
+Patch41:	0002-ArmPlatformPkg-Bds-generate-ESP-Image-boot-option-if.patch
+Patch42:	0003-ArmPlatformPkg-Bds-check-for-other-defaults-too-if-u.patch
+Patch43:	0004-ArmPlatformPkg-ArmVirtualizationPkg-auto-detect-boot.patch
+
 Patch90:        coreboot-pkg.patch
 
 BuildRequires:	iasl
@@ -100,6 +105,10 @@ AARCH64 UEFI Firmware
 %patch12 -p1
 %patch20 -p1
 %patch30 -p1
+%patch40 -p1
+%patch41 -p1
+%patch42 -p1
+%patch43 -p1
 #%patch90 -p1
 
 # add openssl
@@ -244,6 +253,11 @@ build $ARM_FLAGS -a AARCH64 \
 mkdir -p "arm" "aarch64"
 cp Build/ArmVirtualizationQemu-ARM/DEBUG_*/FV/*.fd arm
 cp Build/ArmVirtualizationQemu-AARCH64/DEBUG_*/FV/*.fd aarch64
+for fd in {arm,aarch64}/*.fd; do
+	img="${fd%.fd}-pflash.img"
+	dd of="$img" if="/dev/zero" bs=1M count=64
+	dd of="$img" if="$fd" conv=notrunc
+done
 
 %install
 mkdir -p %{buildroot}%{_bindir}

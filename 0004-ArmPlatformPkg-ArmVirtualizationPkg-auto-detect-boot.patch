@@ -1,0 +1,32 @@
+From c40b4fa4f74175bd0bebb3d8d5782ef38858acf7 Mon Sep 17 00:00:00 2001
+From: Laszlo Ersek <lersek@redhat.com>
+Date: Sun, 21 Sep 2014 23:16:14 +0200
+Subject: [PATCH 4/4] ArmPlatformPkg/ArmVirtualizationPkg: auto-detect boot
+ path
+
+Contributed-under: TianoCore Contribution Agreement 1.0
+Signed-off-by: Laszlo Ersek <lersek@redhat.com>
+---
+ ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc b/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
+index 276cce7..a311c21 100644
+--- a/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
++++ b/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
+@@ -115,9 +115,9 @@
+   #
+   # ARM OS Loader
+   #
+-  gArmPlatformTokenSpaceGuid.PcdDefaultBootDescription|L"Linux (EFI stub) on virtio31:hd0:part0"
+-  gArmPlatformTokenSpaceGuid.PcdDefaultBootDevicePath|L"VenHw(837DCA9E-E874-4D82-B29A-23FE0E23D1E2,003E000A00000000)/HD(1,MBR,0x00000000,0x3F,0x19FC0)/Image"
+-  gArmPlatformTokenSpaceGuid.PcdDefaultBootArgument|"root=/dev/vda2 console=ttyAMA0 earlycon uefi_debug"
++  gArmPlatformTokenSpaceGuid.PcdDefaultBootDescription|L"Linux from first ESP"
++  gArmPlatformTokenSpaceGuid.PcdDefaultBootDevicePath|L""
++  gArmPlatformTokenSpaceGuid.PcdDefaultBootArgument|""
+   gArmPlatformTokenSpaceGuid.PcdDefaultBootType|0
+ 
+   # Use the serial console (ConIn & ConOut) and the Graphic driver (ConOut)
+-- 
+1.8.3.1
+
