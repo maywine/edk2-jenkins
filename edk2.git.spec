@@ -28,8 +28,6 @@ Patch41:	0002-ArmPlatformPkg-Bds-generate-ESP-Image-boot-option-if.patch
 Patch42:	0003-ArmPlatformPkg-Bds-check-for-other-defaults-too-if-u.patch
 Patch43:	0004-ArmPlatformPkg-ArmVirtualizationPkg-auto-detect-boot.patch
 
-Patch90:        coreboot-pkg.patch
-
 BuildRequires:	iasl
 BuildRequires:	python
 BuildRequires:	libuuid-devel
@@ -85,14 +83,6 @@ BuildArch:      noarch
 %description aarch64
 EFI Development Kit II
 AARCH64 UEFI Firmware
-
-#%package coreboot
-#Summary:	coreboot payloads
-#Requires:       %{name}
-#License:	BSD License (no advertising) with restrictions on use and redistribution
-#%description coreboot
-#EFI Development Kit II
-#coreboot payloads
 
 %prep
 %setup -q -n %{name}
@@ -155,7 +145,6 @@ fi
 
 # prepare
 cp /usr/share/seabios.git-csm/bios-csm.bin OvmfPkg/Csm/Csm16/Csm16.bin
-#cp /usr/share/seabios.git-csm/bios-csm.bin corebootPkg/Csm/Csm16/Csm16.bin
 make -C BaseTools
 
 # go build
@@ -202,12 +191,10 @@ build_iso()
 
 for cfg in pure-efi with-csm; do
 	OVMF_FLAGS="$CC_FLAGS -D SECURE_BOOT_ENABLE"
-	CORE_FLAGS="$CC_FLAGS -D BUILD_NEW_SHELL -D NETWORK_ENABLE=TRUE"
 
 	case "$cfg" in
 	with-csm)
 		OVMF_FLAGS="$OVMF_FLAGS -D CSM_ENABLE"
-		CORE_FLAGS="$CORE_FLAGS -D CSM_ENABLE=TRUE"
 		;;
 	pure-efi)
 		# nothing
@@ -224,11 +211,6 @@ for cfg in pure-efi with-csm; do
 	fi
 	rm -rf Build/OvmfIa32
 
-#	build $CORE_FLAGS -a IA32 -p corebootPkg/corebootPkg.dsc
-#	mkdir -p "coreboot-ia32"
-#	cp Build/corebootIA32/DEBUG_*/FV/COREBOOT.fd coreboot-ia32/COREBOOT-${cfg}.fd
-#	rm -rf Build/corebootIa32
-
 	build $OVMF_FLAGS -a X64 -p OvmfPkg/OvmfPkgX64.dsc
 	mkdir -p "ovmf-x64"
 	cp Build/OvmfX64/DEBUG_*/FV/OVMF.fd ovmf-x64/OVMF-${cfg}.fd
@@ -238,11 +220,6 @@ for cfg in pure-efi with-csm; do
 		build_iso X64
 	fi
 	rm -rf Build/OvmfX64
-
-#	build $CORE_FLAGS -a X64 -p corebootPkg/corebootPkg.dsc
-#	mkdir -p "coreboot-x64"
-#	cp Build/corebootX64/DEBUG_*/FV/COREBOOT.fd coreboot-x64/COREBOOT-${cfg}.fd
-#	rm -rf Build/corebootX64
 done
 
 ARM_FLAGS="$CROSS_CC_FLAGS"
@@ -342,9 +319,6 @@ done
 
 cp -a arm aarch64 %{buildroot}/usr/share/%{name}
 
-#cp -a	coreboot-* \
-#	%{buildroot}/usr/share/%{name}
-
 %files
 %dir /usr/share/%{name}
 
@@ -374,8 +348,5 @@ cp -a arm aarch64 %{buildroot}/usr/share/%{name}
 %doc FatBinPkg/License.txt
 %dir /usr/share/%{name}
 /usr/share/%{name}/aarch64
-
-#%files coreboot
-#/usr/share/%{name}/coreboot-*
 
 %changelog
