@@ -27,6 +27,7 @@ Patch40:	0001-ArmPlatformPkg-ArmVirtualizationPkg-enable-DEBUG_VER.patch
 Patch41:	0002-ArmPlatformPkg-Bds-generate-ESP-Image-boot-option-if.patch
 Patch42:	0003-ArmPlatformPkg-Bds-check-for-other-defaults-too-if-u.patch
 Patch43:	0004-ArmPlatformPkg-ArmVirtualizationPkg-auto-detect-boot.patch
+Patch44:	0005-ArmPlatformPkg-Bds-initialize-ConIn-ConOut-ErrOut-be.patch
 
 BuildRequires:	iasl
 BuildRequires:	python
@@ -99,6 +100,7 @@ AARCH64 UEFI Firmware
 %patch41 -p1
 %patch42 -p1
 %patch43 -p1
+%patch44 -p1
 #%patch90 -p1
 
 # add openssl
