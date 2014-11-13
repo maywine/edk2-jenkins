@@ -28,6 +28,9 @@ Patch41:	0002-ArmPlatformPkg-Bds-generate-ESP-Image-boot-option-if.patch
 Patch42:	0003-ArmPlatformPkg-Bds-check-for-other-defaults-too-if-u.patch
 Patch43:	0004-ArmPlatformPkg-ArmVirtualizationPkg-auto-detect-boot.patch
 Patch44:	0005-ArmPlatformPkg-Bds-initialize-ConIn-ConOut-ErrOut-be.patch
+Patch45:	0006-ArmPlatformPkg-Bds-let-FindCandidate-search-all-file.patch
+Patch46:	0007-ArmPlatformPkg-Bds-FindCandidateOnHandle-log-full-de.patch
+
 
 BuildRequires:	iasl
 BuildRequires:	python
@@ -101,6 +104,8 @@ AARCH64 UEFI Firmware
 %patch42 -p1
 %patch43 -p1
 %patch44 -p1
+%patch45 -p1
+%patch46 -p1
 #%patch90 -p1
 
 # add openssl

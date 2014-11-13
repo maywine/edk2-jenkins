@@ -1,7 +1,7 @@
 From 1c468ec0e315bffcd0f9fa5d69657dcba349a1aa Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Wed, 27 Nov 2013 01:07:05 +0100
-Subject: [PATCH 2/4] ArmPlatformPkg/Bds: generate ESP Image boot option if
+Subject: [PATCH 2/7] ArmPlatformPkg/Bds: generate ESP Image boot option if
  user pref is unset
 
 This hack is probably not upstreamable, but it should ease development:

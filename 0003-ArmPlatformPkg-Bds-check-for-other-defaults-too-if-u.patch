@@ -1,7 +1,7 @@
 From 192e25daa1eee9e250d6597ed98555b4395359cb Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Fri, 13 Dec 2013 22:02:37 +0100
-Subject: [PATCH 3/4] ArmPlatformPkg/Bds: check for other defaults too if user
+Subject: [PATCH 3/7] ArmPlatformPkg/Bds: check for other defaults too if user
  pref is unset
 
 Contributed-under: TianoCore Contribution Agreement 1.0
