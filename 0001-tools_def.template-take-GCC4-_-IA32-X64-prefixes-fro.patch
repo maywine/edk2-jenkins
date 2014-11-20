@@ -1,4 +1,4 @@
-From 90720b5a0331dabf7e4ebd740ebb77f32f95b163 Mon Sep 17 00:00:00 2001
+From 71bfe6b2e19ddcc0645a54ec7cfeb0f186351308 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Wed, 29 Jan 2014 13:13:11 +0100
 Subject: [PATCH] tools_def.template: take GCC4?_(IA32|X64) prefixes from the
@@ -22,7 +22,7 @@ Signed-off-by: Laszlo Ersek <lersek@redhat.com>
  1 file changed, 12 insertions(+), 12 deletions(-)
 
 diff --git a/BaseTools/Conf/tools_def.template b/BaseTools/Conf/tools_def.template
-index 302a90e..570c037 100644
+index 302a90e..68d7bb0 100644
 --- a/BaseTools/Conf/tools_def.template
 +++ b/BaseTools/Conf/tools_def.template
 @@ -165,25 +165,25 @@ DEFINE CYGWIN_BINIA32          = c:/cygwin/opt/tiano/i386-tiano-pe/i386-tiano-pe
@@ -53,13 +53,13 @@ index 302a90e..570c037 100644
  
 -DEFINE GCC48_IA32_PREFIX       = ENV(GCC48_BIN)
 -DEFINE GCC48_X64_PREFIX        = ENV(GCC48_BIN)
-+DEFINE GCC48_IA32_PREFIX       = ENV(GCC48_BIN)/ENV(GCC48_IA32_PREFIX)
-+DEFINE GCC48_X64_PREFIX        = ENV(GCC48_BIN)/ENV(GCC48_X64_PREFIX)
++DEFINE GCC48_IA32_PREFIX       = ENV(GCC48_BIN)ENV(GCC48_IA32_PREFIX)
++DEFINE GCC48_X64_PREFIX        = ENV(GCC48_BIN)ENV(GCC48_X64_PREFIX)
  
 -DEFINE GCC49_IA32_PREFIX       = ENV(GCC49_BIN)
 -DEFINE GCC49_X64_PREFIX        = ENV(GCC49_BIN)
-+DEFINE GCC49_IA32_PREFIX       = ENV(GCC49_BIN)/ENV(GCC49_IA32_PREFIX)
-+DEFINE GCC49_X64_PREFIX        = ENV(GCC49_BIN)/ENV(GCC49_X64_PREFIX)
++DEFINE GCC49_IA32_PREFIX       = ENV(GCC49_BIN)ENV(GCC49_IA32_PREFIX)
++DEFINE GCC49_X64_PREFIX        = ENV(GCC49_BIN)ENV(GCC49_X64_PREFIX)
  
  DEFINE UNIX_IASL_BIN           = ENV(IASL_PREFIX)iasl
  DEFINE WIN_ASL_BIN_DIR         = C:\ASL
