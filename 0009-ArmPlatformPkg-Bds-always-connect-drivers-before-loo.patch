@@ -1,0 +1,43 @@
+From 1e1cd128fe38aa76b416320d80109be7c853ce69 Mon Sep 17 00:00:00 2001
+From: Laszlo Ersek <lersek@redhat.com>
+Date: Fri, 21 Nov 2014 03:40:53 +0100
+Subject: [PATCH 9/9] ArmPlatformPkg/Bds: always connect drivers before looking
+ at boot options
+
+A long standing issue in ARM BDS has been that it can attempt to load a
+preexistent, absolute devpath option without first connecting the
+necessary drivers and devices, fail, and drop to the boot menu.
+
+Connect drivers and devices unconditionally, before we look at anything
+boot option related.
+
+Contributed-under: TianoCore Contribution Agreement 1.0
+Signed-off-by: Laszlo Ersek <lersek@redhat.com>
+---
+ ArmPlatformPkg/Bds/Bds.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/ArmPlatformPkg/Bds/Bds.c b/ArmPlatformPkg/Bds/Bds.c
+index 5bec9ad..50b8da9 100644
+--- a/ArmPlatformPkg/Bds/Bds.c
++++ b/ArmPlatformPkg/Bds/Bds.c
+@@ -342,7 +342,6 @@ DefineDefaultBootEntries (
+   Status = gRT->GetVariable (L"BootOrder", &gEfiGlobalVariableGuid, NULL, &Size, NULL);
+   if (Status == EFI_NOT_FOUND) {
+     if ((PcdGetPtr(PcdDefaultBootDevicePath) == NULL) || (StrLen ((CHAR16*)PcdGetPtr(PcdDefaultBootDevicePath)) == 0)) {
+-      BdsConnectAllDrivers();
+       Status = FindCandidate (&BootDevicePath);
+       if (EFI_ERROR (Status)) {
+         DEBUG ((EFI_D_ERROR, "failed to auto-create default boot option: %r\n",
+@@ -669,6 +668,8 @@ BdsEntry (
+   Status = gBS->CalculateCrc32 ((VOID*)gST, gST->Hdr.HeaderSize, &gST->Hdr.CRC32);
+   ASSERT_EFI_ERROR (Status);
+ 
++  BdsConnectAllDrivers();
++
+   // If Boot Order does not exist then create a default entry
+   DefineDefaultBootEntries ();
+ 
+-- 
+1.8.3.1
+

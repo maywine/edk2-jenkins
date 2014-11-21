@@ -30,7 +30,8 @@ Patch43:	0004-ArmPlatformPkg-ArmVirtualizationPkg-auto-detect-boot.patch
 Patch44:	0005-ArmPlatformPkg-Bds-initialize-ConIn-ConOut-ErrOut-be.patch
 Patch45:	0006-ArmPlatformPkg-Bds-let-FindCandidate-search-all-file.patch
 Patch46:	0007-ArmPlatformPkg-Bds-FindCandidateOnHandle-log-full-de.patch
-
+Patch47:	0008-ArmPlatformPkg-Bds-fall-back-to-Boot-Menu-when-no-de.patch
+Patch48:	0009-ArmPlatformPkg-Bds-always-connect-drivers-before-loo.patch
 
 BuildRequires:	iasl
 BuildRequires:	python
@@ -106,6 +107,8 @@ AARCH64 UEFI Firmware
 %patch44 -p1
 %patch45 -p1
 %patch46 -p1
+%patch47 -p1
+%patch48 -p1
 #%patch90 -p1
 
 # add openssl

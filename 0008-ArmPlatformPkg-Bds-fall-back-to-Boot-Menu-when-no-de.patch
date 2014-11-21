@@ -1,0 +1,69 @@
+From a24d2550750cf3772913945e5ef3f2d5e17dffb0 Mon Sep 17 00:00:00 2001
+From: Laszlo Ersek <lersek@redhat.com>
+Date: Fri, 21 Nov 2014 02:52:56 +0100
+Subject: [PATCH 8/9] ArmPlatformPkg/Bds: fall back to Boot Menu when no
+ default option was found
+
+The StartDefaultBootOnTimeout() function assumes that its predecessor
+DefineDefaultBootEntries() sets up at least one default boot option,
+unconditionally (even if that boot option can't actually be booted later).
+
+With our FindCandidate() logic in place, this is no longer guaranteed. If
+FindCandidate() fails, then StartDefaultBootOnTimeout() may dereference
+the uninitialized BootOrder pointer.
+
+Prevent this by checking the return value of
+GetGlobalEnvironmentVariable(L"BootOrder"). And, if it's not found, don't
+even start the countdown, just go straight to the boot menu.
+
+Contributed-under: TianoCore Contribution Agreement 1.0
+Signed-off-by: Laszlo Ersek <lersek@redhat.com>
+---
+ ArmPlatformPkg/Bds/Bds.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/ArmPlatformPkg/Bds/Bds.c b/ArmPlatformPkg/Bds/Bds.c
+index 0bef8f0..5bec9ad 100644
+--- a/ArmPlatformPkg/Bds/Bds.c
++++ b/ArmPlatformPkg/Bds/Bds.c
+@@ -475,6 +475,15 @@ StartDefaultBootOnTimeout (
+   EFI_STATUS          Status;
+   EFI_INPUT_KEY       Key;
+ 
++  Status = GetGlobalEnvironmentVariable (L"BootOrder", NULL, &BootOrderSize,
++             (VOID**)&BootOrder);
++  if (EFI_ERROR (Status)) {
++    //
++    // proceed to Boot Menu immediately
++    //
++    return Status;
++  }
++
+   Size = sizeof(UINT16);
+   Timeout = (UINT16)PcdGet16 (PcdPlatformBootTimeOut);
+   Status = GetGlobalEnvironmentVariable (L"Timeout", &Timeout, &Size, (VOID**)&TimeoutPtr);
+@@ -511,9 +520,6 @@ StartDefaultBootOnTimeout (
+ 
+     // In case of Timeout we start the default boot selection
+     if (Timeout == 0) {
+-      // Get the Boot Option Order from the environment variable (a default value should have been created)
+-      GetGlobalEnvironmentVariable (L"BootOrder", NULL, &BootOrderSize, (VOID**)&BootOrder);
+-
+       for (Index = 0; Index < BootOrderSize / sizeof (UINT16); Index++) {
+         UnicodeSPrint (BootVariableName, 9 * sizeof(CHAR16), L"Boot%04X", BootOrder[Index]);
+         Status = BdsStartBootOption (BootVariableName);
+@@ -523,9 +529,10 @@ StartDefaultBootOnTimeout (
+         }
+         // In case of success, we should not return from this call.
+       }
+-      FreePool (BootOrder);
+     }
+   }
++
++  FreePool (BootOrder);
+   return EFI_SUCCESS;
+ }
+ 
+-- 
+1.8.3.1
+
