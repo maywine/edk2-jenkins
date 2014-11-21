@@ -253,9 +253,9 @@ install	--strip \
 mkdir -p %{buildroot}/usr/share/%{name}/ovmf-ia32
 cp	ovmf-ia32/* \
 	%{buildroot}/usr/share/%{name}/ovmf-ia32
-ln -s	OVMF-with-csm.fd \
+ln -s	OVMF-pure-efi.fd \
 	%{buildroot}/usr/share/%{name}/ovmf-ia32/bios.bin
-ln -s	OVMF-with-csm.fd \
+ln -s	OVMF-pure-efi.fd \
 	%{buildroot}/usr/share/%{name}/ovmf-ia32/bios-256k.bin
 
 for ext in rom bin; do
@@ -291,7 +291,7 @@ done
 mkdir -p %{buildroot}/usr/share/%{name}/ovmf-x64
 cp	ovmf-x64/* \
 	%{buildroot}/usr/share/%{name}/ovmf-x64
-ln -s	OVMF-with-csm.fd \
+ln -s	OVMF-pure-efi.fd \
 	%{buildroot}/usr/share/%{name}/ovmf-x64/bios.bin
 
 for ext in rom bin; do
