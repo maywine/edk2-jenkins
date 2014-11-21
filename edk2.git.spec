@@ -199,7 +199,7 @@ build_iso()
 		-o "$ISO_IMAGE" -- "$UEFI_SHELL_IMAGE"
 }
 
-for cfg in pure-efi; do
+for cfg in pure-efi with-csm; do
 	OVMF_FLAGS="$CC_FLAGS -D SECURE_BOOT_ENABLE"
 
 	case "$cfg" in
