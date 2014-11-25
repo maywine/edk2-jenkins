@@ -241,9 +241,11 @@ mkdir -p "arm" "aarch64"
 cp Build/ArmVirtualizationQemu-ARM/DEBUG_*/FV/*.fd arm
 cp Build/ArmVirtualizationQemu-AARCH64/DEBUG_*/FV/*.fd aarch64
 for fd in {arm,aarch64}/*.fd; do
-	img="${fd%.fd}-pflash.img"
-	dd of="$img" if="/dev/zero" bs=1M count=64
-	dd of="$img" if="$fd" conv=notrunc
+	code="${fd%.fd}-pflash.raw"
+	vars="${fd%%/*}/vars-template-pflash.raw"
+	dd of="$code" if="/dev/zero" bs=1M count=64
+	dd of="$code" if="$fd" conv=notrunc
+	dd of="$vars" if="/dev/zero" bs=1M count=64
 done
 
 %install
