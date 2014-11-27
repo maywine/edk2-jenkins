@@ -22,6 +22,7 @@ Patch12:	0003-OvmfPkg-SmbiosPlatformDxe-install-patch-default-lega.patch
 Patch20:	0001-OvmfPkg-EnrollDefaultKeys-application-for-enrolling-.patch
 
 Patch30:	0001-tools_def.template-take-GCC4-_-IA32-X64-prefixes-fro.patch
+Patch31:	0001-OvmfPkg-disable-multi-processor-support-for-boot-tim.patch
 
 Patch40:	0001-ArmPlatformPkg-ArmVirtualizationPkg-enable-DEBUG_VER.patch
 Patch41:	0002-ArmPlatformPkg-Bds-generate-ESP-Image-boot-option-if.patch
@@ -100,6 +101,8 @@ AARCH64 UEFI Firmware
 %patch12 -p1
 %patch20 -p1
 %patch30 -p1
+%patch31 -p1
+
 %patch40 -p1
 %patch41 -p1
 %patch42 -p1
