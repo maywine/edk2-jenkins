@@ -1,7 +1,7 @@
-From 1c468ec0e315bffcd0f9fa5d69657dcba349a1aa Mon Sep 17 00:00:00 2001
+From 8e52f7e33dddc49b04772ad8b385b2b184ba30de Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Wed, 27 Nov 2013 01:07:05 +0100
-Subject: [PATCH 2/7] ArmPlatformPkg/Bds: generate ESP Image boot option if
+Subject: [PATCH 2/9] ArmPlatformPkg/Bds: generate ESP Image boot option if
  user pref is unset
 
 This hack is probably not upstreamable, but it should ease development:
@@ -106,7 +106,7 @@ index debc932..8844bd8 100644
      // Create the entry is the Default values are correct
      if (BootDevicePath != NULL) {
 diff --git a/ArmPlatformPkg/Bds/Bds.inf b/ArmPlatformPkg/Bds/Bds.inf
-index 5a2f86b..7c225b6 100644
+index c3de53c..1e64c5b 100644
 --- a/ArmPlatformPkg/Bds/Bds.inf
 +++ b/ArmPlatformPkg/Bds/Bds.inf
 @@ -53,6 +53,7 @@

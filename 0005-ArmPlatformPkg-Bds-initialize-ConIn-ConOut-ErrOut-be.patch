@@ -1,7 +1,7 @@
-From 57a452b0f9c28bfb01ff3be1d604ae3a2c54a307 Mon Sep 17 00:00:00 2001
+From 82a605ae483d3ec982ecd737f5efaba63dab5f2f Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Fri, 17 Oct 2014 01:06:38 +0200
-Subject: [PATCH 5/7] ArmPlatformPkg/Bds: initialize ConIn/ConOut/ErrOut before
+Subject: [PATCH 5/9] ArmPlatformPkg/Bds: initialize ConIn/ConOut/ErrOut before
  connecting terminals
 
 In the following call tree:

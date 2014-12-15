@@ -1,4 +1,4 @@
-From a24d2550750cf3772913945e5ef3f2d5e17dffb0 Mon Sep 17 00:00:00 2001
+From 8763a1f88027b92d441ab08c239054073e2a2acc Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Fri, 21 Nov 2014 02:52:56 +0100
 Subject: [PATCH 8/9] ArmPlatformPkg/Bds: fall back to Boot Menu when no

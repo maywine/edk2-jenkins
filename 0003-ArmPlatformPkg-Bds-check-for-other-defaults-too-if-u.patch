@@ -1,7 +1,7 @@
-From 192e25daa1eee9e250d6597ed98555b4395359cb Mon Sep 17 00:00:00 2001
+From 421dec8910e238abff3c0bfb14302c71340ecbd0 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Fri, 13 Dec 2013 22:02:37 +0100
-Subject: [PATCH 3/7] ArmPlatformPkg/Bds: check for other defaults too if user
+Subject: [PATCH 3/9] ArmPlatformPkg/Bds: check for other defaults too if user
  pref is unset
 
 Contributed-under: TianoCore Contribution Agreement 1.0
@@ -100,13 +100,13 @@ index 8844bd8..bc72d01 100644
        }
        if (EFI_ERROR (Status)) {
 diff --git a/ArmPlatformPkg/Bds/Bds.inf b/ArmPlatformPkg/Bds/Bds.inf
-index 7c225b6..bd69259 100644
+index 1e64c5b..d8cd8f0 100644
 --- a/ArmPlatformPkg/Bds/Bds.inf
 +++ b/ArmPlatformPkg/Bds/Bds.inf
-@@ -64,6 +64,7 @@
-   gEfiDevicePathToTextProtocolGuid
-   gEfiFirmwareVolumeBlockProtocolGuid
+@@ -66,6 +66,7 @@
    gEfiFirmwareVolumeBlock2ProtocolGuid
+   gEfiDhcp4ServiceBindingProtocolGuid
+   gEfiMtftp4ServiceBindingProtocolGuid
 +  gEfiSimpleFileSystemProtocolGuid
  
  [Pcd]

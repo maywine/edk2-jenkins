@@ -1,7 +1,7 @@
-From 6423ebf09e7581823f4dea948a1c405632bf8fbe Mon Sep 17 00:00:00 2001
+From aab91ef6a281110db801a6758d2b7cc42fa50505 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Thu, 13 Nov 2014 15:18:41 +0100
-Subject: [PATCH 6/7] ArmPlatformPkg/Bds: let FindCandidate() search all
+Subject: [PATCH 6/9] ArmPlatformPkg/Bds: let FindCandidate() search all
  filesystems
 
 Thus far FindCandidate() has looked only at the EFI System Partition that

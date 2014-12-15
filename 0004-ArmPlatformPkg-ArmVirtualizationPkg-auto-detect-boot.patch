@@ -1,7 +1,7 @@
-From c40b4fa4f74175bd0bebb3d8d5782ef38858acf7 Mon Sep 17 00:00:00 2001
+From 225b90d705a45302ccdba1bc43d0cd3a5c357596 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Sun, 21 Sep 2014 23:16:14 +0200
-Subject: [PATCH 4/7] ArmPlatformPkg/ArmVirtualizationPkg: auto-detect boot
+Subject: [PATCH 4/9] ArmPlatformPkg/ArmVirtualizationPkg: auto-detect boot
  path
 
 Contributed-under: TianoCore Contribution Agreement 1.0
@@ -11,7 +11,7 @@ Signed-off-by: Laszlo Ersek <lersek@redhat.com>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc b/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
-index 276cce7..a311c21 100644
+index a0b1355..98fa98c 100644
 --- a/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
 +++ b/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
 @@ -115,9 +115,9 @@

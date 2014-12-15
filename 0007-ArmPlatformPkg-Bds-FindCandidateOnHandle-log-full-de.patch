@@ -1,7 +1,7 @@
-From 12569efa62f81a89e98268787a12eafe3f3bacfa Mon Sep 17 00:00:00 2001
+From 90e571ced2df8337d7f7a1d1fd49f03e8392c73b Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Thu, 13 Nov 2014 15:18:42 +0100
-Subject: [PATCH 7/7] ArmPlatformPkg/Bds: FindCandidateOnHandle(): log full
+Subject: [PATCH 7/9] ArmPlatformPkg/Bds: FindCandidateOnHandle(): log full
  device path
 
 Since we scan several handles / devices now, log the full device path when
@@ -50,7 +50,7 @@ index f255a25..0bef8f0 100644
  CloseRoot:
    RootDir->Close (RootDir);
 diff --git a/ArmPlatformPkg/Bds/Bds.inf b/ArmPlatformPkg/Bds/Bds.inf
-index bd69259..4d37e2a 100644
+index d8cd8f0..69cf996 100644
 --- a/ArmPlatformPkg/Bds/Bds.inf
 +++ b/ArmPlatformPkg/Bds/Bds.inf
 @@ -48,6 +48,7 @@
