@@ -1,4 +1,4 @@
-From aab91ef6a281110db801a6758d2b7cc42fa50505 Mon Sep 17 00:00:00 2001
+From 684b90bb09eb57cb21956746e6ea86bce87849e8 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Thu, 13 Nov 2014 15:18:41 +0100
 Subject: [PATCH 6/9] ArmPlatformPkg/Bds: let FindCandidate() search all
@@ -21,7 +21,7 @@ Signed-off-by: Laszlo Ersek <lersek@redhat.com>
  1 file changed, 39 insertions(+), 12 deletions(-)
 
 diff --git a/ArmPlatformPkg/Bds/Bds.c b/ArmPlatformPkg/Bds/Bds.c
-index bd9d5dd..f255a25 100644
+index a0ca7c4..6f70483 100644
 --- a/ArmPlatformPkg/Bds/Bds.c
 +++ b/ArmPlatformPkg/Bds/Bds.c
 @@ -214,7 +214,7 @@ InitializeConsole (

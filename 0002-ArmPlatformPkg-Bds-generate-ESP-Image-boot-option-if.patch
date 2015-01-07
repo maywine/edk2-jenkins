@@ -1,4 +1,4 @@
-From 8e52f7e33dddc49b04772ad8b385b2b184ba30de Mon Sep 17 00:00:00 2001
+From 023995e06a9d06e3861a9b9865a07bcdbd4eb44c Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Wed, 27 Nov 2013 01:07:05 +0100
 Subject: [PATCH 2/9] ArmPlatformPkg/Bds: generate ESP Image boot option if
@@ -20,7 +20,7 @@ Signed-off-by: Laszlo Ersek <lersek@redhat.com>
  2 files changed, 45 insertions(+), 24 deletions(-)
 
 diff --git a/ArmPlatformPkg/Bds/Bds.c b/ArmPlatformPkg/Bds/Bds.c
-index debc932..8844bd8 100644
+index 971ab07..276a7c0 100644
 --- a/ArmPlatformPkg/Bds/Bds.c
 +++ b/ArmPlatformPkg/Bds/Bds.c
 @@ -20,6 +20,7 @@
@@ -106,13 +106,13 @@ index debc932..8844bd8 100644
      // Create the entry is the Default values are correct
      if (BootDevicePath != NULL) {
 diff --git a/ArmPlatformPkg/Bds/Bds.inf b/ArmPlatformPkg/Bds/Bds.inf
-index c3de53c..1e64c5b 100644
+index 9872ce3..ca1a276 100644
 --- a/ArmPlatformPkg/Bds/Bds.inf
 +++ b/ArmPlatformPkg/Bds/Bds.inf
-@@ -53,6 +53,7 @@
-   gEfiEndOfDxeEventGroupGuid
+@@ -54,6 +54,7 @@
    gEfiFileSystemInfoGuid
    gArmGlobalVariableGuid
+   gArmPlatformUpdateFdtEventGuid
 +  gEfiPartTypeSystemPartGuid
  
  [Protocols]

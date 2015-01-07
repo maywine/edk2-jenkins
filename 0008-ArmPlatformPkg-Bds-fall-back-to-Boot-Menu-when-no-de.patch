@@ -1,4 +1,4 @@
-From 8763a1f88027b92d441ab08c239054073e2a2acc Mon Sep 17 00:00:00 2001
+From c331506d6ad7e8c4e7b49e8258f73eedd005a450 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Fri, 21 Nov 2014 02:52:56 +0100
 Subject: [PATCH 8/9] ArmPlatformPkg/Bds: fall back to Boot Menu when no
@@ -23,7 +23,7 @@ Signed-off-by: Laszlo Ersek <lersek@redhat.com>
  1 file changed, 11 insertions(+), 4 deletions(-)
 
 diff --git a/ArmPlatformPkg/Bds/Bds.c b/ArmPlatformPkg/Bds/Bds.c
-index 0bef8f0..5bec9ad 100644
+index 545cc24..31bcee0 100644
 --- a/ArmPlatformPkg/Bds/Bds.c
 +++ b/ArmPlatformPkg/Bds/Bds.c
 @@ -475,6 +475,15 @@ StartDefaultBootOnTimeout (

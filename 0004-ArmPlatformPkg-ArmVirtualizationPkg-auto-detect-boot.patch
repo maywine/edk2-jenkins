@@ -1,4 +1,4 @@
-From 225b90d705a45302ccdba1bc43d0cd3a5c357596 Mon Sep 17 00:00:00 2001
+From b14a88e8195502e354fad8bde73dc7ab381503e6 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Sun, 21 Sep 2014 23:16:14 +0200
 Subject: [PATCH 4/9] ArmPlatformPkg/ArmVirtualizationPkg: auto-detect boot
@@ -11,10 +11,10 @@ Signed-off-by: Laszlo Ersek <lersek@redhat.com>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc b/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
-index a0b1355..98fa98c 100644
+index 2c65b12..62a53ac 100644
 --- a/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
 +++ b/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
-@@ -115,9 +115,9 @@
+@@ -120,9 +120,9 @@
    #
    # ARM OS Loader
    #

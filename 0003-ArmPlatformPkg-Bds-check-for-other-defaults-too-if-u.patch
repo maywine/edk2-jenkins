@@ -1,4 +1,4 @@
-From 421dec8910e238abff3c0bfb14302c71340ecbd0 Mon Sep 17 00:00:00 2001
+From 04143fe7e68ff8788bf6847ba87cccd478b72b09 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Fri, 13 Dec 2013 22:02:37 +0100
 Subject: [PATCH 3/9] ArmPlatformPkg/Bds: check for other defaults too if user
@@ -12,7 +12,7 @@ Signed-off-by: Laszlo Ersek <lersek@redhat.com>
  2 files changed, 60 insertions(+), 4 deletions(-)
 
 diff --git a/ArmPlatformPkg/Bds/Bds.c b/ArmPlatformPkg/Bds/Bds.c
-index 8844bd8..bc72d01 100644
+index 276a7c0..b376433 100644
 --- a/ArmPlatformPkg/Bds/Bds.c
 +++ b/ArmPlatformPkg/Bds/Bds.c
 @@ -18,6 +18,7 @@
@@ -100,10 +100,10 @@ index 8844bd8..bc72d01 100644
        }
        if (EFI_ERROR (Status)) {
 diff --git a/ArmPlatformPkg/Bds/Bds.inf b/ArmPlatformPkg/Bds/Bds.inf
-index 1e64c5b..d8cd8f0 100644
+index ca1a276..960b9a1 100644
 --- a/ArmPlatformPkg/Bds/Bds.inf
 +++ b/ArmPlatformPkg/Bds/Bds.inf
-@@ -66,6 +66,7 @@
+@@ -67,6 +67,7 @@
    gEfiFirmwareVolumeBlock2ProtocolGuid
    gEfiDhcp4ServiceBindingProtocolGuid
    gEfiMtftp4ServiceBindingProtocolGuid
