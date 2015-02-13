@@ -9,7 +9,7 @@ Group:		Applications/Emulators
 License:	BSD License (two clause)
 URL:		http://sourceforge.net/apps/mediawiki/tianocore/index.php?title=EDK2
 Source0:	edk2.git-g9b141c5.tar.xz
-Source1:	openssl-0.9.8zb.tar.gz
+Source1:	openssl-0.9.8ze.tar.gz
 Patch1:         0001-OvmfPkg-Don-t-build-in-QemuVideoDxe-when-we-have-CSM.patch
 Patch2:         0001-pick-up-any-display-device-not-only-vga.patch
 Patch3:         edk2-no-lock-umb.patch
@@ -116,8 +116,8 @@ AARCH64 UEFI Firmware
 
 # add openssl
 tar -C CryptoPkg/Library/OpensslLib -xf %{SOURCE1}
-(cd CryptoPkg/Library/OpensslLib/openssl-0.9.8zb;
- patch -p0 < ../EDKII_openssl-0.9.8zb.patch)
+(cd CryptoPkg/Library/OpensslLib/openssl-0.9.8ze;
+ patch -p0 < ../EDKII_openssl-0.9.8ze.patch)
 (cd CryptoPkg/Library/OpensslLib; ./Install.sh)
 
 %build
