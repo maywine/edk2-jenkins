@@ -1,4 +1,4 @@
-From b14a88e8195502e354fad8bde73dc7ab381503e6 Mon Sep 17 00:00:00 2001
+From fefc99928b9f7f87d1227a7377231dd37fe85395 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Sun, 21 Sep 2014 23:16:14 +0200
 Subject: [PATCH 4/9] ArmPlatformPkg/ArmVirtualizationPkg: auto-detect boot
@@ -11,10 +11,10 @@ Signed-off-by: Laszlo Ersek <lersek@redhat.com>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc b/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
-index 2c65b12..62a53ac 100644
+index eb2446d..f1f9bf4 100644
 --- a/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
 +++ b/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
-@@ -120,9 +120,9 @@
+@@ -124,9 +124,9 @@
    #
    # ARM OS Loader
    #
@@ -26,7 +26,7 @@ index 2c65b12..62a53ac 100644
 +  gArmPlatformTokenSpaceGuid.PcdDefaultBootArgument|""
    gArmPlatformTokenSpaceGuid.PcdDefaultBootType|0
  
-   # Use the serial console (ConIn & ConOut) and the Graphic driver (ConOut)
+   #
 -- 
 1.8.3.1
 

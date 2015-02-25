@@ -1,4 +1,4 @@
-From 023995e06a9d06e3861a9b9865a07bcdbd4eb44c Mon Sep 17 00:00:00 2001
+From aa759e6bb5893e86e14c45c0335571500bf33965 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Wed, 27 Nov 2013 01:07:05 +0100
 Subject: [PATCH 2/9] ArmPlatformPkg/Bds: generate ESP Image boot option if

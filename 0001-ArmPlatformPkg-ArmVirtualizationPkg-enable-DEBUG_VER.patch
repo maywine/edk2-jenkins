@@ -1,4 +1,4 @@
-From ab4e53ddc51b3cf2c303aa2742ad196ca1f73e93 Mon Sep 17 00:00:00 2001
+From 6dd12ddc549d95474ed30842c30ed292c3774bcd Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Sun, 21 Sep 2014 23:12:09 +0200
 Subject: [PATCH 1/9] ArmPlatformPkg/ArmVirtualizationPkg: enable DEBUG_VERBOSE
@@ -10,11 +10,11 @@ Signed-off-by: Laszlo Ersek <lersek@redhat.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc b/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
-index dff4e25..2c65b12 100644
+index d3384a7..eb2446d 100644
 --- a/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
 +++ b/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
-@@ -87,7 +87,7 @@
-   gEfiMdeModulePkgTokenSpaceGuid.PcdConOutGopSupport|FALSE
+@@ -91,7 +91,7 @@
+   gArmVirtualizationTokenSpaceGuid.PcdKludgeMapPciMmioAsCached|TRUE
  
  [PcdsFixedAtBuild.common]
 -  gEfiMdePkgTokenSpaceGuid.PcdDebugPrintErrorLevel|0x8000004F
