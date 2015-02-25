@@ -1,4 +1,4 @@
-From c18b71ef6deee44125f2690773e8ded99b131f49 Mon Sep 17 00:00:00 2001
+From ce49586bd98201ff5ca4bd42b614b3f2b0168b52 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Wed, 5 Jun 2013 10:28:09 +0200
 Subject: [PATCH 3/3] OvmfPkg/SmbiosPlatformDxe: install+patch default legacy
