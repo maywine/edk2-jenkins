@@ -1,4 +1,4 @@
-From d232478d8ffd59be1a93acd5fd4ea70254f9a1e2 Mon Sep 17 00:00:00 2001
+From 97d27bdf0f5c68f10fa4cbcdeafe5b34a82f13ee Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Wed, 27 Nov 2013 01:07:05 +0100
 Subject: [PATCH 2/9] ArmPlatformPkg/Bds: generate ESP Image boot option if
@@ -16,8 +16,8 @@ Contributed-under: TianoCore Contribution Agreement 1.0
 Signed-off-by: Laszlo Ersek <lersek@redhat.com>
 ---
  ArmPlatformPkg/Bds/Bds.c   | 68 ++++++++++++++++++++++++++++++----------------
- ArmPlatformPkg/Bds/Bds.inf |  2 ++
- 2 files changed, 46 insertions(+), 24 deletions(-)
+ ArmPlatformPkg/Bds/Bds.inf |  1 +
+ 2 files changed, 45 insertions(+), 24 deletions(-)
 
 diff --git a/ArmPlatformPkg/Bds/Bds.c b/ArmPlatformPkg/Bds/Bds.c
 index 971ab07..276a7c0 100644
@@ -106,14 +106,13 @@ index 971ab07..276a7c0 100644
      // Create the entry is the Default values are correct
      if (BootDevicePath != NULL) {
 diff --git a/ArmPlatformPkg/Bds/Bds.inf b/ArmPlatformPkg/Bds/Bds.inf
-index d49b0ef..d24de39 100644
+index d49b0ef..78df86f 100644
 --- a/ArmPlatformPkg/Bds/Bds.inf
 +++ b/ArmPlatformPkg/Bds/Bds.inf
-@@ -53,6 +53,8 @@
+@@ -53,6 +53,7 @@
    gEfiEndOfDxeEventGroupGuid
    gEfiFileSystemInfoGuid
    gArmGlobalVariableGuid
-+  gArmPlatformUpdateFdtEventGuid
 +  gEfiPartTypeSystemPartGuid
  
  [Protocols]

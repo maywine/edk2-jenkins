@@ -1,4 +1,4 @@
-From c16edd07a8b987d341046d64d6a257c164aaa6ba Mon Sep 17 00:00:00 2001
+From 1504e1cd1a0151207520ccccfcb2f46f951aaaee Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Sun, 21 Sep 2014 23:16:14 +0200
 Subject: [PATCH 4/9] ArmPlatformPkg/ArmVirtualizationPkg: auto-detect boot
