@@ -237,8 +237,10 @@ done
 
 ARM_FLAGS="$CROSS_CC_FLAGS"
 build $ARM_FLAGS -a ARM \
+    -D INTEL_BDS \
     -p ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
 build $ARM_FLAGS -a AARCH64 \
+    -D INTEL_BDS \
     -p ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
 mkdir -p "arm" "aarch64"
 cp Build/ArmVirtualizationQemu-ARM/DEBUG_*/FV/*.fd arm
