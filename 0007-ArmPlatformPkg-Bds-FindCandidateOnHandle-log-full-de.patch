@@ -1,4 +1,4 @@
-From 6ad8130386565e53333b61aea1fc7b68337ae9f1 Mon Sep 17 00:00:00 2001
+From 20938b307851edd71ec3ba16ae1d221e22686f76 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Thu, 13 Nov 2014 15:18:42 +0100
 Subject: [PATCH 7/9] ArmPlatformPkg/Bds: FindCandidateOnHandle(): log full
