@@ -253,9 +253,9 @@ for fd in {arm,aarch64}/*.fd; do
 	dd of="$vars" if="/dev/zero" bs=1M count=64
 done
 
-build $CC_FLAGS -a IA32 -p CorebootPayloadPkg\CorebootPayloadPkgIA32.dsc
+build $CC_FLAGS -a IA32 -p CorebootPayloadPkg/CorebootPayloadPkgIA32.dsc
 mkdir -p "coreboot-ia32"
-build $CC_FLAGS -a X64 -p CorebootPayloadPkg\CorebootPayloadPkgX64.dsc
+build $CC_FLAGS -a X64 -p CorebootPayloadPkg/CorebootPayloadPkgX64.dsc
 mkdir -p "coreboot-x64"
 find Build/CorebootPayloadPkg -print
 
