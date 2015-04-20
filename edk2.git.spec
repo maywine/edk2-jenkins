@@ -90,6 +90,24 @@ BuildArch:      noarch
 EFI Development Kit II
 AARCH64 UEFI Firmware
 
+%package coreboot-ia32
+Summary:	Open Virtual Machine Firmware
+License:	BSD License (no advertising) with restrictions on use and redistribution
+BuildArch:      noarch
+%description coreboot-ia32
+EFI Development Kit II
+coreboot payload
+32bit version
+
+%package coreboot-x64
+Summary:	Open Virtual Machine Firmware
+License:	BSD License (no advertising) with restrictions on use and redistribution
+BuildArch:      noarch
+%description coreboot-x64
+EFI Development Kit II
+coreboot payload
+64bit version
+
 %prep
 %setup -q -n %{name}
 %patch1 -p1
@@ -160,7 +178,7 @@ fi
 cp /usr/share/seabios.git-csm/bios-csm.bin OvmfPkg/Csm/Csm16/Csm16.bin
 make -C BaseTools
 
-# go build
+# build key encollment boot iso
 build_iso()
 {
 	local ARCH="$1"
@@ -202,6 +220,7 @@ build_iso()
 		-o "$ISO_IMAGE" -- "$UEFI_SHELL_IMAGE"
 }
 
+# build ovmf
 for cfg in pure-efi with-csm; do
 	OVMF_FLAGS="$CC_FLAGS -D SECURE_BOOT_ENABLE"
 
@@ -235,6 +254,7 @@ for cfg in pure-efi with-csm; do
 	rm -rf Build/OvmfX64
 done
 
+# build arm/aarch64 firmware
 ARM_FLAGS="$CROSS_CC_FLAGS"
 build $ARM_FLAGS -a ARM \
     -D INTEL_BDS \
@@ -253,11 +273,13 @@ for fd in {arm,aarch64}/*.fd; do
 	dd of="$vars" if="/dev/zero" bs=1M count=64
 done
 
-#build $CC_FLAGS -a IA32 -p CorebootPayloadPkg/CorebootPayloadPkgIA32.dsc
-#mkdir -p "coreboot-ia32"
-#build $CC_FLAGS -a X64 -p CorebootPayloadPkg/CorebootPayloadPkgX64.dsc
-#mkdir -p "coreboot-x64"
-#find Build/CorebootPayloadPkg -print
+# build coreboot payload
+build $CC_FLAGS -a IA32 -p CorebootPayloadPkg/CorebootPayloadPkgIa32.dsc
+mkdir -p "coreboot-ia32"
+cp Build/CorebootPayloadPkgIA32/DEBUG_*/FV/*.fd "coreboot-ia32"
+build $CC_FLAGS -a IA32 -a X64 -p CorebootPayloadPkg/CorebootPayloadPkgIa32X64.dsc
+mkdir -p "coreboot-x64"
+cp Build/CorebootPayloadPkgX64/DEBUG_*/FV/*.fd "coreboot-x64"
 
 %install
 mkdir -p %{buildroot}%{_bindir}
@@ -340,7 +362,7 @@ for vga in stdvga cirrus vmware qxl virtio; do
 		%{buildroot}/usr/share/%{name}/ovmf-x64/vgabios-$vga.bin
 done
 
-cp -a arm aarch64 %{buildroot}/usr/share/%{name}
+cp -a arm aarch64 coreboot-* %{buildroot}/usr/share/%{name}
 
 %files
 %dir /usr/share/%{name}
@@ -371,5 +393,15 @@ cp -a arm aarch64 %{buildroot}/usr/share/%{name}
 %doc FatBinPkg/License.txt
 %dir /usr/share/%{name}
 /usr/share/%{name}/aarch64
+
+%files coreboot-ia32
+%doc FatBinPkg/License.txt
+%dir /usr/share/%{name}
+/usr/share/%{name}/coreboot-ia32
+
+%files coreboot-x64
+%doc FatBinPkg/License.txt
+%dir /usr/share/%{name}
+/usr/share/%{name}/coreboot-x64
 
 %changelog
