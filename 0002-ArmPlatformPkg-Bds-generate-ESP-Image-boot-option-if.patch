@@ -1,4 +1,4 @@
-From 6624a09b1ad2fac52024c403eec75076c3ff0652 Mon Sep 17 00:00:00 2001
+From 36f573260b2bd49a53ab82a24f25200c072bb792 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Wed, 27 Nov 2013 01:07:05 +0100
 Subject: [PATCH 2/9] ArmPlatformPkg/Bds: generate ESP Image boot option if
@@ -15,12 +15,12 @@ files only to provide a file called "Image" in the ESP.
 Contributed-under: TianoCore Contribution Agreement 1.0
 Signed-off-by: Laszlo Ersek <lersek@redhat.com>
 ---
- ArmPlatformPkg/Bds/Bds.c   | 68 ++++++++++++++++++++++++++++++----------------
+ ArmPlatformPkg/Bds/Bds.c   | 76 +++++++++++++++++++++++++++++-----------------
  ArmPlatformPkg/Bds/Bds.inf |  1 +
- 2 files changed, 45 insertions(+), 24 deletions(-)
+ 2 files changed, 49 insertions(+), 28 deletions(-)
 
 diff --git a/ArmPlatformPkg/Bds/Bds.c b/ArmPlatformPkg/Bds/Bds.c
-index 971ab07..276a7c0 100644
+index 1fab439..dd391b1 100644
 --- a/ArmPlatformPkg/Bds/Bds.c
 +++ b/ArmPlatformPkg/Bds/Bds.c
 @@ -20,6 +20,7 @@
@@ -31,7 +31,7 @@ index 971ab07..276a7c0 100644
  
  #define EFI_SET_TIMER_TO_SECOND   10000000
  
-@@ -238,30 +239,49 @@ DefineDefaultBootEntries (
+@@ -238,34 +239,53 @@ DefineDefaultBootEntries (
    Status = gRT->GetVariable (L"BootOrder", &gEfiGlobalVariableGuid, NULL, &Size, NULL);
    if (Status == EFI_NOT_FOUND) {
      if ((PcdGetPtr(PcdDefaultBootDevicePath) == NULL) || (StrLen ((CHAR16*)PcdGetPtr(PcdDefaultBootDevicePath)) == 0)) {
@@ -55,7 +55,11 @@ index 971ab07..276a7c0 100644
 -      ASSERT_EFI_ERROR(Status);
 -      DevicePathTxt = DevicePathToTextProtocol->ConvertDevicePathToText (BootDevicePath, TRUE, TRUE);
 -
--      ASSERT (StrCmp ((CHAR16*)PcdGetPtr(PcdDefaultBootDevicePath), DevicePathTxt) == 0);
+-      if (StrCmp ((CHAR16*)PcdGetPtr (PcdDefaultBootDevicePath), DevicePathTxt) != 0) {
+-        DEBUG ((EFI_D_ERROR, "Device Path given: '%s' Device Path expected: '%s'\n",
+-            (CHAR16*)PcdGetPtr (PcdDefaultBootDevicePath), DevicePathTxt));
+-        ASSERT_EFI_ERROR (EFI_INVALID_PARAMETER);
+-      }
 -
 -      FreePool (DevicePathTxt);
 -    DEBUG_CODE_END();
@@ -97,7 +101,11 @@ index 971ab07..276a7c0 100644
 +        ASSERT_EFI_ERROR(Status);
 +        DevicePathTxt = DevicePathToTextProtocol->ConvertDevicePathToText (BootDevicePath, TRUE, TRUE);
 +
-+        ASSERT (StrCmp ((CHAR16*)PcdGetPtr(PcdDefaultBootDevicePath), DevicePathTxt) == 0);
++        if (StrCmp ((CHAR16*)PcdGetPtr (PcdDefaultBootDevicePath), DevicePathTxt) != 0) {
++          DEBUG ((EFI_D_ERROR, "Device Path given: '%s' Device Path expected: '%s'\n",
++              (CHAR16*)PcdGetPtr (PcdDefaultBootDevicePath), DevicePathTxt));
++          ASSERT_EFI_ERROR (EFI_INVALID_PARAMETER);
++        }
 +
 +        FreePool (DevicePathTxt);
 +      DEBUG_CODE_END();
@@ -106,7 +114,7 @@ index 971ab07..276a7c0 100644
      // Create the entry is the Default values are correct
      if (BootDevicePath != NULL) {
 diff --git a/ArmPlatformPkg/Bds/Bds.inf b/ArmPlatformPkg/Bds/Bds.inf
-index d49b0ef..78df86f 100644
+index e04c86d..ad10045 100644
 --- a/ArmPlatformPkg/Bds/Bds.inf
 +++ b/ArmPlatformPkg/Bds/Bds.inf
 @@ -53,6 +53,7 @@

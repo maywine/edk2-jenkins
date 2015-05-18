@@ -1,4 +1,4 @@
-From 449888b252138a33cc94bce099262ee52b55b69e Mon Sep 17 00:00:00 2001
+From 88616149035171a976241cfda536879326435b52 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Fri, 13 Dec 2013 22:02:37 +0100
 Subject: [PATCH 3/9] ArmPlatformPkg/Bds: check for other defaults too if user
@@ -12,7 +12,7 @@ Signed-off-by: Laszlo Ersek <lersek@redhat.com>
  2 files changed, 60 insertions(+), 4 deletions(-)
 
 diff --git a/ArmPlatformPkg/Bds/Bds.c b/ArmPlatformPkg/Bds/Bds.c
-index 276a7c0..b376433 100644
+index dd391b1..b197c96 100644
 --- a/ArmPlatformPkg/Bds/Bds.c
 +++ b/ArmPlatformPkg/Bds/Bds.c
 @@ -18,6 +18,7 @@
@@ -100,7 +100,7 @@ index 276a7c0..b376433 100644
        }
        if (EFI_ERROR (Status)) {
 diff --git a/ArmPlatformPkg/Bds/Bds.inf b/ArmPlatformPkg/Bds/Bds.inf
-index 78df86f..2d23f13 100644
+index ad10045..d9a8a4c 100644
 --- a/ArmPlatformPkg/Bds/Bds.inf
 +++ b/ArmPlatformPkg/Bds/Bds.inf
 @@ -66,6 +66,7 @@

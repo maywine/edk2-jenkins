@@ -1,4 +1,4 @@
-From e1b259925c0c4be3d26042b8e298ccb4b4ab9071 Mon Sep 17 00:00:00 2001
+From cd442ef20492e93a57d104edaa3bd35b8843f5ed Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Fri, 17 Oct 2014 01:06:38 +0200
 Subject: [PATCH 5/9] ArmPlatformPkg/Bds: initialize ConIn/ConOut/ErrOut before
@@ -29,10 +29,10 @@ Signed-off-by: Laszlo Ersek <lersek@redhat.com>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/ArmPlatformPkg/Bds/Bds.c b/ArmPlatformPkg/Bds/Bds.c
-index b376433..a0ca7c4 100644
+index b197c96..3ad5e2e 100644
 --- a/ArmPlatformPkg/Bds/Bds.c
 +++ b/ArmPlatformPkg/Bds/Bds.c
-@@ -616,9 +616,6 @@ BdsEntry (
+@@ -620,9 +620,6 @@ BdsEntry (
          0, NULL);
    }
  
@@ -42,7 +42,7 @@ index b376433..a0ca7c4 100644
    // Now we need to setup the EFI System Table with information about the console devices.
    InitializeConsole ();
  
-@@ -629,6 +626,9 @@ BdsEntry (
+@@ -633,6 +630,9 @@ BdsEntry (
    Status = gBS->CalculateCrc32 ((VOID*)gST, gST->Hdr.HeaderSize, &gST->Hdr.CRC32);
    ASSERT_EFI_ERROR (Status);
  

@@ -1,4 +1,4 @@
-From 20938b307851edd71ec3ba16ae1d221e22686f76 Mon Sep 17 00:00:00 2001
+From b47c0c13e2dc52b28825dfc57640381e30c84139 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Thu, 13 Nov 2014 15:18:42 +0100
 Subject: [PATCH 7/9] ArmPlatformPkg/Bds: FindCandidateOnHandle(): log full
@@ -15,7 +15,7 @@ Signed-off-by: Laszlo Ersek <lersek@redhat.com>
  2 files changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/ArmPlatformPkg/Bds/Bds.c b/ArmPlatformPkg/Bds/Bds.c
-index 6f70483..545cc24 100644
+index 6472ece..74c4c75 100644
 --- a/ArmPlatformPkg/Bds/Bds.c
 +++ b/ArmPlatformPkg/Bds/Bds.c
 @@ -16,6 +16,7 @@
@@ -50,7 +50,7 @@ index 6f70483..545cc24 100644
  CloseRoot:
    RootDir->Close (RootDir);
 diff --git a/ArmPlatformPkg/Bds/Bds.inf b/ArmPlatformPkg/Bds/Bds.inf
-index 2d23f13..6f6e31c 100644
+index d9a8a4c..925aa17 100644
 --- a/ArmPlatformPkg/Bds/Bds.inf
 +++ b/ArmPlatformPkg/Bds/Bds.inf
 @@ -48,6 +48,7 @@

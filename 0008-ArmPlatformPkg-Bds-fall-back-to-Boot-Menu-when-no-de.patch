@@ -1,4 +1,4 @@
-From 93e312a3ac46bbc97b89974bd1b4ea3bc0ae4382 Mon Sep 17 00:00:00 2001
+From 444d617d184fa3170006358f78d91d34642fec3f Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Fri, 21 Nov 2014 02:52:56 +0100
 Subject: [PATCH 8/9] ArmPlatformPkg/Bds: fall back to Boot Menu when no
@@ -23,10 +23,10 @@ Signed-off-by: Laszlo Ersek <lersek@redhat.com>
  1 file changed, 11 insertions(+), 4 deletions(-)
 
 diff --git a/ArmPlatformPkg/Bds/Bds.c b/ArmPlatformPkg/Bds/Bds.c
-index 545cc24..31bcee0 100644
+index 74c4c75..8f1e3f5 100644
 --- a/ArmPlatformPkg/Bds/Bds.c
 +++ b/ArmPlatformPkg/Bds/Bds.c
-@@ -475,6 +475,15 @@ StartDefaultBootOnTimeout (
+@@ -479,6 +479,15 @@ StartDefaultBootOnTimeout (
    EFI_STATUS          Status;
    EFI_INPUT_KEY       Key;
  
@@ -42,7 +42,7 @@ index 545cc24..31bcee0 100644
    Size = sizeof(UINT16);
    Timeout = (UINT16)PcdGet16 (PcdPlatformBootTimeOut);
    Status = GetGlobalEnvironmentVariable (L"Timeout", &Timeout, &Size, (VOID**)&TimeoutPtr);
-@@ -511,9 +520,6 @@ StartDefaultBootOnTimeout (
+@@ -515,9 +524,6 @@ StartDefaultBootOnTimeout (
  
      // In case of Timeout we start the default boot selection
      if (Timeout == 0) {
@@ -52,7 +52,7 @@ index 545cc24..31bcee0 100644
        for (Index = 0; Index < BootOrderSize / sizeof (UINT16); Index++) {
          UnicodeSPrint (BootVariableName, 9 * sizeof(CHAR16), L"Boot%04X", BootOrder[Index]);
          Status = BdsStartBootOption (BootVariableName);
-@@ -523,9 +529,10 @@ StartDefaultBootOnTimeout (
+@@ -527,9 +533,10 @@ StartDefaultBootOnTimeout (
          }
          // In case of success, we should not return from this call.
        }
