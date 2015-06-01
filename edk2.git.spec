@@ -284,6 +284,7 @@ install	--strip \
 	BaseTools/Source/C/bin/VolInfo \
 	%{buildroot}%{_bindir}
 
+mkdir -p %{buildroot}/usr/share/%{name}
 cp -a ovmf-* arm aarch64 coreboot-* %{buildroot}/usr/share/%{name}
 
 %files
