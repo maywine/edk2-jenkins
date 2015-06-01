@@ -54,8 +54,6 @@ EFI Development Kit II Tools
 
 %package ovmf-ia32
 Summary:	Open Virtual Machine Firmware
-Requires:       ipxe.git-combined
-Requires:       seavgabios.git
 License:	BSD License (no advertising) with restrictions on use and redistribution
 BuildArch:      noarch
 %description ovmf-ia32
@@ -65,8 +63,6 @@ Open Virtual Machine Firmware
 
 %package ovmf-x64
 Summary:	Open Virtual Machine Firmware
-Requires:       ipxe.git-combined
-Requires:       seavgabios.git
 License:	BSD License (no advertising) with restrictions on use and redistribution
 BuildArch:      noarch
 %description ovmf-x64
@@ -288,81 +284,7 @@ install	--strip \
 	BaseTools/Source/C/bin/VolInfo \
 	%{buildroot}%{_bindir}
 
-mkdir -p %{buildroot}/usr/share/%{name}/ovmf-ia32
-cp	ovmf-ia32/* \
-	%{buildroot}/usr/share/%{name}/ovmf-ia32
-ln -s	OVMF-pure-efi.fd \
-	%{buildroot}/usr/share/%{name}/ovmf-ia32/bios.bin
-ln -s	OVMF-pure-efi.fd \
-	%{buildroot}/usr/share/%{name}/ovmf-ia32/bios-256k.bin
-
-for ext in rom bin; do
-  ln -s	../../ipxe.git/combined/8086100e.rom \
-	%{buildroot}/usr/share/%{name}/ovmf-ia32/pxe-e1000.$ext
-  ln -s	../../ipxe.git/combined/10ec8029.rom \
-	%{buildroot}/usr/share/%{name}/ovmf-ia32/pxe-ne2k_pci.$ext
-  ln -s	../../ipxe.git/combined/10222000.rom \
-	%{buildroot}/usr/share/%{name}/ovmf-ia32/pxe-pcnet.$ext
-  ln -s	../../ipxe.git/combined/10ec8139.rom \
-	%{buildroot}/usr/share/%{name}/ovmf-ia32/pxe-rtl8139.$ext
-  ln -s	../../ipxe.git/combined/1af41000.rom \
-	%{buildroot}/usr/share/%{name}/ovmf-ia32/pxe-virtio.$ext
-done
-for ext in rom; do
-  ln -s	../../ipxe.git/combined/8086100e.rom \
-	%{buildroot}/usr/share/%{name}/ovmf-ia32/efi-e1000.$ext
-  ln -s	../../ipxe.git/combined/10ec8029.rom \
-	%{buildroot}/usr/share/%{name}/ovmf-ia32/efi-ne2k_pci.$ext
-  ln -s	../../ipxe.git/combined/10222000.rom \
-	%{buildroot}/usr/share/%{name}/ovmf-ia32/efi-pcnet.$ext
-  ln -s	../../ipxe.git/combined/10ec8139.rom \
-	%{buildroot}/usr/share/%{name}/ovmf-ia32/efi-rtl8139.$ext
-  ln -s	../../ipxe.git/combined/1af41000.rom \
-	%{buildroot}/usr/share/%{name}/ovmf-ia32/efi-virtio.$ext
-done
-
-for vga in stdvga cirrus vmware qxl virtio; do
-	ln -s	../../seavgabios.git/vgabios-$vga.bin \
-		%{buildroot}/usr/share/%{name}/ovmf-ia32/vgabios-$vga.bin
-done
-
-mkdir -p %{buildroot}/usr/share/%{name}/ovmf-x64
-cp	ovmf-x64/* \
-	%{buildroot}/usr/share/%{name}/ovmf-x64
-ln -s	OVMF-pure-efi.fd \
-	%{buildroot}/usr/share/%{name}/ovmf-x64/bios.bin
-
-for ext in rom bin; do
-  ln -s	../../ipxe.git/combined/8086100e.rom \
-	%{buildroot}/usr/share/%{name}/ovmf-x64/pxe-e1000.$ext
-  ln -s	../../ipxe.git/combined/10ec8029.rom \
-	%{buildroot}/usr/share/%{name}/ovmf-x64/pxe-ne2k_pci.$ext
-  ln -s	../../ipxe.git/combined/10222000.rom \
-	%{buildroot}/usr/share/%{name}/ovmf-x64/pxe-pcnet.$ext
-  ln -s	../../ipxe.git/combined/10ec8139.rom \
-	%{buildroot}/usr/share/%{name}/ovmf-x64/pxe-rtl8139.$ext
-  ln -s	../../ipxe.git/combined/1af41000.rom \
-	%{buildroot}/usr/share/%{name}/ovmf-x64/pxe-virtio.$ext
-done
-for ext in rom; do
-  ln -s	../../ipxe.git/combined/8086100e.rom \
-	%{buildroot}/usr/share/%{name}/ovmf-x64/efi-e1000.$ext
-  ln -s	../../ipxe.git/combined/10ec8029.rom \
-	%{buildroot}/usr/share/%{name}/ovmf-x64/efi-ne2k_pci.$ext
-  ln -s	../../ipxe.git/combined/10222000.rom \
-	%{buildroot}/usr/share/%{name}/ovmf-x64/efi-pcnet.$ext
-  ln -s	../../ipxe.git/combined/10ec8139.rom \
-	%{buildroot}/usr/share/%{name}/ovmf-x64/efi-rtl8139.$ext
-  ln -s	../../ipxe.git/combined/1af41000.rom \
-	%{buildroot}/usr/share/%{name}/ovmf-x64/efi-virtio.$ext
-done
-
-for vga in stdvga cirrus vmware qxl virtio; do
-	ln -s	../../seavgabios.git/vgabios-$vga.bin \
-		%{buildroot}/usr/share/%{name}/ovmf-x64/vgabios-$vga.bin
-done
-
-cp -a arm aarch64 coreboot-* %{buildroot}/usr/share/%{name}
+cp -a ovmf-* arm aarch64 coreboot-* %{buildroot}/usr/share/%{name}
 
 %files
 %dir /usr/share/%{name}
