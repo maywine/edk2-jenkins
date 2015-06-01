@@ -258,13 +258,13 @@ done
 ARM_FLAGS="$CROSS_CC_FLAGS"
 build $ARM_FLAGS -a ARM \
     -D INTEL_BDS \
-    -p ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
+    -p ArmVirtPkg/ArmVirtQemu.dsc
 build $ARM_FLAGS -a AARCH64 \
     -D INTEL_BDS \
-    -p ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
+    -p ArmVirtPkg/ArmVirtQemu.dsc
 mkdir -p "arm" "aarch64"
-cp Build/ArmVirtualizationQemu-ARM/DEBUG_*/FV/*.fd arm
-cp Build/ArmVirtualizationQemu-AARCH64/DEBUG_*/FV/*.fd aarch64
+cp Build/ArmVirtQemu-ARM/DEBUG_*/FV/*.fd arm
+cp Build/ArmVirtQemu-AARCH64/DEBUG_*/FV/*.fd aarch64
 for fd in {arm,aarch64}/*.fd; do
 	code="${fd%.fd}-pflash.raw"
 	vars="${fd%%/*}/vars-template-pflash.raw"

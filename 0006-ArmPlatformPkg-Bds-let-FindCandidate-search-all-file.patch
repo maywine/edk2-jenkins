@@ -1,4 +1,4 @@
-From 920dcccb8209a70aed2af1972963e57520885627 Mon Sep 17 00:00:00 2001
+From b0d7379c5835e2e9da01b9738165028af5ea2c5a Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Thu, 13 Nov 2014 15:18:41 +0100
 Subject: [PATCH 6/9] ArmPlatformPkg/Bds: let FindCandidate() search all

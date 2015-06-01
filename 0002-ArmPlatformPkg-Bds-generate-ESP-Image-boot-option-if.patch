@@ -1,4 +1,4 @@
-From 36f573260b2bd49a53ab82a24f25200c072bb792 Mon Sep 17 00:00:00 2001
+From 0ce6ae398c6aace0a1331330eb07d9092d03a2f9 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Wed, 27 Nov 2013 01:07:05 +0100
 Subject: [PATCH 2/9] ArmPlatformPkg/Bds: generate ESP Image boot option if
@@ -15,9 +15,9 @@ files only to provide a file called "Image" in the ESP.
 Contributed-under: TianoCore Contribution Agreement 1.0
 Signed-off-by: Laszlo Ersek <lersek@redhat.com>
 ---
- ArmPlatformPkg/Bds/Bds.c   | 76 +++++++++++++++++++++++++++++-----------------
+ ArmPlatformPkg/Bds/Bds.c   | 66 ++++++++++++++++++++++++++++++----------------
  ArmPlatformPkg/Bds/Bds.inf |  1 +
- 2 files changed, 49 insertions(+), 28 deletions(-)
+ 2 files changed, 44 insertions(+), 23 deletions(-)
 
 diff --git a/ArmPlatformPkg/Bds/Bds.c b/ArmPlatformPkg/Bds/Bds.c
 index 1fab439..dd391b1 100644
@@ -37,7 +37,9 @@ index 1fab439..dd391b1 100644
      if ((PcdGetPtr(PcdDefaultBootDevicePath) == NULL) || (StrLen ((CHAR16*)PcdGetPtr(PcdDefaultBootDevicePath)) == 0)) {
 -      return EFI_UNSUPPORTED;
 -    }
--
++      UINTN      NrHandles;
++      EFI_HANDLE *Handles;
+ 
 -    Status = gBS->LocateProtocol (&gEfiDevicePathFromTextProtocolGuid, NULL, (VOID **)&EfiDevicePathFromTextProtocol);
 -    if (EFI_ERROR(Status)) {
 -      // You must provide an implementation of DevicePathFromTextProtocol in your firmware (eg: DevicePathDxe)
@@ -45,27 +47,6 @@ index 1fab439..dd391b1 100644
 -      return Status;
 -    }
 -    BootDevicePath = EfiDevicePathFromTextProtocol->ConvertTextToDevicePath ((CHAR16*)PcdGetPtr(PcdDefaultBootDevicePath));
--
--    DEBUG_CODE_BEGIN();
--      // We convert back to the text representation of the device Path to see if the initial text is correct
--      EFI_DEVICE_PATH_TO_TEXT_PROTOCOL* DevicePathToTextProtocol;
--      CHAR16* DevicePathTxt;
--
--      Status = gBS->LocateProtocol(&gEfiDevicePathToTextProtocolGuid, NULL, (VOID **)&DevicePathToTextProtocol);
--      ASSERT_EFI_ERROR(Status);
--      DevicePathTxt = DevicePathToTextProtocol->ConvertDevicePathToText (BootDevicePath, TRUE, TRUE);
--
--      if (StrCmp ((CHAR16*)PcdGetPtr (PcdDefaultBootDevicePath), DevicePathTxt) != 0) {
--        DEBUG ((EFI_D_ERROR, "Device Path given: '%s' Device Path expected: '%s'\n",
--            (CHAR16*)PcdGetPtr (PcdDefaultBootDevicePath), DevicePathTxt));
--        ASSERT_EFI_ERROR (EFI_INVALID_PARAMETER);
--      }
--
--      FreePool (DevicePathTxt);
--    DEBUG_CODE_END();
-+      UINTN      NrHandles;
-+      EFI_HANDLE *Handles;
-+
 +      BdsConnectAllDrivers();
 +      Status = gBS->LocateHandleBuffer (ByProtocol,
 +                      &gEfiPartTypeSystemPartGuid, NULL /* SearchKey */,
@@ -91,22 +72,36 @@ index 1fab439..dd391b1 100644
 +        return Status;
 +      }
 +      BootDevicePath = EfiDevicePathFromTextProtocol->ConvertTextToDevicePath ((CHAR16*)PcdGetPtr(PcdDefaultBootDevicePath));
-+
+ 
+-    DEBUG_CODE_BEGIN();
+-      // We convert back to the text representation of the device Path to see if the initial text is correct
+-      EFI_DEVICE_PATH_TO_TEXT_PROTOCOL* DevicePathToTextProtocol;
+-      CHAR16* DevicePathTxt;
 +      DEBUG_CODE_BEGIN();
 +        // We convert back to the text representation of the device Path to see if the initial text is correct
 +        EFI_DEVICE_PATH_TO_TEXT_PROTOCOL* DevicePathToTextProtocol;
 +        CHAR16* DevicePathTxt;
-+
+ 
+-      Status = gBS->LocateProtocol(&gEfiDevicePathToTextProtocolGuid, NULL, (VOID **)&DevicePathToTextProtocol);
+-      ASSERT_EFI_ERROR(Status);
+-      DevicePathTxt = DevicePathToTextProtocol->ConvertDevicePathToText (BootDevicePath, TRUE, TRUE);
 +        Status = gBS->LocateProtocol(&gEfiDevicePathToTextProtocolGuid, NULL, (VOID **)&DevicePathToTextProtocol);
 +        ASSERT_EFI_ERROR(Status);
 +        DevicePathTxt = DevicePathToTextProtocol->ConvertDevicePathToText (BootDevicePath, TRUE, TRUE);
-+
+ 
+-      if (StrCmp ((CHAR16*)PcdGetPtr (PcdDefaultBootDevicePath), DevicePathTxt) != 0) {
+-        DEBUG ((EFI_D_ERROR, "Device Path given: '%s' Device Path expected: '%s'\n",
+-            (CHAR16*)PcdGetPtr (PcdDefaultBootDevicePath), DevicePathTxt));
+-        ASSERT_EFI_ERROR (EFI_INVALID_PARAMETER);
+-      }
 +        if (StrCmp ((CHAR16*)PcdGetPtr (PcdDefaultBootDevicePath), DevicePathTxt) != 0) {
 +          DEBUG ((EFI_D_ERROR, "Device Path given: '%s' Device Path expected: '%s'\n",
 +              (CHAR16*)PcdGetPtr (PcdDefaultBootDevicePath), DevicePathTxt));
 +          ASSERT_EFI_ERROR (EFI_INVALID_PARAMETER);
 +        }
-+
+ 
+-      FreePool (DevicePathTxt);
+-    DEBUG_CODE_END();
 +        FreePool (DevicePathTxt);
 +      DEBUG_CODE_END();
 +    }

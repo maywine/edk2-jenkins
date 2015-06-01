@@ -1,4 +1,4 @@
-From 88616149035171a976241cfda536879326435b52 Mon Sep 17 00:00:00 2001
+From 4485503a18aa9279038475adc0957f44b685f11b Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Fri, 13 Dec 2013 22:02:37 +0100
 Subject: [PATCH 3/9] ArmPlatformPkg/Bds: check for other defaults too if user

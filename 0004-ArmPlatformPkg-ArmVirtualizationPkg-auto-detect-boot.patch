@@ -1,4 +1,4 @@
-From 1b52aee0d74614166109485bb559fa69bbb70a52 Mon Sep 17 00:00:00 2001
+From 05ef0ad43caa8c7e0cfc313ce3cb86bed2b02313 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Sun, 21 Sep 2014 23:16:14 +0200
 Subject: [PATCH 4/9] ArmPlatformPkg/ArmVirtualizationPkg: auto-detect boot
@@ -7,13 +7,13 @@ Subject: [PATCH 4/9] ArmPlatformPkg/ArmVirtualizationPkg: auto-detect boot
 Contributed-under: TianoCore Contribution Agreement 1.0
 Signed-off-by: Laszlo Ersek <lersek@redhat.com>
 ---
- ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc | 6 +++---
+ ArmVirtPkg/ArmVirtQemu.dsc | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc b/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
-index 67364e9..e9e7bd7 100644
---- a/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
-+++ b/ArmPlatformPkg/ArmVirtualizationPkg/ArmVirtualizationQemu.dsc
+diff --git a/ArmVirtPkg/ArmVirtQemu.dsc b/ArmVirtPkg/ArmVirtQemu.dsc
+index b0ed8d9..e3314c0 100644
+--- a/ArmVirtPkg/ArmVirtQemu.dsc
++++ b/ArmVirtPkg/ArmVirtQemu.dsc
 @@ -130,9 +130,9 @@
    #
    # ARM OS Loader
