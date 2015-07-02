@@ -1,4 +1,4 @@
-From c8fe70adff69ae68ba70c588d45928bc162cc0a1 Mon Sep 17 00:00:00 2001
+From 650046e539b090c0adcc8eccc35875ec8035798e Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Wed, 1 Oct 2014 21:11:19 +0200
 Subject: [PATCH] OvmfPkg: EnrollDefaultKeys: application for enrolling default
@@ -1076,12 +1076,12 @@ index 0000000..34c9f26
 +  UefiLib
 +  UefiRuntimeServicesTableLib
 diff --git a/OvmfPkg/OvmfPkgIa32.dsc b/OvmfPkg/OvmfPkgIa32.dsc
-index 8527ece..fe75268 100644
+index bb008f6..543029f 100644
 --- a/OvmfPkg/OvmfPkgIa32.dsc
 +++ b/OvmfPkg/OvmfPkgIa32.dsc
-@@ -563,6 +563,10 @@
-       OpensslLib|CryptoPkg/Library/OpensslLib/OpensslLib.inf
-   }
+@@ -597,6 +597,10 @@
+ 
+ !if $(SECURE_BOOT_ENABLE) == TRUE
    SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe.inf
 +  OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf {
 +    <LibraryClasses>
@@ -1091,12 +1091,12 @@ index 8527ece..fe75268 100644
  
    OvmfPkg/PlatformDxe/Platform.inf
 diff --git a/OvmfPkg/OvmfPkgIa32X64.dsc b/OvmfPkg/OvmfPkgIa32X64.dsc
-index 823f005..eca3973 100644
+index fed584f..8268652 100644
 --- a/OvmfPkg/OvmfPkgIa32X64.dsc
 +++ b/OvmfPkg/OvmfPkgIa32X64.dsc
-@@ -570,6 +570,10 @@
-       OpensslLib|CryptoPkg/Library/OpensslLib/OpensslLib.inf
-   }
+@@ -604,6 +604,10 @@
+ 
+ !if $(SECURE_BOOT_ENABLE) == TRUE
    SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe.inf
 +  OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf {
 +    <LibraryClasses>
@@ -1106,12 +1106,12 @@ index 823f005..eca3973 100644
  
    OvmfPkg/PlatformDxe/Platform.inf
 diff --git a/OvmfPkg/OvmfPkgX64.dsc b/OvmfPkg/OvmfPkgX64.dsc
-index 40c18de..5c200e3 100644
+index 92af10f..d6921d0 100644
 --- a/OvmfPkg/OvmfPkgX64.dsc
 +++ b/OvmfPkg/OvmfPkgX64.dsc
-@@ -568,6 +568,10 @@
-       OpensslLib|CryptoPkg/Library/OpensslLib/OpensslLib.inf
-   }
+@@ -602,6 +602,10 @@
+ 
+ !if $(SECURE_BOOT_ENABLE) == TRUE
    SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe.inf
 +  OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf {
 +    <LibraryClasses>
