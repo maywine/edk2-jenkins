@@ -255,11 +255,9 @@ done
 ARM_FLAGS="$CROSS_CC_FLAGS"
 build $ARM_FLAGS -a ARM \
     -D INTEL_BDS \
-    -D SECURE_BOOT_ENABLE \
     -p ArmVirtPkg/ArmVirtQemu.dsc
 build $ARM_FLAGS -a AARCH64 \
     -D INTEL_BDS \
-    -D SECURE_BOOT_ENABLE \
     -p ArmVirtPkg/ArmVirtQemu.dsc
 mkdir -p "arm" "aarch64"
 cp Build/ArmVirtQemu-ARM/DEBUG_*/FV/*.fd arm
