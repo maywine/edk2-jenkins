@@ -1,6 +1,6 @@
-From 650046e539b090c0adcc8eccc35875ec8035798e Mon Sep 17 00:00:00 2001
+From b3bc8aa82eccda416297b7abf444e4e03a937b2c Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
-Date: Wed, 1 Oct 2014 21:11:19 +0200
+Date: Mon, 6 Jul 2015 20:22:02 +0200
 Subject: [PATCH] OvmfPkg: EnrollDefaultKeys: application for enrolling default
  keys
 
@@ -41,14 +41,15 @@ DB:
 - "Microsoft Corporation UEFI CA 2011" -- to load Linux and signed PCI
   oproms.
 
+Contributed-under: TianoCore Contribution Agreement 1.0
 Signed-off-by: Laszlo Ersek <lersek@redhat.com>
 ---
  OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c   | 961 ++++++++++++++++++++++++
- OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf |  50 ++
+ OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf |  51 ++
  OvmfPkg/OvmfPkgIa32.dsc                         |   4 +
  OvmfPkg/OvmfPkgIa32X64.dsc                      |   4 +
  OvmfPkg/OvmfPkgX64.dsc                          |   4 +
- 5 files changed, 1023 insertions(+)
+ 5 files changed, 1024 insertions(+)
  create mode 100644 OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c
  create mode 100644 OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf
 
@@ -1021,10 +1022,10 @@ index 0000000..29de6e2
 +}
 diff --git a/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf b/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf
 new file mode 100644
-index 0000000..34c9f26
+index 0000000..ac919bb
 --- /dev/null
 +++ b/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf
-@@ -0,0 +1,50 @@
+@@ -0,0 +1,51 @@
 +## @file
 +#  Enroll default PK, KEK, DB.
 +#
@@ -1057,6 +1058,7 @@ index 0000000..34c9f26
 +
 +[Packages]
 +  MdePkg/MdePkg.dec
++  MdeModulePkg/MdeModulePkg.dec
 +  SecurityPkg/SecurityPkg.dec
 +  ShellPkg/ShellPkg.dec
 +
