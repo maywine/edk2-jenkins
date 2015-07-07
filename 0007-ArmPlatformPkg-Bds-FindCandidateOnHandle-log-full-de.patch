@@ -1,4 +1,4 @@
-From 5506fbab9510b7707e5b0d75e00c51ec09a7c917 Mon Sep 17 00:00:00 2001
+From 2352cd9cecafafb1e113d982101f82dcc09496d0 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Thu, 13 Nov 2014 15:18:42 +0100
 Subject: [PATCH 7/9] ArmPlatformPkg/Bds: FindCandidateOnHandle(): log full
@@ -50,10 +50,10 @@ index 6472ece..74c4c75 100644
  CloseRoot:
    RootDir->Close (RootDir);
 diff --git a/ArmPlatformPkg/Bds/Bds.inf b/ArmPlatformPkg/Bds/Bds.inf
-index d9a8a4c..925aa17 100644
+index d30fbb0..6be7320 100644
 --- a/ArmPlatformPkg/Bds/Bds.inf
 +++ b/ArmPlatformPkg/Bds/Bds.inf
-@@ -48,6 +48,7 @@
+@@ -49,6 +49,7 @@
    PrintLib
    BaseLib
    NetLib

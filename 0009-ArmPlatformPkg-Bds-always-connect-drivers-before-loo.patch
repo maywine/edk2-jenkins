@@ -1,4 +1,4 @@
-From 442195b81371d1d2c9110148c7fc273769ac7ebd Mon Sep 17 00:00:00 2001
+From f59d5410e06c02766fae2ee89357663a61a9e706 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Fri, 21 Nov 2014 03:40:53 +0100
 Subject: [PATCH 9/9] ArmPlatformPkg/Bds: always connect drivers before looking
