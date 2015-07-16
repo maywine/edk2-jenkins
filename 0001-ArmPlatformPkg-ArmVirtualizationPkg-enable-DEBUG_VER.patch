@@ -1,4 +1,4 @@
-From 2912c84763b02d0aa48103d4d7c89d0043237ea5 Mon Sep 17 00:00:00 2001
+From 531fca06adb33cc0ccad04a39ca3b9893c7dc761 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Sun, 21 Sep 2014 23:12:09 +0200
 Subject: [PATCH 1/9] ArmPlatformPkg/ArmVirtualizationPkg: enable DEBUG_VERBOSE
@@ -10,7 +10,7 @@ Signed-off-by: Laszlo Ersek <lersek@redhat.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/ArmVirtPkg/ArmVirtQemu.dsc b/ArmVirtPkg/ArmVirtQemu.dsc
-index 0671469..ae9aed1 100644
+index 0d4f4b0..cf49f9a 100644
 --- a/ArmVirtPkg/ArmVirtQemu.dsc
 +++ b/ArmVirtPkg/ArmVirtQemu.dsc
 @@ -99,6 +99,7 @@

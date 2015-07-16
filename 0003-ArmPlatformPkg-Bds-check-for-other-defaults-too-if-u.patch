@@ -1,4 +1,4 @@
-From 69f2a53baf9985fc08c494df2faba72ccde8b726 Mon Sep 17 00:00:00 2001
+From 60f86cf1b8822cbf18fdcf45de83d25d3af723ac Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Fri, 13 Dec 2013 22:02:37 +0100
 Subject: [PATCH 3/9] ArmPlatformPkg/Bds: check for other defaults too if user
@@ -12,7 +12,7 @@ Signed-off-by: Laszlo Ersek <lersek@redhat.com>
  2 files changed, 60 insertions(+), 4 deletions(-)
 
 diff --git a/ArmPlatformPkg/Bds/Bds.c b/ArmPlatformPkg/Bds/Bds.c
-index dd391b1..b197c96 100644
+index 803cd08..e8c6846 100644
 --- a/ArmPlatformPkg/Bds/Bds.c
 +++ b/ArmPlatformPkg/Bds/Bds.c
 @@ -18,6 +18,7 @@
@@ -87,7 +87,7 @@ index dd391b1..b197c96 100644
  EFI_STATUS
  DefineDefaultBootEntries (
    VOID
-@@ -248,10 +306,7 @@ DefineDefaultBootEntries (
+@@ -242,10 +300,7 @@ DefineDefaultBootEntries (
                        &NrHandles, &Handles);
        if (!EFI_ERROR (Status)) {
          ASSERT (NrHandles > 0);
@@ -100,17 +100,17 @@ index dd391b1..b197c96 100644
        }
        if (EFI_ERROR (Status)) {
 diff --git a/ArmPlatformPkg/Bds/Bds.inf b/ArmPlatformPkg/Bds/Bds.inf
-index 1c6c8bf..d30fbb0 100644
+index 442bf2f..f516cf7 100644
 --- a/ArmPlatformPkg/Bds/Bds.inf
 +++ b/ArmPlatformPkg/Bds/Bds.inf
-@@ -68,6 +68,7 @@
+@@ -73,6 +73,7 @@
    gEfiFirmwareVolumeBlock2ProtocolGuid
    gEfiDhcp4ServiceBindingProtocolGuid
    gEfiMtftp4ServiceBindingProtocolGuid
 +  gEfiSimpleFileSystemProtocolGuid
  
- [Pcd]
-   gArmPlatformTokenSpaceGuid.PcdFirmwareVendor
+ [FeaturePcd]
+   gArmPlatformTokenSpaceGuid.PcdBdsLinuxSupport
 -- 
 1.8.3.1
 

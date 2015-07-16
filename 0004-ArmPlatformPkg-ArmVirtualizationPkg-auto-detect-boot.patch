@@ -1,4 +1,4 @@
-From 21b5731ae18ca386455563e93e8a8cdeb87acadb Mon Sep 17 00:00:00 2001
+From e570c1744c727ad8de6eff8d808e86a6e77412ad Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Sun, 21 Sep 2014 23:16:14 +0200
 Subject: [PATCH 4/9] ArmPlatformPkg/ArmVirtualizationPkg: auto-detect boot
@@ -11,7 +11,7 @@ Signed-off-by: Laszlo Ersek <lersek@redhat.com>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/ArmVirtPkg/ArmVirtQemu.dsc b/ArmVirtPkg/ArmVirtQemu.dsc
-index ae9aed1..61ddf57 100644
+index cf49f9a..eb6e31a 100644
 --- a/ArmVirtPkg/ArmVirtQemu.dsc
 +++ b/ArmVirtPkg/ArmVirtQemu.dsc
 @@ -131,9 +131,9 @@
@@ -24,9 +24,9 @@ index ae9aed1..61ddf57 100644
 +  gArmPlatformTokenSpaceGuid.PcdDefaultBootDescription|L"Linux from first ESP"
 +  gArmPlatformTokenSpaceGuid.PcdDefaultBootDevicePath|L""
 +  gArmPlatformTokenSpaceGuid.PcdDefaultBootArgument|""
-   gArmPlatformTokenSpaceGuid.PcdDefaultBootType|0
  
    #
+   # Settings for ARM BDS -- use the serial console (ConIn & ConOut).
 -- 
 1.8.3.1
 
