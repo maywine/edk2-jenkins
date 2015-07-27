@@ -1,8 +1,8 @@
-From a25325c649a7b0813e17ceeee624a089e56b1021 Mon Sep 17 00:00:00 2001
+From 0e182f2305a84fdf62ff2631de6e363a5a881287 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Wed, 5 Jun 2013 10:14:34 +0200
 Subject: [PATCH 1/3] OvmfPkg/SmbiosPlatformDxe: install legacy QEMU tables and
- save fields
+ save fields (X86)
 
 Introduce basic legacy SMBIOS machinery for the QEMU platform:
 - Install SMBIOS tables that QEMU passes down in complete form via fw_cfg.
@@ -11,15 +11,14 @@ Introduce basic legacy SMBIOS machinery for the QEMU platform:
 - Add helper functions that OVMF's default SMBIOS tables will need.
 
 Contributed-under: TianoCore Contribution Agreement 1.0
-
 Signed-off-by: Laszlo Ersek <lersek@redhat.com>
 ---
  OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c          | 694 ++++++++++++++++++++++++
  OvmfPkg/SmbiosPlatformDxe/QemuLegacy.h          |  52 ++
  OvmfPkg/SmbiosPlatformDxe/QemuLegacyInternal.h  | 221 ++++++++
- OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.c   |  13 +-
+ OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.c   |  17 +-
  OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf |   2 +
- 5 files changed, 979 insertions(+), 3 deletions(-)
+ 5 files changed, 983 insertions(+), 3 deletions(-)
  create mode 100644 OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c
  create mode 100644 OvmfPkg/SmbiosPlatformDxe/QemuLegacy.h
  create mode 100644 OvmfPkg/SmbiosPlatformDxe/QemuLegacyInternal.h
@@ -1010,7 +1009,7 @@ index 0000000..8613407
 +
 +#endif
 diff --git a/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.c b/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.c
-index f70db2f..bf21385 100644
+index 29948a4..b7c1d0d 100644
 --- a/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.c
 +++ b/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.c
 @@ -1,6 +1,7 @@
@@ -1021,15 +1020,17 @@ index f70db2f..bf21385 100644
    Copyright (c) 2011, Bei Guan <gbtju85@gmail.com>
    Copyright (c) 2011 - 2015, Intel Corporation. All rights reserved.<BR>
  
-@@ -15,6 +16,7 @@
+@@ -15,6 +16,9 @@
  **/
  
  #include "SmbiosPlatformDxe.h"
++#if defined (MDE_CPU_IA32) || defined (MDE_CPU_X64)
 +#include "QemuLegacy.h"
++#endif
  
  #define TYPE0_STRINGS \
    "EFI Development Kit II / OVMF\0"     /* Vendor */ \
-@@ -27,10 +29,10 @@
+@@ -27,10 +31,10 @@
  typedef struct {
    SMBIOS_TABLE_TYPE0 Base;
    UINT8              Strings[sizeof(TYPE0_STRINGS)];
@@ -1042,22 +1043,24 @@ index f70db2f..bf21385 100644
    {
      // SMBIOS_STRUCTURE Hdr
      {
-@@ -237,7 +239,12 @@ SmbiosTablePublishEntry (
+@@ -202,7 +206,14 @@ SmbiosTablePublishEntry (
      SmbiosTables = GetQemuSmbiosTables ();
    }
  
 -  if (SmbiosTables != NULL) {
 +  if (SmbiosTables == NULL) {
++#if defined (MDE_CPU_IA32) || defined (MDE_CPU_X64)
 +    //
 +    // Handle QEMU's legacy SMBIOS interface.
 +    //
 +    Status = InstallQemuSmbiosTables (Smbios, ImageHandle);
++#endif
 +  } else {
      Status = InstallAllStructures (Smbios, SmbiosTables);
  
      //
 diff --git a/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf b/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf
-index 6596392..d51ef52 100644
+index 3b90aac..8c9f43c 100644
 --- a/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf
 +++ b/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf
 @@ -1,6 +1,7 @@
@@ -1068,14 +1071,14 @@ index 6596392..d51ef52 100644
  #  Copyright (c) 2011, Bei Guan <gbtju85@gmail.com>
  #  Copyright (c) 2011, Intel Corporation. All rights reserved.<BR>
  #
-@@ -33,6 +34,7 @@
-   SmbiosPlatformDxe.c
-   Xen.c
-   Qemu.c
+@@ -35,6 +36,7 @@
+ 
+ [Sources.IA32, Sources.X64]
+   X86Xen.c
 +  QemuLegacy.c
  
- [Packages]
-   MdePkg/MdePkg.dec
+ [Sources.ARM, Sources.AARCH64]
+   ArmXen.c
 -- 
 1.8.3.1
 

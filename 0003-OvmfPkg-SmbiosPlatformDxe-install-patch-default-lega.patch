@@ -1,11 +1,10 @@
-From 7fd1c784408549c842beb5e50fa341ff1058b3a7 Mon Sep 17 00:00:00 2001
+From 1b10131728dd1cff48ef1ce46820d89f21708852 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Wed, 5 Jun 2013 10:28:09 +0200
 Subject: [PATCH 3/3] OvmfPkg/SmbiosPlatformDxe: install+patch default legacy
- type1 table
+ type1 table (X86)
 
 Contributed-under: TianoCore Contribution Agreement 1.0
-
 Signed-off-by: Laszlo Ersek <lersek@redhat.com>
 ---
  OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c          |   5 +
@@ -255,17 +254,17 @@ index 0000000..ff48164
 +  return EFI_SUCCESS;
 +}
 diff --git a/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf b/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf
-index 8e673eb..4849713 100644
+index 3483b9c..1f7dfca 100644
 --- a/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf
 +++ b/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf
-@@ -36,6 +36,7 @@
-   Qemu.c
+@@ -38,6 +38,7 @@
+   X86Xen.c
    QemuLegacy.c
    QemuType0.c
 +  QemuType1.c
  
- [Packages]
-   MdePkg/MdePkg.dec
+ [Sources.ARM, Sources.AARCH64]
+   ArmXen.c
 -- 
 1.8.3.1
 
