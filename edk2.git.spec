@@ -25,16 +25,6 @@ Patch20:	0001-OvmfPkg-EnrollDefaultKeys-application-for-enrolling-.patch
 Patch30:	0001-tools_def.template-take-GCC4-_-IA32-X64-prefixes-fro.patch
 Patch31:	0001-OvmfPkg-disable-multi-processor-support-for-boot-tim.patch
 
-Patch40:	0001-ArmPlatformPkg-ArmVirtualizationPkg-enable-DEBUG_VER.patch
-Patch41:	0002-ArmPlatformPkg-Bds-generate-ESP-Image-boot-option-if.patch
-Patch42:	0003-ArmPlatformPkg-Bds-check-for-other-defaults-too-if-u.patch
-Patch43:	0004-ArmPlatformPkg-ArmVirtualizationPkg-auto-detect-boot.patch
-Patch44:	0005-ArmPlatformPkg-Bds-initialize-ConIn-ConOut-ErrOut-be.patch
-Patch45:	0006-ArmPlatformPkg-Bds-let-FindCandidate-search-all-file.patch
-Patch46:	0007-ArmPlatformPkg-Bds-FindCandidateOnHandle-log-full-de.patch
-Patch47:	0008-ArmPlatformPkg-Bds-fall-back-to-Boot-Menu-when-no-de.patch
-Patch48:	0009-ArmPlatformPkg-Bds-always-connect-drivers-before-loo.patch
-
 BuildRequires:	iasl
 BuildRequires:	python
 BuildRequires:	libuuid-devel
@@ -117,17 +107,6 @@ coreboot payload
 %patch20 -p1
 %patch30 -p1
 %patch31 -p1
-
-%patch40 -p1
-%patch41 -p1
-%patch42 -p1
-%patch43 -p1
-%patch44 -p1
-%patch45 -p1
-%patch46 -p1
-%patch47 -p1
-%patch48 -p1
-#%patch90 -p1
 
 # add openssl
 tar -C CryptoPkg/Library/OpensslLib -xf %{SOURCE1}
@@ -254,10 +233,10 @@ done
 # build arm/aarch64 firmware
 ARM_FLAGS="$CROSS_CC_FLAGS"
 build $ARM_FLAGS -a ARM \
-    -D INTEL_BDS \
+    -D DEBUG_PRINT_ERROR_LEVEL=0x8040004F \
     -p ArmVirtPkg/ArmVirtQemu.dsc
 build $ARM_FLAGS -a AARCH64 \
-    -D INTEL_BDS \
+    -D DEBUG_PRINT_ERROR_LEVEL=0x8040004F \
     -p ArmVirtPkg/ArmVirtQemu.dsc
 mkdir -p "arm" "aarch64"
 cp Build/ArmVirtQemu-ARM/DEBUG_*/FV/*.fd arm
