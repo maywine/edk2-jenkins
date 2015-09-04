@@ -126,6 +126,8 @@ case "$GCCVER" in
 4.7*)	CC_FLAGS="-t GCC47";;
 4.8*)	CC_FLAGS="-t GCC48";;
 4.9*)	CC_FLAGS="-t GCC49";;
+5.0*)	CC_FLAGS="-t GCC49";;
+5.1*)	CC_FLAGS="-t GCC49";;
 esac
 
 CROSSGCCVER=$(arm-linux-gnu-gcc --version | awk '{ print $3; exit}')
