@@ -136,7 +136,8 @@ case "$CROSSGCCVER" in
         export GCC48_ARM_PREFIX="arm-linux-gnu-"
         export GCC48_AARCH64_PREFIX="aarch64-linux-gnu-"
         ;;
-4.9*)	CROSS_CC_FLAGS="-t GCC49"
+4.9* | 5.*)
+	CROSS_CC_FLAGS="-t GCC49"
         export GCC49_ARM_PREFIX="arm-linux-gnu-"
         export GCC49_AARCH64_PREFIX="aarch64-linux-gnu-"
         ;;
