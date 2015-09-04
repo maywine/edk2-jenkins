@@ -26,6 +26,7 @@ Patch30:	0001-tools_def.template-take-GCC4-_-IA32-X64-prefixes-fro.patch
 Patch31:	0001-OvmfPkg-disable-multi-processor-support-for-boot-tim.patch
 
 BuildRequires:	iasl
+BuildRequires:	nasm
 BuildRequires:	python
 BuildRequires:	libuuid-devel
 BuildRequires:	seabios.git-csm
