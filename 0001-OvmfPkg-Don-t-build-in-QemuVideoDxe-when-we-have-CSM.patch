@@ -1,4 +1,4 @@
-From 993abe7dacd43d19e7caeffc794ac7c0980e62e9 Mon Sep 17 00:00:00 2001
+From eb46fe87cc0e594c5f78fc23b3904f8a55a9a08c Mon Sep 17 00:00:00 2001
 From: David Woodhouse <David.Woodhouse@intel.com>
 Date: Fri, 8 Feb 2013 21:44:08 +0000
 Subject: [PATCH] OvmfPkg: Don't build in QemuVideoDxe when we have CSM
@@ -14,18 +14,18 @@ Signed-off-by: David Woodhouse <David.Woodhouse@intel.com>
 Reviewed-by: Laszlo Ersek <lersek@redhat.com>
 ---
  OvmfPkg/OvmfPkgIa32.dsc    | 2 ++
- OvmfPkg/OvmfPkgIa32.fdf    | 3 ++-
+ OvmfPkg/OvmfPkgIa32.fdf    | 5 +++--
  OvmfPkg/OvmfPkgIa32X64.dsc | 2 ++
- OvmfPkg/OvmfPkgIa32X64.fdf | 3 ++-
+ OvmfPkg/OvmfPkgIa32X64.fdf | 5 +++--
  OvmfPkg/OvmfPkgX64.dsc     | 2 ++
- OvmfPkg/OvmfPkgX64.fdf     | 3 ++-
- 6 files changed, 12 insertions(+), 3 deletions(-)
+ OvmfPkg/OvmfPkgX64.fdf     | 5 +++--
+ 6 files changed, 15 insertions(+), 6 deletions(-)
 
 diff --git a/OvmfPkg/OvmfPkgIa32.dsc b/OvmfPkg/OvmfPkgIa32.dsc
-index 5adf4c0..b903fd2 100644
+index 6f2e7f3..5d86a6c 100644
 --- a/OvmfPkg/OvmfPkgIa32.dsc
 +++ b/OvmfPkg/OvmfPkgIa32.dsc
-@@ -459,10 +459,12 @@
+@@ -551,10 +551,12 @@
    MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe.inf
    MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
  
@@ -39,26 +39,27 @@ index 5adf4c0..b903fd2 100644
    #
    # ISA Support
 diff --git a/OvmfPkg/OvmfPkgIa32.fdf b/OvmfPkg/OvmfPkgIa32.fdf
-index 1f78b5b..c6626ad 100644
+index 1c1936c..26ea838 100644
 --- a/OvmfPkg/OvmfPkgIa32.fdf
 +++ b/OvmfPkg/OvmfPkgIa32.fdf
-@@ -373,9 +373,10 @@ INF  MdeModulePkg/Bus/Usb/UsbMassStorageDxe/UsbMassStorageDxe.inf
+@@ -348,9 +348,10 @@ INF  MdeModulePkg/Bus/Usb/UsbMassStorageDxe/UsbMassStorageDxe.inf
  INF  IntelFrameworkModulePkg/Csm/BiosThunk/VideoDxe/VideoDxe.inf
  INF  IntelFrameworkModulePkg/Csm/LegacyBiosDxe/LegacyBiosDxe.inf
  INF  RuleOverride=CSM OvmfPkg/Csm/Csm16/Csm16.inf
+-!endif
+-
 +!else
-+INF  OvmfPkg/QemuVideoDxe/QemuVideoDxe.inf
- !endif
- 
--INF  OvmfPkg/QemuVideoDxe/QemuVideoDxe.inf
+ INF  OvmfPkg/QemuVideoDxe/QemuVideoDxe.inf
++!endif
++
  INF  OvmfPkg/PlatformDxe/Platform.inf
  
- ################################################################################
+ !if $(SMM_REQUIRE) == TRUE
 diff --git a/OvmfPkg/OvmfPkgIa32X64.dsc b/OvmfPkg/OvmfPkgIa32X64.dsc
-index 75ff5f0..5b94900 100644
+index 63fbb25..6b9268b 100644
 --- a/OvmfPkg/OvmfPkgIa32X64.dsc
 +++ b/OvmfPkg/OvmfPkgIa32X64.dsc
-@@ -466,10 +466,12 @@
+@@ -558,10 +558,12 @@
    MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe.inf
    MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
  
@@ -72,26 +73,27 @@ index 75ff5f0..5b94900 100644
    #
    # ISA Support
 diff --git a/OvmfPkg/OvmfPkgIa32X64.fdf b/OvmfPkg/OvmfPkgIa32X64.fdf
-index e78995b..ba2079c 100644
+index ffed58a..c9d826c 100644
 --- a/OvmfPkg/OvmfPkgIa32X64.fdf
 +++ b/OvmfPkg/OvmfPkgIa32X64.fdf
-@@ -373,9 +373,10 @@ INF  MdeModulePkg/Bus/Usb/UsbMassStorageDxe/UsbMassStorageDxe.inf
+@@ -348,9 +348,10 @@ INF  MdeModulePkg/Bus/Usb/UsbMassStorageDxe/UsbMassStorageDxe.inf
  INF  IntelFrameworkModulePkg/Csm/BiosThunk/VideoDxe/VideoDxe.inf
  INF  IntelFrameworkModulePkg/Csm/LegacyBiosDxe/LegacyBiosDxe.inf
  INF  RuleOverride=CSM OvmfPkg/Csm/Csm16/Csm16.inf
+-!endif
+-
 +!else
-+INF  OvmfPkg/QemuVideoDxe/QemuVideoDxe.inf
- !endif
- 
--INF  OvmfPkg/QemuVideoDxe/QemuVideoDxe.inf
+ INF  OvmfPkg/QemuVideoDxe/QemuVideoDxe.inf
++!endif
++
  INF  OvmfPkg/PlatformDxe/Platform.inf
  
- ################################################################################
+ !if $(SMM_REQUIRE) == TRUE
 diff --git a/OvmfPkg/OvmfPkgX64.dsc b/OvmfPkg/OvmfPkgX64.dsc
-index 7a1e0ee..aa4f6e0 100644
+index 76ef00a..b12c6ed 100644
 --- a/OvmfPkg/OvmfPkgX64.dsc
 +++ b/OvmfPkg/OvmfPkgX64.dsc
-@@ -464,10 +464,12 @@
+@@ -556,10 +556,12 @@
    MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe.inf
    MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
  
@@ -105,21 +107,22 @@ index 7a1e0ee..aa4f6e0 100644
    #
    # ISA Support
 diff --git a/OvmfPkg/OvmfPkgX64.fdf b/OvmfPkg/OvmfPkgX64.fdf
-index c5bc6ac..5cf6c95 100644
+index ae9f348..d6370a1 100644
 --- a/OvmfPkg/OvmfPkgX64.fdf
 +++ b/OvmfPkg/OvmfPkgX64.fdf
-@@ -373,9 +373,10 @@ INF  MdeModulePkg/Bus/Usb/UsbMassStorageDxe/UsbMassStorageDxe.inf
+@@ -348,9 +348,10 @@ INF  MdeModulePkg/Bus/Usb/UsbMassStorageDxe/UsbMassStorageDxe.inf
  INF  IntelFrameworkModulePkg/Csm/BiosThunk/VideoDxe/VideoDxe.inf
  INF  IntelFrameworkModulePkg/Csm/LegacyBiosDxe/LegacyBiosDxe.inf
  INF  RuleOverride=CSM OvmfPkg/Csm/Csm16/Csm16.inf
+-!endif
+-
 +!else
-+INF  OvmfPkg/QemuVideoDxe/QemuVideoDxe.inf
- !endif
- 
--INF  OvmfPkg/QemuVideoDxe/QemuVideoDxe.inf
+ INF  OvmfPkg/QemuVideoDxe/QemuVideoDxe.inf
++!endif
++
  INF  OvmfPkg/PlatformDxe/Platform.inf
  
- ################################################################################
+ !if $(SMM_REQUIRE) == TRUE
 -- 
 1.8.3.1
 
