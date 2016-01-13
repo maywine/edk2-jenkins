@@ -204,7 +204,7 @@ build_iso()
 
 # build ovmf
 for cfg in pure-efi with-csm; do
-	OVMF_FLAGS="$CC_FLAGS -D SECURE_BOOT_ENABLE"
+	OVMF_FLAGS="$CC_FLAGS -D SECURE_BOOT_ENABLE -D HTTP_BOOT_ENABLE"
 
 	case "$cfg" in
 	with-csm)
@@ -240,9 +240,11 @@ done
 ARM_FLAGS="$CROSS_CC_FLAGS"
 build $ARM_FLAGS -a ARM \
     -D DEBUG_PRINT_ERROR_LEVEL=0x8040004F \
+    -D HTTP_BOOT_ENABLE \
     -p ArmVirtPkg/ArmVirtQemu.dsc
 build $ARM_FLAGS -a AARCH64 \
     -D DEBUG_PRINT_ERROR_LEVEL=0x8040004F \
+    -D HTTP_BOOT_ENABLE \
     -p ArmVirtPkg/ArmVirtQemu.dsc
 mkdir -p "arm" "aarch64"
 cp Build/ArmVirtQemu-ARM/DEBUG_*/FV/*.fd arm
@@ -256,10 +258,14 @@ for fd in {arm,aarch64}/*.fd; do
 done
 
 # build coreboot payload
-build $CC_FLAGS -a IA32 -p CorebootPayloadPkg/CorebootPayloadPkgIa32.dsc
+build $CC_FLAGS -a IA32 \
+    -D HTTP_BOOT_ENABLE \
+    -p CorebootPayloadPkg/CorebootPayloadPkgIa32.dsc
 mkdir -p "coreboot-ia32"
 cp Build/CorebootPayloadPkgIA32/DEBUG_*/FV/*.fd "coreboot-ia32"
-build $CC_FLAGS -a IA32 -a X64 -p CorebootPayloadPkg/CorebootPayloadPkgIa32X64.dsc
+build $CC_FLAGS -a IA32 -a X64 \
+    -D HTTP_BOOT_ENABLE \
+    -p CorebootPayloadPkg/CorebootPayloadPkgIa32X64.dsc
 mkdir -p "coreboot-x64"
 cp Build/CorebootPayloadPkgX64/DEBUG_*/FV/*.fd "coreboot-x64"
 
