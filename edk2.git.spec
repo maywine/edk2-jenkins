@@ -203,7 +203,7 @@ build_iso()
 }
 
 # build ovmf
-for cfg in pure-efi with-csm; do
+for cfg in pure-efi with-csm need-smm; do
 	OVMF_FLAGS="$CC_FLAGS -D SECURE_BOOT_ENABLE -D HTTP_BOOT_ENABLE"
 
 	case "$cfg" in
@@ -212,6 +212,9 @@ for cfg in pure-efi with-csm; do
 		;;
 	pure-efi)
 		# nothing
+		;;
+	need-smm)
+		OVMF_FLAGS="$OVMF_FLAGS -D SMM_REQUIRE"
 		;;
 	esac
 
