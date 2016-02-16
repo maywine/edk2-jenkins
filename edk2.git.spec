@@ -214,7 +214,9 @@ for cfg in pure-efi with-csm need-smm; do
 		# nothing
 		;;
 	need-smm)
-		OVMF_FLAGS="$OVMF_FLAGS -D SECURE_BOOT_ENABLE -D SMM_REQUIRE"
+		OVMF_FLAGS="$OVMF_FLAGS -D SECURE_BOOT_ENABLE"
+		OVMF_FLAGS="$OVMF_FLAGS -D SMM_REQUIRE"
+		OVMF_FLAGS="$OVMF_FLAGS -D EXCLUDE_SHELL_FROM_FD"
 		;;
 	esac
 
@@ -223,7 +225,7 @@ for cfg in pure-efi with-csm need-smm; do
 	cp Build/OvmfIa32/DEBUG_*/FV/OVMF.fd ovmf-ia32/OVMF-${cfg}.fd
 	cp Build/OvmfIa32/DEBUG_*/FV/OVMF_CODE.fd ovmf-ia32/OVMF_CODE-${cfg}.fd
 	cp Build/OvmfIa32/DEBUG_*/FV/OVMF_VARS.fd ovmf-ia32/OVMF_VARS-${cfg}.fd
-	if [ "$cfg" = pure-efi ]; then
+	if [ "$cfg" = need-smm ]; then
 		build_iso Ia32
 	fi
 	rm -rf Build/OvmfIa32
@@ -233,7 +235,7 @@ for cfg in pure-efi with-csm need-smm; do
 	cp Build/OvmfX64/DEBUG_*/FV/OVMF.fd ovmf-x64/OVMF-${cfg}.fd
 	cp Build/OvmfX64/DEBUG_*/FV/OVMF_CODE.fd ovmf-x64/OVMF_CODE-${cfg}.fd
 	cp Build/OvmfX64/DEBUG_*/FV/OVMF_VARS.fd ovmf-x64/OVMF_VARS-${cfg}.fd
-	if [ "$cfg" = pure-efi ]; then
+	if [ "$cfg" = need-smm ]; then
 		build_iso X64
 	fi
 	rm -rf Build/OvmfX64
