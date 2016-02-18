@@ -15,6 +15,7 @@ Patch1:         0001-OvmfPkg-Don-t-build-in-QemuVideoDxe-when-we-have-CSM.patch
 Patch2:         0001-pick-up-any-display-device-not-only-vga.patch
 Patch3:         0001-OvmfPkg-don-t-lock-lock-umb-when-running-csm.patch
 Patch4:		0001-MdeModulePkg-TerminalDxe-add-other-text-resolutions.patch
+Patch5:		0001-EXCLUDE_SHELL_FROM_FD.patch
 
 Patch10:	0001-OvmfPkg-SmbiosPlatformDxe-install-legacy-QEMU-tables.patch
 Patch11:	0002-OvmfPkg-SmbiosPlatformDxe-install-patch-default-lega.patch
@@ -102,6 +103,7 @@ coreboot payload
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
