@@ -114,7 +114,7 @@ coreboot payload
 # add openssl
 tar -C CryptoPkg/Library/OpensslLib -xf %{SOURCE1}
 (cd CryptoPkg/Library/OpensslLib/openssl-%{openssl_version};
- patch -p0 < ../EDKII_openssl-%{openssl_version}.patch)
+ patch -p1 < ../EDKII_openssl-%{openssl_version}.patch)
 (cd CryptoPkg/Library/OpensslLib; ./Install.sh)
 
 %build
