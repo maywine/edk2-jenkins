@@ -1,4 +1,4 @@
-From b3bc8aa82eccda416297b7abf444e4e03a937b2c Mon Sep 17 00:00:00 2001
+From 89d722b43fba95708ba16ef676a989a6e02a55f5 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Mon, 6 Jul 2015 20:22:02 +0200
 Subject: [PATCH] OvmfPkg: EnrollDefaultKeys: application for enrolling default
@@ -44,21 +44,21 @@ DB:
 Contributed-under: TianoCore Contribution Agreement 1.0
 Signed-off-by: Laszlo Ersek <lersek@redhat.com>
 ---
- OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c   | 961 ++++++++++++++++++++++++
+ OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c   | 960 ++++++++++++++++++++++++
  OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf |  51 ++
  OvmfPkg/OvmfPkgIa32.dsc                         |   4 +
  OvmfPkg/OvmfPkgIa32X64.dsc                      |   4 +
  OvmfPkg/OvmfPkgX64.dsc                          |   4 +
- 5 files changed, 1024 insertions(+)
+ 5 files changed, 1023 insertions(+)
  create mode 100644 OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c
  create mode 100644 OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf
 
 diff --git a/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c b/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c
 new file mode 100644
-index 0000000..29de6e2
+index 000000000000..a1dddb2fb5be
 --- /dev/null
 +++ b/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c
-@@ -0,0 +1,961 @@
+@@ -0,0 +1,960 @@
 +/** @file
 +  Enroll default PK, KEK, DB.
 +
@@ -733,10 +733,9 @@ index 0000000..29de6e2
 +       Cert != NULL;
 +       Cert = VA_ARG (Marker, CONST UINT8 *)) {
 +    UINTN          CertSize;
-+    CONST EFI_GUID *OwnerGuid;
 +
-+    CertSize  = VA_ARG (Marker, UINTN);
-+    OwnerGuid = VA_ARG (Marker, CONST EFI_GUID *);
++    CertSize = VA_ARG (Marker, UINTN);
++    (VOID)VA_ARG (Marker, CONST EFI_GUID *);
 +
 +    if (CertSize == 0 ||
 +        CertSize > MAX_UINT32 - sizeof *RepeatingHeader ||
@@ -1022,7 +1021,7 @@ index 0000000..29de6e2
 +}
 diff --git a/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf b/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf
 new file mode 100644
-index 0000000..ac919bb
+index 000000000000..30c127f2ecb4
 --- /dev/null
 +++ b/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf
 @@ -0,0 +1,51 @@
@@ -1078,10 +1077,10 @@ index 0000000..ac919bb
 +  UefiLib
 +  UefiRuntimeServicesTableLib
 diff --git a/OvmfPkg/OvmfPkgIa32.dsc b/OvmfPkg/OvmfPkgIa32.dsc
-index bb008f6..543029f 100644
+index 012e24817e5a..1e0e71aea606 100644
 --- a/OvmfPkg/OvmfPkgIa32.dsc
 +++ b/OvmfPkg/OvmfPkgIa32.dsc
-@@ -597,6 +597,10 @@
+@@ -743,6 +743,10 @@ [Components]
  
  !if $(SECURE_BOOT_ENABLE) == TRUE
    SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe.inf
@@ -1093,10 +1092,10 @@ index bb008f6..543029f 100644
  
    OvmfPkg/PlatformDxe/Platform.inf
 diff --git a/OvmfPkg/OvmfPkgIa32X64.dsc b/OvmfPkg/OvmfPkgIa32X64.dsc
-index fed584f..8268652 100644
+index 23c09d1e6083..6346f2db0006 100644
 --- a/OvmfPkg/OvmfPkgIa32X64.dsc
 +++ b/OvmfPkg/OvmfPkgIa32X64.dsc
-@@ -604,6 +604,10 @@
+@@ -752,6 +752,10 @@ [Components.X64]
  
  !if $(SECURE_BOOT_ENABLE) == TRUE
    SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe.inf
@@ -1108,10 +1107,10 @@ index fed584f..8268652 100644
  
    OvmfPkg/PlatformDxe/Platform.inf
 diff --git a/OvmfPkg/OvmfPkgX64.dsc b/OvmfPkg/OvmfPkgX64.dsc
-index 92af10f..d6921d0 100644
+index b0b6b3770e84..7a0d7eb7a75f 100644
 --- a/OvmfPkg/OvmfPkgX64.dsc
 +++ b/OvmfPkg/OvmfPkgX64.dsc
-@@ -602,6 +602,10 @@
+@@ -750,6 +750,10 @@ [Components]
  
  !if $(SECURE_BOOT_ENABLE) == TRUE
    SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe.inf
