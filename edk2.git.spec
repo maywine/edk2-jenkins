@@ -7,7 +7,7 @@ Release:	20130809.b0.g9b141c5%{?dist}
 Summary:	EFI Development Kit II
 
 Group:		Applications/Emulators
-License:	BSD License (two clause)
+License:	BSD and OpenSSL
 URL:		http://sourceforge.net/apps/mediawiki/tianocore/index.php?title=EDK2
 Source0:	edk2.git-g9b141c5.tar.xz
 Source1:	openssl-%{openssl_version}.tar.gz
@@ -24,7 +24,6 @@ Patch12:	0003-OvmfPkg-SmbiosPlatformDxe-install-patch-default-lega.patch
 Patch20:	0001-OvmfPkg-EnrollDefaultKeys-application-for-enrolling-.patch
 
 Patch30:	0001-tools_def.template-take-GCC4-_-IA32-X64-prefixes-fro.patch
-Patch31:	0001-OvmfPkg-disable-multi-processor-support-for-boot-tim.patch
 
 BuildRequires:	iasl
 BuildRequires:	nasm
