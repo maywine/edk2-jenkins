@@ -108,7 +108,6 @@ coreboot payload
 %patch12 -p1
 %patch20 -p1
 %patch30 -p1
-%patch31 -p1
 
 # add openssl
 tar -C CryptoPkg/Library/OpensslLib -xf %{SOURCE1}
