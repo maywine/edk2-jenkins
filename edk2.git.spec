@@ -78,23 +78,23 @@ BuildArch:      noarch
 EFI Development Kit II
 AARCH64 UEFI Firmware
 
-%package coreboot-ia32
-Summary:	Open Virtual Machine Firmware
-License:	BSD License (no advertising) with restrictions on use and redistribution
-BuildArch:      noarch
-%description coreboot-ia32
-EFI Development Kit II
-coreboot payload
-32bit version
+#%package coreboot-ia32
+#Summary:	Open Virtual Machine Firmware
+#License:	BSD License (no advertising) with restrictions on use and redistribution
+#BuildArch:      noarch
+#%description coreboot-ia32
+#EFI Development Kit II
+#coreboot payload
+#32bit version
 
-%package coreboot-x64
-Summary:	Open Virtual Machine Firmware
-License:	BSD License (no advertising) with restrictions on use and redistribution
-BuildArch:      noarch
-%description coreboot-x64
-EFI Development Kit II
-coreboot payload
-64bit version
+#%package coreboot-x64
+#Summary:	Open Virtual Machine Firmware
+#License:	BSD License (no advertising) with restrictions on use and redistribution
+#BuildArch:      noarch
+#%description coreboot-x64
+#EFI Development Kit II
+#coreboot payload
+#64bit version
 
 %prep
 %setup -q -n %{name}
@@ -263,16 +263,16 @@ for fd in {arm,aarch64}/*.fd; do
 done
 
 # build coreboot payload
-build $CC_FLAGS -a IA32 \
-    -D HTTP_BOOT_ENABLE \
-    -p CorebootPayloadPkg/CorebootPayloadPkgIa32.dsc
-mkdir -p "coreboot-ia32"
-cp Build/CorebootPayloadPkgIA32/DEBUG_*/FV/*.fd "coreboot-ia32"
-build $CC_FLAGS -a IA32 -a X64 \
-    -D HTTP_BOOT_ENABLE \
-    -p CorebootPayloadPkg/CorebootPayloadPkgIa32X64.dsc
-mkdir -p "coreboot-x64"
-cp Build/CorebootPayloadPkgX64/DEBUG_*/FV/*.fd "coreboot-x64"
+#build $CC_FLAGS -a IA32 \
+#    -D HTTP_BOOT_ENABLE \
+#    -p CorebootPayloadPkg/CorebootPayloadPkgIa32.dsc
+#mkdir -p "coreboot-ia32"
+#cp Build/CorebootPayloadPkgIA32/DEBUG_*/FV/*.fd "coreboot-ia32"
+#build $CC_FLAGS -a IA32 -a X64 \
+#    -D HTTP_BOOT_ENABLE \
+#    -p CorebootPayloadPkg/CorebootPayloadPkgIa32X64.dsc
+#mkdir -p "coreboot-x64"
+#cp Build/CorebootPayloadPkgX64/DEBUG_*/FV/*.fd "coreboot-x64"
 
 %install
 mkdir -p %{buildroot}%{_bindir}
@@ -282,7 +282,8 @@ install	--strip \
 	%{buildroot}%{_bindir}
 
 mkdir -p %{buildroot}/usr/share/%{name}
-cp -a ovmf-* arm aarch64 coreboot-* %{buildroot}/usr/share/%{name}
+#cp -a ovmf-* arm aarch64 coreboot-* %{buildroot}/usr/share/%{name}
+cp -a ovmf-* arm aarch64 %{buildroot}/usr/share/%{name}
 
 %files
 %dir /usr/share/%{name}
@@ -314,14 +315,14 @@ cp -a ovmf-* arm aarch64 coreboot-* %{buildroot}/usr/share/%{name}
 %dir /usr/share/%{name}
 /usr/share/%{name}/aarch64
 
-%files coreboot-ia32
-%doc FatBinPkg/License.txt
-%dir /usr/share/%{name}
-/usr/share/%{name}/coreboot-ia32
+#%files coreboot-ia32
+#%doc FatBinPkg/License.txt
+#%dir /usr/share/%{name}
+#/usr/share/%{name}/coreboot-ia32
 
-%files coreboot-x64
-%doc FatBinPkg/License.txt
-%dir /usr/share/%{name}
-/usr/share/%{name}/coreboot-x64
+#%files coreboot-x64
+#%doc FatBinPkg/License.txt
+#%dir /usr/share/%{name}
+#/usr/share/%{name}/coreboot-x64
 
 %changelog
