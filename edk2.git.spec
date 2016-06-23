@@ -254,12 +254,13 @@ build $ARM_FLAGS -a AARCH64 \
 mkdir -p "arm" "aarch64"
 cp Build/ArmVirtQemu-ARM/DEBUG_*/FV/*.fd arm
 cp Build/ArmVirtQemu-AARCH64/DEBUG_*/FV/*.fd aarch64
-for fd in {arm,aarch64}/*.fd; do
+for fd in {arm,aarch64}/QEMU_EFI.fd; do
 	code="${fd%.fd}-pflash.raw"
 	vars="${fd%%/*}/vars-template-pflash.raw"
 	dd of="$code" if="/dev/zero" bs=1M count=64
 	dd of="$code" if="$fd" conv=notrunc
 	dd of="$vars" if="/dev/zero" bs=1M count=64
+	dd of="$vars" if="${fd//QEMU_EFI/QEMU_VARS}" conv=notrunc
 done
 
 # build coreboot payload
