@@ -1,4 +1,4 @@
-From 89d722b43fba95708ba16ef676a989a6e02a55f5 Mon Sep 17 00:00:00 2001
+From da502f7cc283055a65ab3caeaa62eb5c6a6fddb5 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Mon, 6 Jul 2015 20:22:02 +0200
 Subject: [PATCH] OvmfPkg: EnrollDefaultKeys: application for enrolling default
@@ -44,21 +44,21 @@ DB:
 Contributed-under: TianoCore Contribution Agreement 1.0
 Signed-off-by: Laszlo Ersek <lersek@redhat.com>
 ---
- OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c   | 960 ++++++++++++++++++++++++
+ OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c   | 963 ++++++++++++++++++++++++
  OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf |  51 ++
  OvmfPkg/OvmfPkgIa32.dsc                         |   4 +
  OvmfPkg/OvmfPkgIa32X64.dsc                      |   4 +
  OvmfPkg/OvmfPkgX64.dsc                          |   4 +
- 5 files changed, 1023 insertions(+)
+ 5 files changed, 1026 insertions(+)
  create mode 100644 OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c
  create mode 100644 OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf
 
 diff --git a/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c b/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c
 new file mode 100644
-index 000000000000..a1dddb2fb5be
+index 0000000..447288f
 --- /dev/null
 +++ b/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c
-@@ -0,0 +1,960 @@
+@@ -0,0 +1,963 @@
 +/** @file
 +  Enroll default PK, KEK, DB.
 +
@@ -724,6 +724,8 @@ index 000000000000..a1dddb2fb5be
 +  UINT8            *Data;
 +  UINT8            *Position;
 +
++  Status = EFI_SUCCESS;
++
 +  //
 +  // compute total size first, for UINT32 range check, and allocation
 +  //
@@ -801,10 +803,11 @@ index 000000000000..a1dddb2fb5be
 +
 +    RepeatingHeader = (REPEATING_HEADER *)Position;
 +    CopyGuid (&RepeatingHeader->SignatureType, &gEfiCertX509Guid);
-+    RepeatingHeader->SignatureListSize   = sizeof *RepeatingHeader + CertSize;
++    RepeatingHeader->SignatureListSize   =
++      (UINT32)(sizeof *RepeatingHeader + CertSize);
 +    RepeatingHeader->SignatureHeaderSize = 0;
 +    RepeatingHeader->SignatureSize       =
-+      sizeof RepeatingHeader->SignatureOwner + CertSize;
++      (UINT32)(sizeof RepeatingHeader->SignatureOwner + CertSize);
 +    CopyGuid (&RepeatingHeader->SignatureOwner, OwnerGuid);
 +    Position += sizeof *RepeatingHeader;
 +
@@ -1021,7 +1024,7 @@ index 000000000000..a1dddb2fb5be
 +}
 diff --git a/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf b/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf
 new file mode 100644
-index 000000000000..30c127f2ecb4
+index 0000000..ac919bb
 --- /dev/null
 +++ b/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf
 @@ -0,0 +1,51 @@
@@ -1077,10 +1080,10 @@ index 000000000000..30c127f2ecb4
 +  UefiLib
 +  UefiRuntimeServicesTableLib
 diff --git a/OvmfPkg/OvmfPkgIa32.dsc b/OvmfPkg/OvmfPkgIa32.dsc
-index 012e24817e5a..1e0e71aea606 100644
+index 8af3267..6fb5c9c 100644
 --- a/OvmfPkg/OvmfPkgIa32.dsc
 +++ b/OvmfPkg/OvmfPkgIa32.dsc
-@@ -743,6 +743,10 @@ [Components]
+@@ -749,6 +749,10 @@
  
  !if $(SECURE_BOOT_ENABLE) == TRUE
    SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe.inf
@@ -1092,10 +1095,10 @@ index 012e24817e5a..1e0e71aea606 100644
  
    OvmfPkg/PlatformDxe/Platform.inf
 diff --git a/OvmfPkg/OvmfPkgIa32X64.dsc b/OvmfPkg/OvmfPkgIa32X64.dsc
-index 23c09d1e6083..6346f2db0006 100644
+index 4bb38d0..e5abaff 100644
 --- a/OvmfPkg/OvmfPkgIa32X64.dsc
 +++ b/OvmfPkg/OvmfPkgIa32X64.dsc
-@@ -752,6 +752,10 @@ [Components.X64]
+@@ -758,6 +758,10 @@
  
  !if $(SECURE_BOOT_ENABLE) == TRUE
    SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe.inf
@@ -1107,10 +1110,10 @@ index 23c09d1e6083..6346f2db0006 100644
  
    OvmfPkg/PlatformDxe/Platform.inf
 diff --git a/OvmfPkg/OvmfPkgX64.dsc b/OvmfPkg/OvmfPkgX64.dsc
-index b0b6b3770e84..7a0d7eb7a75f 100644
+index be3aa1f..4c36a7d 100644
 --- a/OvmfPkg/OvmfPkgX64.dsc
 +++ b/OvmfPkg/OvmfPkgX64.dsc
-@@ -750,6 +750,10 @@ [Components]
+@@ -756,6 +756,10 @@
  
  !if $(SECURE_BOOT_ENABLE) == TRUE
    SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe.inf
