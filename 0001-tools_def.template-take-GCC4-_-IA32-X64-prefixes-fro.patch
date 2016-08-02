@@ -1,4 +1,4 @@
-From c2462a1fcd6cf2224e05bc437cb8625a594d70fe Mon Sep 17 00:00:00 2001
+From 56daa7a65a15c973d5e38ec45c0dbb6fb20c608c Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Wed, 29 Jan 2014 13:13:11 +0100
 Subject: [PATCH] tools_def.template: take GCC4?_(IA32|X64) prefixes from the
@@ -22,10 +22,10 @@ Signed-off-by: Laszlo Ersek <lersek@redhat.com>
  1 file changed, 12 insertions(+), 12 deletions(-)
 
 diff --git a/BaseTools/Conf/tools_def.template b/BaseTools/Conf/tools_def.template
-index c0f505c..53f3c8f 100644
+index fd9eccb..f80bc45 100644
 --- a/BaseTools/Conf/tools_def.template
 +++ b/BaseTools/Conf/tools_def.template
-@@ -165,23 +165,23 @@ DEFINE CYGWIN_BINIA32          = c:/cygwin/opt/tiano/i386-tiano-pe/i386-tiano-pe
+@@ -179,23 +179,23 @@ DEFINE CYGWIN_BINIA32          = c:/cygwin/opt/tiano/i386-tiano-pe/i386-tiano-pe
  DEFINE CYGWIN_BINX64           = c:/cygwin/opt/tiano/x86_64-pc-mingw64/x86_64-pc-mingw64/bin/
  DEFINE CYGWIN_BINIPF           = c:/cygwin/opt/tiano/gcc/ipf/bin/ia64-pc-elf-
  
@@ -59,8 +59,8 @@ index c0f505c..53f3c8f 100644
 +DEFINE GCC49_IA32_PREFIX       = ENV(GCC49_BIN)ENV(GCC49_IA32_PREFIX)
 +DEFINE GCC49_X64_PREFIX        = ENV(GCC49_BIN)ENV(GCC49_X64_PREFIX)
  
- DEFINE UNIX_IASL_BIN           = ENV(IASL_PREFIX)iasl
- DEFINE WIN_ASL_BIN_DIR         = C:\ASL
+ DEFINE GCC5_IA32_PREFIX        = ENV(GCC5_BIN)
+ DEFINE GCC5_X64_PREFIX         = ENV(GCC5_BIN)
 -- 
 1.8.3.1
 
