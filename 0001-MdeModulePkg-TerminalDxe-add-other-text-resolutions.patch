@@ -1,4 +1,4 @@
-From 45b4770755ba779a47ac207ff6836b7c146c2594 Mon Sep 17 00:00:00 2001
+From 14b719f9ecd14c5252843ea2d79cfd7ca9643197 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Tue, 25 Feb 2014 18:40:35 +0100
 Subject: [PATCH] MdeModulePkg: TerminalDxe: add other text resolutions
@@ -12,7 +12,7 @@ Two notable output devices are provided by:
 (2) MdeModulePkg/Universal/Console/TerminalDxe.
 
 GraphicsConsoleDxe supports four modes at most -- see
-InitializeGraphicsConsoleTextMode():
+InitializeGraphicsConsoleTextMode() and "mGraphicsConsoleModeData":
 
 (1a) 80x25 (required by the UEFI spec as mode 0),
 (1b) 80x50 (not necessarily supported, but if it is, then the UEFI spec
@@ -26,13 +26,13 @@ InitializeGraphicsConsoleTextMode():
 The automatic "full screen resolution" makes GraphicsConsoleDxe's
 character console very flexible. However, TerminalDxe (which runs on
 serial ports) only provides the following fixed resolutions -- see
-InitializeTerminalConsoleTextMode():
+InitializeTerminalConsoleTextMode() and "mTerminalConsoleModeData":
 
 (2a) 80x25 (required by the UEFI spec as mode 0),
 (2b) 80x50 (since the character resolution of a serial device cannot be
-    interrogated easily, this is added unconditionally as mode 1)
-(2c) modes 2 and above come from "mTerminalConsoleModeData". This table
-     currently only contains one mode, 100x31.
+     interrogated easily, this is added unconditionally as mode 1),
+(2c) 100x31 (since the character resolution of a serial device cannot be
+     interrogated easily, this is added unconditionally as mode 2).
 
 When ConSplitterDxe combines (1) and (2), multiplexing console output to
 both video output and serial terminal, the list of commonly supported text
@@ -57,18 +57,22 @@ resolution too.
 Contributed-under: TianoCore Contribution Agreement 1.0
 Signed-off-by: Laszlo Ersek <lersek@redhat.com>
 ---
- .../Universal/Console/TerminalDxe/Terminal.c       | 37 +++++++++++++++++++++-
- 1 file changed, 36 insertions(+), 1 deletion(-)
+ .../Universal/Console/TerminalDxe/Terminal.c       | 41 ++++++++++++++++++++--
+ 1 file changed, 38 insertions(+), 3 deletions(-)
 
 diff --git a/MdeModulePkg/Universal/Console/TerminalDxe/Terminal.c b/MdeModulePkg/Universal/Console/TerminalDxe/Terminal.c
-index 5110948..f8604e4 100644
+index 5d55969..29ef7ae 100644
 --- a/MdeModulePkg/Universal/Console/TerminalDxe/Terminal.c
 +++ b/MdeModulePkg/Universal/Console/TerminalDxe/Terminal.c
-@@ -96,7 +96,42 @@ TERMINAL_DEV  mTerminalDevTemplate = {
+@@ -113,9 +113,44 @@ TERMINAL_DEV  mTerminalDevTemplate = {
  };
  
  TERMINAL_CONSOLE_MODE_DATA mTerminalConsoleModeData[] = {
+-  {80,  25},
+-  {80,  50},
 -  {100, 31},
++  {   80,  25 }, // from graphics resolution  640 x  480
++  {   80,  50 }, // from graphics resolution  640 x  960
 +  {  100,  25 }, // from graphics resolution  800 x  480
 +  {  100,  31 }, // from graphics resolution  800 x  600
 +  {  104,  32 }, // from graphics resolution  832 x  624
