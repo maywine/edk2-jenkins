@@ -1,5 +1,5 @@
 %global debug_package %{nil}
-%global openssl_version 1.0.2k
+%global openssl_version 1.1.0e
 
 Name:		edk2.git
 Version:	0
@@ -111,9 +111,8 @@ AARCH64 UEFI Firmware
 
 # add openssl
 tar -C CryptoPkg/Library/OpensslLib -xf %{SOURCE1}
-(cd CryptoPkg/Library/OpensslLib/openssl-%{openssl_version};
- patch -p1 < ../EDKII_openssl-%{openssl_version}.patch)
-(cd CryptoPkg/Library/OpensslLib; ./Install.sh)
+mv      CryptoPkg/Library/OpensslLib/openssl-%{openssl_version} \
+        CryptoPkg/Library/OpensslLib/openssl
 
 %build
 source ./edksetup.sh
