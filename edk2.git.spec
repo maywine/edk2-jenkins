@@ -201,7 +201,7 @@ build_iso()
 
 # build ovmf
 for cfg in pure-efi with-csm need-smm; do
-	OVMF_FLAGS="$CC_FLAGS -D HTTP_BOOT_ENABLE"
+	OVMF_FLAGS="$CC_FLAGS -D HTTP_BOOT_ENABLE -D FD_SIZE_2MB"
 
 	case "$cfg" in
 	with-csm)
