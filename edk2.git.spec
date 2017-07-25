@@ -137,10 +137,15 @@ case "$CROSSGCCVER" in
         export GCC48_ARM_PREFIX="arm-linux-gnu-"
         export GCC48_AARCH64_PREFIX="aarch64-linux-gnu-"
         ;;
-4.9* | 5.* | 6.*)
+4.9*)
 	CROSS_CC_FLAGS="-t GCC49"
         export GCC49_ARM_PREFIX="arm-linux-gnu-"
         export GCC49_AARCH64_PREFIX="aarch64-linux-gnu-"
+        ;;
+5.* | 6.* | 7.*)
+	CROSS_CC_FLAGS="-t GCC5"
+        export GCC5_ARM_PREFIX="arm-linux-gnu-"
+        export GCC5_AARCH64_PREFIX="aarch64-linux-gnu-"
         ;;
 esac
 
