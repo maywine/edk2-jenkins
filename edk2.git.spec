@@ -299,33 +299,27 @@ cp -a ovmf-* arm aarch64 %{buildroot}/usr/share/%{name}
 
 %files ovmf-ia32
 %doc OvmfPkg/README
-%doc FatBinPkg/License.txt
 %dir /usr/share/%{name}
 /usr/share/%{name}/ovmf-ia32
 
 %files ovmf-x64
 %doc OvmfPkg/README
-%doc FatBinPkg/License.txt
 %dir /usr/share/%{name}
 /usr/share/%{name}/ovmf-x64
 
 %files arm
-%doc FatBinPkg/License.txt
 %dir /usr/share/%{name}
 /usr/share/%{name}/arm
 
 %files aarch64
-%doc FatBinPkg/License.txt
 %dir /usr/share/%{name}
 /usr/share/%{name}/aarch64
 
 #%files coreboot-ia32
-#%doc FatBinPkg/License.txt
 #%dir /usr/share/%{name}
 #/usr/share/%{name}/coreboot-ia32
 
 #%files coreboot-x64
-#%doc FatBinPkg/License.txt
 #%dir /usr/share/%{name}
 #/usr/share/%{name}/coreboot-x64
 
