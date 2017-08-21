@@ -128,7 +128,7 @@ case "$GCCVER" in
 4.9*)	CC_FLAGS="-t GCC49";;
 5.*)	CC_FLAGS="-t GCC5";;
 6.*)	CC_FLAGS="-t GCC5";;
-7.*)	CC_FLAGS="-t GCC5";;
+7.*)	CC_FLAGS="-t GCC49";; # https://bugzilla.tianocore.org/show_bug.cgi?id=671
 esac
 
 CROSSGCCVER=$(arm-linux-gnu-gcc --version | awk '{ print $3; exit}')
@@ -137,12 +137,13 @@ case "$CROSSGCCVER" in
         export GCC48_ARM_PREFIX="arm-linux-gnu-"
         export GCC48_AARCH64_PREFIX="aarch64-linux-gnu-"
         ;;
-4.9*)
+4.9* | 7.*)
+	# gcc7: https://bugzilla.tianocore.org/show_bug.cgi?id=671
 	CROSS_CC_FLAGS="-t GCC49"
         export GCC49_ARM_PREFIX="arm-linux-gnu-"
         export GCC49_AARCH64_PREFIX="aarch64-linux-gnu-"
         ;;
-5.* | 6.* | 7.*)
+5.* | 6.*)
 	CROSS_CC_FLAGS="-t GCC5"
         export GCC5_ARM_PREFIX="arm-linux-gnu-"
         export GCC5_AARCH64_PREFIX="aarch64-linux-gnu-"
