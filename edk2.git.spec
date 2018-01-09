@@ -1,5 +1,5 @@
 %global debug_package %{nil}
-%global openssl_version 1.1.0e
+%global openssl_version 1.1.0g
 
 Name:		edk2.git
 Version:	0
