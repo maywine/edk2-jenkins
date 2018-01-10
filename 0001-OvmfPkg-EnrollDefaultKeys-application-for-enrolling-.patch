@@ -1,8 +1,17 @@
-From da502f7cc283055a65ab3caeaa62eb5c6a6fddb5 Mon Sep 17 00:00:00 2001
+From d028d750a6e11a3ca3f74e612aa483d107e3b139 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Mon, 6 Jul 2015 20:22:02 +0200
 Subject: [PATCH] OvmfPkg: EnrollDefaultKeys: application for enrolling default
  keys
+
+Squash log, 2017-May-05:
+- see <https://bugzilla.redhat.com/show_bug.cgi?id=1443351#c31>
+- OvmfPkg/EnrollDefaultKeys: update SignatureOwner GUID for Windows HCK
+- OvmfPkg/EnrollDefaultKeys: expose CertType parameter of
+  EnrollListOfCerts
+- OvmfPkg/EnrollDefaultKeys: blacklist empty file in dbx for Windows HCK
+
+Original commit message:
 
 (A port of the <https://bugzilla.redhat.com/show_bug.cgi?id=1148296> patch
 to Gerd's public RPMs.)
@@ -44,21 +53,21 @@ DB:
 Contributed-under: TianoCore Contribution Agreement 1.0
 Signed-off-by: Laszlo Ersek <lersek@redhat.com>
 ---
- OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c   | 963 ++++++++++++++++++++++++
- OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf |  51 ++
- OvmfPkg/OvmfPkgIa32.dsc                         |   4 +
- OvmfPkg/OvmfPkgIa32X64.dsc                      |   4 +
- OvmfPkg/OvmfPkgX64.dsc                          |   4 +
- 5 files changed, 1026 insertions(+)
+ OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c   | 1047 +++++++++++++++++++++++
+ OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf |   52 ++
+ OvmfPkg/OvmfPkgIa32.dsc                         |    4 +
+ OvmfPkg/OvmfPkgIa32X64.dsc                      |    4 +
+ OvmfPkg/OvmfPkgX64.dsc                          |    4 +
+ 5 files changed, 1111 insertions(+)
  create mode 100644 OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c
  create mode 100644 OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf
 
 diff --git a/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c b/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c
 new file mode 100644
-index 0000000..447288f
+index 0000000000..9d6ef3fcce
 --- /dev/null
 +++ b/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c
-@@ -0,0 +1,963 @@
+@@ -0,0 +1,1047 @@
 +/** @file
 +  Enroll default PK, KEK, DB.
 +
@@ -578,6 +587,71 @@ index 0000000..447288f
 +};
 +
 +//
++// The Microsoft.UefiSecureBootLogo.Tests.OutOfBoxConfirmDBXisPresent test case
++// of the Secure Boot Logo Test in the Microsoft Hardware Certification Kit
++// expects that the "dbx" variable exist.
++//
++// The article at <https://technet.microsoft.com/en-us/library/dn747883.aspx>
++// writes (excerpt):
++//
++//    Windows 8.1 Secure Boot Key Creation and Management Guidance
++//    1. Secure Boot, Windows 8.1 and Key Management
++//    1.4 Signature Databases (Db and Dbx)
++//    1.4.3 Forbidden Signature Database (dbx)
++//
++//    The contents of EFI_IMAGE_SIGNATURE_DATABASE1 dbx must be checked when
++//    verifying images before checking db and any matches must prevent the
++//    image from executing. The database may contain multiple certificates,
++//    keys, and hashes in order to identify forbidden images. The Windows
++//    Hardware Certification Requirements state that a dbx must be present, so
++//    any dummy value, such as the SHA-256 hash of 0, may be used as a safe
++//    placeholder until such time as Microsoft begins delivering dbx updates.
++//
++// The byte array below captures the SHA256 checksum of the empty file,
++// blacklisting it for loading & execution. This qualifies as a dummy, since
++// the empty file is not a valid UEFI binary anyway.
++//
++// Technically speaking, we could also capture an official (although soon to be
++// obsolete) dbx update from <http://www.uefi.org/revocationlistfile>. However,
++// the terms and conditions on distributing that binary aren't exactly light
++// reading, so let's best steer clear of it, and follow the "dummy entry"
++// practice recommended -- in natural English langauge -- in the
++// above-referenced TechNet article.
++//
++STATIC CONST UINT8 mSha256OfDevNull[] = {
++  0xe3, 0xb0, 0xc4, 0x42, 0x98, 0xfc, 0x1c, 0x14, 0x9a, 0xfb, 0xf4, 0xc8, 0x99,
++  0x6f, 0xb9, 0x24, 0x27, 0xae, 0x41, 0xe4, 0x64, 0x9b, 0x93, 0x4c, 0xa4, 0x95,
++  0x99, 0x1b, 0x78, 0x52, 0xb8, 0x55
++};
++
++//
++// The following test cases of the Secure Boot Logo Test in the Microsoft
++// Hardware Certification Kit:
++//
++// - Microsoft.UefiSecureBootLogo.Tests.OutOfBoxVerifyMicrosoftKEKpresent
++// - Microsoft.UefiSecureBootLogo.Tests.OutOfBoxConfirmMicrosoftSignatureInDB
++//
++// expect the EFI_SIGNATURE_DATA.SignatureOwner GUID to be
++// 77FA9ABD-0359-4D32-BD60-28F4E78F784B, when the
++// EFI_SIGNATURE_DATA.SignatureData field carries any of the following X509
++// certificates:
++//
++// - "Microsoft Corporation KEK CA 2011" (in KEK)
++// - "Microsoft Windows Production PCA 2011" (in db)
++// - "Microsoft Corporation UEFI CA 2011" (in db)
++//
++// This is despite the fact that the UEFI specification requires
++// EFI_SIGNATURE_DATA.SignatureOwner to reflect the agent (i.e., OS,
++// application or driver) that enrolled and therefore owns
++// EFI_SIGNATURE_DATA.SignatureData, and not the organization that issued
++// EFI_SIGNATURE_DATA.SignatureData.
++//
++STATIC CONST EFI_GUID mMicrosoftOwnerGuid = {
++  0x77fa9abd, 0x0359, 0x4d32,
++  { 0xbd, 0x60, 0x28, 0xf4, 0xe7, 0x8f, 0x78, 0x4b },
++};
++
++//
 +// The most important thing about the variable payload is that it is a list of
 +// lists, where the element size of any given *inner* list is constant.
 +//
@@ -669,8 +743,7 @@ index 0000000..447288f
 +#pragma pack()
 +
 +/**
-+  Enroll a set of DER-formatted X.509 certificates in a global variable,
-+  overwriting it.
++  Enroll a set of certificates in a global variable, overwriting it.
 +
 +  The variable will be rewritten with NV+BS+RT+AT attributes.
 +
@@ -678,6 +751,12 @@ index 0000000..447288f
 +
 +  @param[in] VendorGuid    The namespace (ie. vendor GUID) of the variable to
 +                           overwrite.
++
++  @param[in] CertType      The GUID determining the type of all the
++                           certificates in the set that is passed in. For
++                           example, gEfiCertX509Guid stands for DER-encoded
++                           X.509 certificates, while gEfiCertSha256Guid stands
++                           for SHA256 image hashes.
 +
 +  @param[in] ...           A list of
 +
@@ -688,9 +767,9 @@ index 0000000..447288f
 +                           triplets. If the first component of a triplet is
 +                           NULL, then the other two components are not
 +                           accessed, and processing is terminated. The list of
-+                           X.509 certificates is enrolled in the variable
-+                           specified, overwriting it. The OwnerGuid component
-+                           identifies the agent installing the certificate.
++                           certificates is enrolled in the variable specified,
++                           overwriting it. The OwnerGuid component identifies
++                           the agent installing the certificate.
 +
 +  @retval EFI_INVALID_PARAMETER  The triplet list is empty (ie. the first Cert
 +                                 value is NULL), or one of the CertSize values
@@ -709,9 +788,10 @@ index 0000000..447288f
 +STATIC
 +EFI_STATUS
 +EFIAPI
-+EnrollListOfX509Certs (
++EnrollListOfCerts (
 +  IN CHAR16   *VariableName,
 +  IN EFI_GUID *VendorGuid,
++  IN EFI_GUID *CertType,
 +  ...
 +  )
 +{
@@ -730,7 +810,7 @@ index 0000000..447288f
 +  // compute total size first, for UINT32 range check, and allocation
 +  //
 +  DataSize = sizeof *SingleHeader;
-+  VA_START (Marker, VendorGuid);
++  VA_START (Marker, CertType);
 +  for (Cert = VA_ARG (Marker, CONST UINT8 *);
 +       Cert != NULL;
 +       Cert = VA_ARG (Marker, CONST UINT8 *)) {
@@ -791,7 +871,7 @@ index 0000000..447288f
 +  CopyGuid (&SingleHeader->CertType, &gEfiCertPkcs7Guid);
 +  Position += sizeof *SingleHeader;
 +
-+  VA_START (Marker, VendorGuid);
++  VA_START (Marker, CertType);
 +  for (Cert = VA_ARG (Marker, CONST UINT8 *);
 +       Cert != NULL;
 +       Cert = VA_ARG (Marker, CONST UINT8 *)) {
@@ -802,7 +882,7 @@ index 0000000..447288f
 +    OwnerGuid = VA_ARG (Marker, CONST EFI_GUID *);
 +
 +    RepeatingHeader = (REPEATING_HEADER *)Position;
-+    CopyGuid (&RepeatingHeader->SignatureType, &gEfiCertX509Guid);
++    CopyGuid (&RepeatingHeader->SignatureType, CertType);
 +    RepeatingHeader->SignatureListSize   =
 +      (UINT32)(sizeof *RepeatingHeader + CertSize);
 +    RepeatingHeader->SignatureHeaderSize = 0;
@@ -967,29 +1047,42 @@ index 0000000..447288f
 +    }
 +  }
 +
-+  Status = EnrollListOfX509Certs (
++  Status = EnrollListOfCerts (
 +             EFI_IMAGE_SECURITY_DATABASE,
 +             &gEfiImageSecurityDatabaseGuid,
-+             MicrosoftPCA,    sizeof MicrosoftPCA,    &gEfiCallerIdGuid,
-+             MicrosoftUefiCA, sizeof MicrosoftUefiCA, &gEfiCallerIdGuid,
++             &gEfiCertX509Guid,
++             MicrosoftPCA,    sizeof MicrosoftPCA,    &mMicrosoftOwnerGuid,
++             MicrosoftUefiCA, sizeof MicrosoftUefiCA, &mMicrosoftOwnerGuid,
 +             NULL);
 +  if (EFI_ERROR (Status)) {
 +    return 1;
 +  }
 +
-+  Status = EnrollListOfX509Certs (
++  Status = EnrollListOfCerts (
++             EFI_IMAGE_SECURITY_DATABASE1,
++             &gEfiImageSecurityDatabaseGuid,
++             &gEfiCertSha256Guid,
++             mSha256OfDevNull, sizeof mSha256OfDevNull, &gEfiCallerIdGuid,
++             NULL);
++  if (EFI_ERROR (Status)) {
++    return 1;
++  }
++
++  Status = EnrollListOfCerts (
 +             EFI_KEY_EXCHANGE_KEY_NAME,
 +             &gEfiGlobalVariableGuid,
++             &gEfiCertX509Guid,
 +             ExampleCert,  sizeof ExampleCert,  &gEfiCallerIdGuid,
-+             MicrosoftKEK, sizeof MicrosoftKEK, &gEfiCallerIdGuid,
++             MicrosoftKEK, sizeof MicrosoftKEK, &mMicrosoftOwnerGuid,
 +             NULL);
 +  if (EFI_ERROR (Status)) {
 +    return 1;
 +  }
 +
-+  Status = EnrollListOfX509Certs (
++  Status = EnrollListOfCerts (
 +             EFI_PLATFORM_KEY_NAME,
 +             &gEfiGlobalVariableGuid,
++             &gEfiCertX509Guid,
 +             ExampleCert, sizeof ExampleCert, &gEfiGlobalVariableGuid,
 +             NULL);
 +  if (EFI_ERROR (Status)) {
@@ -1024,10 +1117,10 @@ index 0000000..447288f
 +}
 diff --git a/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf b/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf
 new file mode 100644
-index 0000000..ac919bb
+index 0000000000..313bab6d46
 --- /dev/null
 +++ b/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.inf
-@@ -0,0 +1,51 @@
+@@ -0,0 +1,52 @@
 +## @file
 +#  Enroll default PK, KEK, DB.
 +#
@@ -1066,6 +1159,7 @@ index 0000000..ac919bb
 +
 +[Guids]
 +  gEfiCertPkcs7Guid
++  gEfiCertSha256Guid
 +  gEfiCertX509Guid
 +  gEfiCustomModeEnableGuid
 +  gEfiGlobalVariableGuid
@@ -1080,10 +1174,10 @@ index 0000000..ac919bb
 +  UefiLib
 +  UefiRuntimeServicesTableLib
 diff --git a/OvmfPkg/OvmfPkgIa32.dsc b/OvmfPkg/OvmfPkgIa32.dsc
-index 8af3267..6fb5c9c 100644
+index 9d23f8c162..ca8cc175c2 100644
 --- a/OvmfPkg/OvmfPkgIa32.dsc
 +++ b/OvmfPkg/OvmfPkgIa32.dsc
-@@ -749,6 +749,10 @@
+@@ -816,6 +816,10 @@
  
  !if $(SECURE_BOOT_ENABLE) == TRUE
    SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe.inf
@@ -1095,10 +1189,10 @@ index 8af3267..6fb5c9c 100644
  
    OvmfPkg/PlatformDxe/Platform.inf
 diff --git a/OvmfPkg/OvmfPkgIa32X64.dsc b/OvmfPkg/OvmfPkgIa32X64.dsc
-index 4bb38d0..e5abaff 100644
+index a9c667fed8..cda64ce006 100644
 --- a/OvmfPkg/OvmfPkgIa32X64.dsc
 +++ b/OvmfPkg/OvmfPkgIa32X64.dsc
-@@ -758,6 +758,10 @@
+@@ -825,6 +825,10 @@
  
  !if $(SECURE_BOOT_ENABLE) == TRUE
    SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe.inf
@@ -1110,10 +1204,10 @@ index 4bb38d0..e5abaff 100644
  
    OvmfPkg/PlatformDxe/Platform.inf
 diff --git a/OvmfPkg/OvmfPkgX64.dsc b/OvmfPkg/OvmfPkgX64.dsc
-index be3aa1f..4c36a7d 100644
+index abf570512a..f67c1bfedf 100644
 --- a/OvmfPkg/OvmfPkgX64.dsc
 +++ b/OvmfPkg/OvmfPkgX64.dsc
-@@ -756,6 +756,10 @@
+@@ -823,6 +823,10 @@
  
  !if $(SECURE_BOOT_ENABLE) == TRUE
    SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe.inf
@@ -1125,5 +1219,5 @@ index be3aa1f..4c36a7d 100644
  
    OvmfPkg/PlatformDxe/Platform.inf
 -- 
-1.8.3.1
+2.9.3
 
