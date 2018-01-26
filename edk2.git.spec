@@ -1,5 +1,4 @@
 %global debug_package %{nil}
-%global openssl_version 1.1.0g
 
 Name:		edk2.git
 Version:	0
@@ -10,9 +9,7 @@ Group:		Applications/Emulators
 License:	BSD and OpenSSL
 URL:		http://sourceforge.net/apps/mediawiki/tianocore/index.php?title=EDK2
 Source0:	edk2.git-g9b141c5.tar.xz
-Source1:	openssl-%{openssl_version}.tar.gz
-Patch1:         0001-OvmfPkg-Don-t-build-in-QemuVideoDxe-when-we-have-CSM.patch
-Patch2:         0001-pick-up-any-display-device-not-only-vga.patch
+
 Patch3:         0001-OvmfPkg-don-t-lock-lock-umb-when-running-csm.patch
 Patch4:		0001-MdeModulePkg-TerminalDxe-add-other-text-resolutions.patch
 Patch5:		0001-EXCLUDE_SHELL_FROM_FD.patch
@@ -78,28 +75,8 @@ BuildArch:      noarch
 EFI Development Kit II
 AARCH64 UEFI Firmware
 
-#%package coreboot-ia32
-#Summary:	Open Virtual Machine Firmware
-#License:	BSD License (no advertising) with restrictions on use and redistribution
-#BuildArch:      noarch
-#%description coreboot-ia32
-#EFI Development Kit II
-#coreboot payload
-#32bit version
-
-#%package coreboot-x64
-#Summary:	Open Virtual Machine Firmware
-#License:	BSD License (no advertising) with restrictions on use and redistribution
-#BuildArch:      noarch
-#%description coreboot-x64
-#EFI Development Kit II
-#coreboot payload
-#64bit version
-
 %prep
 %setup -q -n %{name}
-#%patch1 -p1
-#%patch2 -p1
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
@@ -108,11 +85,6 @@ AARCH64 UEFI Firmware
 %patch12 -p1
 %patch20 -p1
 %patch30 -p1
-
-# add openssl
-tar -C CryptoPkg/Library/OpensslLib -xf %{SOURCE1}
-mv      CryptoPkg/Library/OpensslLib/openssl-%{openssl_version} \
-        CryptoPkg/Library/OpensslLib/openssl
 
 %build
 source ./edksetup.sh
@@ -266,18 +238,6 @@ for fd in {arm,aarch64}/QEMU_EFI.fd; do
 	dd of="$vars" if="${fd//QEMU_EFI/QEMU_VARS}" conv=notrunc
 done
 
-# build coreboot payload
-#build $CC_FLAGS -a IA32 \
-#    -D HTTP_BOOT_ENABLE \
-#    -p CorebootPayloadPkg/CorebootPayloadPkgIa32.dsc
-#mkdir -p "coreboot-ia32"
-#cp Build/CorebootPayloadPkgIA32/DEBUG_*/FV/*.fd "coreboot-ia32"
-#build $CC_FLAGS -a IA32 -a X64 \
-#    -D HTTP_BOOT_ENABLE \
-#    -p CorebootPayloadPkg/CorebootPayloadPkgIa32X64.dsc
-#mkdir -p "coreboot-x64"
-#cp Build/CorebootPayloadPkgX64/DEBUG_*/FV/*.fd "coreboot-x64"
-
 %install
 mkdir -p %{buildroot}%{_bindir}
 install	--strip \
@@ -314,13 +274,5 @@ cp -a ovmf-* arm aarch64 %{buildroot}/usr/share/%{name}
 %files aarch64
 %dir /usr/share/%{name}
 /usr/share/%{name}/aarch64
-
-#%files coreboot-ia32
-#%dir /usr/share/%{name}
-#/usr/share/%{name}/coreboot-ia32
-
-#%files coreboot-x64
-#%dir /usr/share/%{name}
-#/usr/share/%{name}/coreboot-x64
 
 %changelog
