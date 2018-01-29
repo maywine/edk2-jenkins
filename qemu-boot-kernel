@@ -1,0 +1,55 @@
+#!/bin/sh
+
+# figure qemu
+arch="$(uname -m)"
+for item in /usr/libexec/qemu-kvm \
+            /usr/bin/qemu-kvm \
+            /usr/bin/qemu-system-${arch} \
+; do
+	test -x "$item" || continue
+	qemu="$item"
+	break
+done
+
+# figure kernel
+kernel="/boot/vmlinuz-$(uname -r)"
+
+# build cmd line
+declare -a args
+args[0]="-nodefaults"
+args[1]="-no-reboot"
+args[2]="-machine"
+args[3]="accel=kvm:tcg"
+args[4]="-m"
+args[5]="1G"
+args[6]="-display"
+args[7]="none"
+args[8]="-serial"
+args[9]="stdio"
+args[10]="-kernel"
+args[11]="$kernel"
+args[12]="-append"
+args[13]="console=ttyS0,115200 panic=1"
+
+# go!
+echo ""
+echo "#########################################################"
+echo "###"
+echo "### kernel boot test"
+echo "###     qemu:       $qemu"
+echo "###     kernel:     $kernel"
+echo "###     extra args: $*"
+echo "###"
+(set -x; timeout --foreground 10s "$qemu" "${args[@]}" "$@")
+rc="$?"
+
+# print result
+echo ""
+echo "###"
+if test "$rc" = "0"; then
+	echo "### OK"
+else
+	echo "### FAILED ($rc)"
+fi
+echo "###"
+exit $rc

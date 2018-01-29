@@ -9,6 +9,7 @@ Group:		Applications/Emulators
 License:	BSD and OpenSSL
 URL:		http://sourceforge.net/apps/mediawiki/tianocore/index.php?title=EDK2
 Source0:	edk2.git-g9b141c5.tar.xz
+Source1:	qemu-boot-test
 
 Patch3:         0001-OvmfPkg-don-t-lock-lock-umb-when-running-csm.patch
 Patch4:		0001-MdeModulePkg-TerminalDxe-add-other-text-resolutions.patch
@@ -32,6 +33,9 @@ BuildRequires:	gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
 BuildRequires:	dosfstools
 BuildRequires:	mtools
 BuildRequires:	genisoimage
+
+# for check
+BuildRequires:	qemu-kvm
 
 %description
 EFI Development Kit II
@@ -236,6 +240,17 @@ for fd in {arm,aarch64}/QEMU_EFI.fd; do
 	dd of="$code" if="$fd" conv=notrunc
 	dd of="$vars" if="/dev/zero" bs=1M count=64
 	dd of="$vars" if="${fd//QEMU_EFI/QEMU_VARS}" conv=notrunc
+done
+
+%check
+for cfg in pure-efi with-csm need-smm; do
+	for mt in pc q35; do
+		test ${cfg} = need-smm -a ${mt} = pc && continue
+		for cpus in 1 4; do
+			%{SOURCE1} -M ${mt} -smp $cpus \
+				-bios ovmf-ia32/OVMF-${cfg}.fd
+		done
+	done
 done
 
 %install
