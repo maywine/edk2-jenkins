@@ -9,7 +9,7 @@ Group:		Applications/Emulators
 License:	BSD and OpenSSL
 URL:		http://sourceforge.net/apps/mediawiki/tianocore/index.php?title=EDK2
 Source0:	edk2.git-g9b141c5.tar.xz
-Source1:	qemu-boot-test
+Source1:	qemu-boot-kernel
 
 Patch3:         0001-OvmfPkg-don-t-lock-lock-umb-when-running-csm.patch
 Patch4:		0001-MdeModulePkg-TerminalDxe-add-other-text-resolutions.patch
