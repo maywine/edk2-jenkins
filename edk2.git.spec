@@ -244,7 +244,7 @@ done
 
 %check
 for cfg in pure-efi with-csm need-smm; do
-	for mt in pc q35; do
+	for mt in pc q35,smm=on; do
 		test ${cfg} = need-smm -a ${mt} = pc && continue
 		for cpus in 1 4; do
 			%{SOURCE1} -M ${mt} -smp $cpus \
