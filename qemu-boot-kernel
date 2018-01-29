@@ -5,6 +5,7 @@ arch="$(uname -m)"
 for item in /usr/libexec/qemu-kvm \
             /usr/bin/qemu-kvm \
             /usr/bin/qemu-system-${arch} \
+            /usr/local/bin/qemu-system-${arch} \
 ; do
 	test -x "$item" || continue
 	qemu="$item"
@@ -40,16 +41,27 @@ echo "###     qemu:       $qemu"
 echo "###     kernel:     $kernel"
 echo "###     extra args: $*"
 echo "###"
-(set -x; timeout --foreground 10s "$qemu" "${args[@]}" "$@")
+log=$(mktemp)
+trap "rm -f $log" EXIT
+(set -x; timeout --foreground 10s "$qemu" "${args[@]}" "$@" > "$log")
 rc="$?"
 
 # print result
+cat "$log"
 echo ""
 echo "###"
-if test "$rc" = "0"; then
-	echo "### OK"
-else
-	echo "### FAILED ($rc)"
+if test "$rc" != "0"; then
+	echo "### FAILED: timeout, rc=$rc"
+	echo "###"
+	exit $rc
 fi
-echo "###"
-exit $rc
+
+if grep -q "Unable to mount root" "$log"; then
+	echo "### OK"
+	echo "###"
+	exit 0
+else
+	echo "### FAILED: kernel log check"
+	echo "###"
+	exit 1
+fi
