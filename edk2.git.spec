@@ -243,15 +243,26 @@ for fd in {arm,aarch64}/QEMU_EFI.fd; do
 done
 
 %check
-for cfg in pure-efi with-csm need-smm; do
-	for mt in pc q35,smm=on; do
-		test ${cfg} = need-smm -a ${mt} = pc && continue
-		for cpus in 1 4; do
-			%{SOURCE1} -M ${mt} -smp $cpus \
-				-bios ovmf-ia32/OVMF-${cfg}.fd
-		done
+
+# x86 pc
+for cfg in pure-efi with-csm; do
+	for cpus in 1 4; do
+		%{SOURCE1} -M pc -smp $cpus \
+			-bios ovmf-x64/OVMF-${cfg}.fd
 	done
 done
+
+# x86 q35
+for cfg in pure-efi with-csm need-smm; do
+	for cpus in 1 4; do
+		cp ovmf-x64/OVMF_CODE-${cfg}.fd test-code.raw
+		cp ovmf-x64/OVMF_VARS-${cfg}.fd test-vars.raw
+		%{SOURCE1} -M q35,smm=on -smp $cpus \
+		  -drive file=test-code.raw,if=pflash,format=raw,unit=0,readonly=on \
+		  -drive file=test-vars.raw,if=pflash,format=raw,unit=1
+	done
+done
+
 
 %install
 mkdir -p %{buildroot}%{_bindir}
