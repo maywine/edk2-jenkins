@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# config
+timeout="30s"
+
 # figure qemu
 arch="$(uname -m)"
 for item in /usr/libexec/qemu-kvm \
@@ -43,7 +46,7 @@ echo "###     extra args: $*"
 echo "###"
 log=$(mktemp)
 trap "rm -f $log" EXIT
-(set -x; timeout --foreground 10s "$qemu" "${args[@]}" "$@" > "$log")
+(set -x; timeout --foreground "$timeout" "$qemu" "${args[@]}" "$@" > "$log")
 rc="$?"
 
 # print result
