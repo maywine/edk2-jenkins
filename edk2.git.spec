@@ -258,6 +258,7 @@ for cfg in pure-efi with-csm need-smm; do
 		cp ovmf-x64/OVMF_CODE-${cfg}.fd test-code.raw
 		cp ovmf-x64/OVMF_VARS-${cfg}.fd test-vars.raw
 		%{SOURCE1} -M q35,smm=on -smp $cpus \
+		  -global ICH9-LPC.disable_s3=1 \
 		  -drive file=test-code.raw,if=pflash,format=raw,unit=0,readonly=on \
 		  -drive file=test-vars.raw,if=pflash,format=raw,unit=1
 	done
