@@ -11,6 +11,9 @@ def RPMSource() {
 		[
 		    $class: 'CloneOption',
 		    timeout: 60
+                ],[
+                    $class: 'SubmoduleOption',
+                    timeout: 60
 		]
 	    ],
 	    userRemoteConfigs: [
@@ -30,7 +33,13 @@ def RPMBuild() {
         rm -f *.tar.gz
         tarball="edk2-${ghash}.tar.gz"
         (cd source; git archive --format=tar --prefix="${tarball%.tar.gz}/" HEAD) \
-                | gzip > "${tarball}"
+                > "${tarball%.gz}"
+        (cd source/CryptoPkg/Library/OpensslLib/openssl; git archive --format=tar \
+		--prefix="${tarball%.tar.gz}/CryptoPkg/Library/OpensslLib/openssl/" \
+                HEAD) > "openssl.tar"
+        tar --concatenate --file "${tarball%.gz}" "openssl.tar"
+        rm "openssl.tar"
+        gzip "${tarball%.gz}"
 
         # tweak spec file
         sed -i.orig \
