@@ -23,8 +23,7 @@ def RPMBuild() {
     sh '''
         # figure version
         ghash="g$(cd source; git show --format="format:%h" | head -1)"
-        gcnt=$(git show --format="format:%ai" \
-                | head -1 | sed -e 's/ .*//' -e 's/-//g')
+        gcnt=$(git show --format="format:%ai" | head -1 | sed -e "s/ .*//" -e "s/-//g")
         version="0"
 
         # fresh snapshot tarball
