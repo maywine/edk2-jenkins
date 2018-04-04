@@ -41,14 +41,18 @@ def RPMBuild() {
             *.spec
         diff -u *.spec.orig *.spec || true
 
+        # edk2 build uses WORKSPACE too ...
+        WS="$WORKSPACE"
+        unset WORKSPACE
+
         # build package
         rpmbuild                                            \
-            --define "_specdir ${WORKSPACE}"                \
-            --define "_sourcedir ${WORKSPACE}"              \
-            --define "_rpmdir ${WORKSPACE}/rpms"            \
-            --define "_srcrpmdir ${WORKSPACE}/rpms/src"     \
-            --define "_builddir ${WORKSPACE}/build"         \
-            --define "_buildrootdir ${WORKSPACE}/buildroot" \
+            --define "_specdir ${WS}"                \
+            --define "_sourcedir ${WS}"              \
+            --define "_rpmdir ${WS}/rpms"            \
+            --define "_srcrpmdir ${WS}/rpms/src"     \
+            --define "_builddir ${WS}/build"         \
+            --define "_buildrootdir ${WS}/buildroot" \
             -ba *.spec
 
         # revert spec file tweaks
