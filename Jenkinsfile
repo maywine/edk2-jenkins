@@ -123,7 +123,7 @@ pipeline {
     post {
 	failure {
 	    emailext([
-		to: 'kraxel@gmail.com',
+		to: 'kraxel@gmail.com lersek@redhat.com',
 		subject: "${JOB_NAME} - build #${BUILD_NUMBER} - FAILED!",
 		body: "${BUILD_URL}\n",
 		attachLog: true,
