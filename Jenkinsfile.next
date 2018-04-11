@@ -41,14 +41,12 @@ def RPMBuildSource() {
         rm "openssl.tar"
         gzip "${tarball%.gz}"
 
-        # tweak spec file
-        sed -i.orig \
-            -e "s/\\(Version:[ \\t]\\+\\)\\(.*\\)/\\1${version}/" \
+        # generate spec file from template
+        sed -e "s/\\(Version:[ \\t]\\+\\)\\(.*\\)/\\1${version}/" \
             -e "s/\\(Release:[ \\t]\\+\\)\\(.*\\)/\\1${gcnt}.${BUILD_NUMBER}.${ghash}/" \
             -e "s/\\(Source0:[ \\t]\\+\\)\\(.*\\)/\\1${tarball}/" \
             -e "s/\\(%setup\\)\\(.*\\)/\\1 -n ${tarball%.tar.gz}/" \
-            *.spec
-        diff -u *.spec.orig *.spec || true
+            < edk2.git.spec.template > edk2.git.spec
 
         # edk2 build uses WORKSPACE too ...
         WS="$WORKSPACE"
@@ -64,7 +62,7 @@ def RPMBuildSource() {
             --define "_buildrootdir ${WS}/buildroot" \
             -bs *.spec
 
-        # revert spec file tweaks
+        # drop spec file changes
         git reset --hard
 	'''
     stash name: 'srpm', includes: 'rpms/src/*.src.rpm'
