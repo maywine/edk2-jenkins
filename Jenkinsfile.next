@@ -126,7 +126,7 @@ pipeline {
 	    }
 	}
 
-	stage ("RPM Binary") {
+	stage ("RPM x86_64") {
 	    steps {
 		RPMBuildBinary('x86_64')
 	    }
