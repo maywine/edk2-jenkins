@@ -45,6 +45,7 @@ Summary:	EFI Development Kit II Tools
 %description tools
 EFI Development Kit II Tools
 
+%ifarch x86_64
 %package ovmf-ia32
 Summary:	Open Virtual Machine Firmware
 License:	BSD License (no advertising) with restrictions on use and redistribution
@@ -53,7 +54,9 @@ BuildArch:      noarch
 EFI Development Kit II
 Open Virtual Machine Firmware
 32bit version
+%endif
 
+%ifarch x86_64
 %package ovmf-x64
 Summary:	Open Virtual Machine Firmware
 License:	BSD License (no advertising) with restrictions on use and redistribution
@@ -62,7 +65,9 @@ BuildArch:      noarch
 EFI Development Kit II
 Open Virtual Machine Firmware
 64bit version
+%endif
 
+%ifarch %{arm}
 %package arm
 Summary:	Open Virtual Machine Firmware
 License:	BSD License (no advertising) with restrictions on use and redistribution
@@ -70,7 +75,9 @@ BuildArch:      noarch
 %description arm
 EFI Development Kit II
 ARM UEFI Firmware
+%endif
 
+%ifarch aarch64
 %package aarch64
 Summary:	Open Virtual Machine Firmware
 License:	BSD License (no advertising) with restrictions on use and redistribution
@@ -78,6 +85,7 @@ BuildArch:      noarch
 %description aarch64
 EFI Development Kit II
 AARCH64 UEFI Firmware
+%endif
 
 %prep
 %setup -q -n %{name}
@@ -107,32 +115,12 @@ case "$GCCVER" in
 7.*)	CC_FLAGS="-t GCC5";;
 esac
 
-CROSSGCCVER=$(arm-linux-gnu-gcc --version | awk '{ print $3; exit}')
-case "$CROSSGCCVER" in
-4.8*)	CROSS_CC_FLAGS="-t GCC48"
-        export GCC48_ARM_PREFIX="arm-linux-gnu-"
-        export GCC48_AARCH64_PREFIX="aarch64-linux-gnu-"
-        ;;
-4.9*)
-	CROSS_CC_FLAGS="-t GCC49"
-        export GCC49_ARM_PREFIX="arm-linux-gnu-"
-        export GCC49_AARCH64_PREFIX="aarch64-linux-gnu-"
-        ;;
-5.* | 6.* | 7.*)
-	CROSS_CC_FLAGS="-t GCC5"
-        export GCC5_ARM_PREFIX="arm-linux-gnu-"
-        export GCC5_AARCH64_PREFIX="aarch64-linux-gnu-"
-        ;;
-esac
-
 # parallel builds
 SMP_MFLAGS="%{?_smp_mflags}"
 if [[ x"$SMP_MFLAGS" = x-j* ]]; then
 	CC_FLAGS="$CC_FLAGS -n ${SMP_MFLAGS#-j}"
-	CROSS_CC_FLAGS="$CROSS_CC_FLAGS -n ${SMP_MFLAGS#-j}"
 elif [ -n "%{?jobs}" ]; then
 	CC_FLAGS="$CC_FLAGS -n %{?jobs}"
-	CROSS_CC_FLAGS="$CROSS_CC_FLAGS -n %{?jobs}"
 fi
 
 # prepare
@@ -181,6 +169,7 @@ build_iso()
 		-o "$ISO_IMAGE" -- "$UEFI_SHELL_IMAGE"
 }
 
+%ifarch x86_64
 # build ovmf
 for cfg in pure-efi with-csm need-smm; do
 	OVMF_FLAGS="$CC_FLAGS -D HTTP_BOOT_ENABLE -D FD_SIZE_2MB"
@@ -219,21 +208,31 @@ for cfg in pure-efi with-csm need-smm; do
 	fi
 	rm -rf Build/OvmfX64
 done
+%endif
 
-# build arm/aarch64 firmware
-ARM_FLAGS="$CROSS_CC_FLAGS"
-build $ARM_FLAGS -a ARM \
+%ifarch %{arm}
+# build arm firmware
+build $CC_FLAGS -a ARM \
     -D DEBUG_PRINT_ERROR_LEVEL=0x8040004F \
     -D HTTP_BOOT_ENABLE \
     -p ArmVirtPkg/ArmVirtQemu.dsc
-build $ARM_FLAGS -a AARCH64 \
-    -D DEBUG_PRINT_ERROR_LEVEL=0x8040004F \
-    -D HTTP_BOOT_ENABLE \
-    -p ArmVirtPkg/ArmVirtQemu.dsc
-mkdir -p "arm" "aarch64"
+mkdir -p "arm"
 cp Build/ArmVirtQemu-ARM/DEBUG_*/FV/*.fd arm
+%endif
+
+%ifarch aarch64
+# build aarch64 firmware
+build $CC_FLAGS -a AARCH64 \
+    -D DEBUG_PRINT_ERROR_LEVEL=0x8040004F \
+    -D HTTP_BOOT_ENABLE \
+    -p ArmVirtPkg/ArmVirtQemu.dsc
+mkdir -p "aarch64"
 cp Build/ArmVirtQemu-AARCH64/DEBUG_*/FV/*.fd aarch64
-for fd in {arm,aarch64}/QEMU_EFI.fd; do
+%endif
+
+%ifarch %{arm} aarch64
+# build raw pflash images
+for fd in */QEMU_EFI.fd; do
 	code="${fd%.fd}-pflash.raw"
 	vars="${fd%%/*}/vars-template-pflash.raw"
 	dd of="$code" if="/dev/zero" bs=1M count=64
@@ -241,8 +240,12 @@ for fd in {arm,aarch64}/QEMU_EFI.fd; do
 	dd of="$vars" if="/dev/zero" bs=1M count=64
 	dd of="$vars" if="${fd//QEMU_EFI/QEMU_VARS}" conv=notrunc
 done
+%endif
+
 
 %check
+
+%ifarch x86_64
 
 # x86 pc
 for cfg in pure-efi with-csm; do
@@ -264,6 +267,8 @@ for cfg in pure-efi with-csm need-smm; do
 	done
 done
 
+%endif
+
 
 %install
 mkdir -p %{buildroot}%{_bindir}
@@ -284,22 +289,30 @@ cp -a ovmf-* arm aarch64 %{buildroot}/usr/share/%{name}
 %doc BaseTools/UserManuals/VolInfo_Utility_Man_Page.rtf
 %{_bindir}/*
 
+%ifarch x86_64
 %files ovmf-ia32
 %doc OvmfPkg/README
 %dir /usr/share/%{name}
 /usr/share/%{name}/ovmf-ia32
+%endif
 
+%ifarch x86_64
 %files ovmf-x64
 %doc OvmfPkg/README
 %dir /usr/share/%{name}
 /usr/share/%{name}/ovmf-x64
+%endif
 
+%ifarch %{arm}
 %files arm
 %dir /usr/share/%{name}
 /usr/share/%{name}/arm
+%endif
 
+%ifarch aarch64
 %files aarch64
 %dir /usr/share/%{name}
 /usr/share/%{name}/aarch64
+%endif
 
 %changelog
