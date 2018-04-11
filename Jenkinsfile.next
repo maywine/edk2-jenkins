@@ -71,6 +71,10 @@ def RPMBuildSource() {
 def RPMBuildBinary(arch) {
     unstash 'srpm'
     sh '''
+        # edk2 build uses WORKSPACE too ...
+        WS="$WORKSPACE"
+        unset WORKSPACE
+
         # build binary package
         rpmbuild                                     \
             --define "_specdir ${WS}"                \
