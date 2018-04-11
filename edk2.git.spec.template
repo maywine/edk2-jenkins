@@ -278,8 +278,15 @@ install	--strip \
 	%{buildroot}%{_bindir}
 
 mkdir -p %{buildroot}/usr/share/%{name}
-#cp -a ovmf-* arm aarch64 coreboot-* %{buildroot}/usr/share/%{name}
-cp -a ovmf-* arm aarch64 %{buildroot}/usr/share/%{name}
+%ifarch x86_64
+cp -a ovmf-* %{buildroot}/usr/share/%{name}
+%endif
+%ifarch %{arm}
+cp -a arm %{buildroot}/usr/share/%{name}
+%endif
+%ifarch aarch64
+cp -a aarch64 %{buildroot}/usr/share/%{name}
+%endif
 
 %files
 %dir /usr/share/%{name}
