@@ -1,3 +1,4 @@
+# -*-rpm-spec-*-
 %global debug_package %{nil}
 
 Name:		edk2.git

@@ -47,6 +47,7 @@ def RPMBuildSource() {
             -e "s/\\(Source0:[ \\t]\\+\\)\\(.*\\)/\\1${tarball}/" \
             -e "s/\\(%setup\\)\\(.*\\)/\\1 -n ${tarball%.tar.gz}/" \
             < edk2.git.spec.template > edk2.git.spec
+        diff -u edk2.git.spec.template edk2.git.spec || true
 
         # edk2 build uses WORKSPACE too ...
         WS="$WORKSPACE"
@@ -74,6 +75,9 @@ def RPMBuildBinary(arch) {
         # edk2 build uses WORKSPACE too ...
         WS="$WORKSPACE"
         unset WORKSPACE
+
+	# debugging ...
+	ls rpms/src
 
         # build binary package
         rpmbuild                                     \
@@ -116,25 +120,25 @@ pipeline {
 
     stages {
 
-	stage ('Prepare') {
+	stage ('git') {
 	    steps {
 		RPMSource();
 	    }
 	}
 
-	stage ("RPM Source") {
+	stage ("srpm") {
 	    steps {
 		RPMBuildSource()
 	    }
 	}
 
-	stage ("RPM x86_64") {
+	stage ("rpm x86_64") {
 	    steps {
 		RPMBuildBinary('x86_64')
 	    }
 	}
 
-	stage ("Cleanup") {
+	stage ("cleanup") {
 	    steps {
 		RPMCleanup()
 	    }
