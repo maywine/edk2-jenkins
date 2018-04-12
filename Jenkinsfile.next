@@ -124,9 +124,6 @@ pipeline {
     stages {
 
 	stage ('git+srpm') {
-	    agent {
-		node 'sys-fedora-x64'
-	    }
 	    steps {
 		RPMFetchSource();
 		RPMBuildSource()
@@ -135,11 +132,18 @@ pipeline {
 	}
 
 	stage ("rpm x86_64") {
-	    agent {
-		node 'sys-fedora-x64'
-	    }
 	    steps {
 		RPMBuildBinary('x86_64')
+		RPMCleanup()
+	    }
+	}
+
+	stage ("rpm arm") {
+	    agent {
+		node 'sys-fedora-arm'
+	    }
+	    steps {
+		RPMBuildBinary('armhfp')
 		RPMCleanup()
 	    }
 	}
