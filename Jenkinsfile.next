@@ -87,7 +87,7 @@ def RPMBuildBinary(arch) {
             --define "_buildrootdir ${WS}/buildroot" \
             --rebuild rpms/src/*.src.rpm
 	'''
-    archiveArtifacts "rpms/$arch/*"
+    archiveArtifacts "rpms/$arch/*,rpms/noarch/*"
 }
 
 def RPMCleanup() {
