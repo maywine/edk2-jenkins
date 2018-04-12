@@ -143,6 +143,16 @@ pipeline {
 		RPMCleanup()
 	    }
 	}
+
+	stage ("rpm aarch64") {
+	    agent {
+		node 'sys-fedora-a64'
+	    }
+	    steps {
+		RPMBuildBinary('aarch64')
+		RPMCleanup()
+	    }
+	}
     }
 
     post {
