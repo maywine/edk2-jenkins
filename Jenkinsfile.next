@@ -108,6 +108,8 @@ def RPMCleanup() {
 }
 
 pipeline {
+    agent any
+
     options {
 	buildDiscarder(logRotator(numToKeepStr: '3'))
 	disableConcurrentBuilds()
