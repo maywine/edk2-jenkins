@@ -24,16 +24,16 @@ Patch20:	0001-OvmfPkg-EnrollDefaultKeys-application-for-enrolling-.patch
 
 Patch30:	0001-tools_def.template-take-GCC4-_-IA32-X64-prefixes-fro.patch
 
-BuildRequires:	iasl
+%ifarch x86_64
+BuildRequires:	mtools
+BuildRequires:	dosfstools
+BuildRequires:	genisoimage
 BuildRequires:	nasm
+BuildRequires:	seabios.git-csm
+%endif
+BuildRequires:	iasl
 BuildRequires:	python
 BuildRequires:	libuuid-devel
-BuildRequires:	seabios.git-csm
-BuildRequires:	gcc-arm-linux-gnu binutils-arm-linux-gnu
-BuildRequires:	gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
-BuildRequires:	dosfstools
-BuildRequires:	mtools
-BuildRequires:	genisoimage
 
 # for check
 BuildRequires:	qemu-kvm
@@ -125,7 +125,9 @@ elif [ -n "%{?jobs}" ]; then
 fi
 
 # prepare
+%ifarch x86_64
 cp /usr/share/seabios.git-csm/bios-csm.bin OvmfPkg/Csm/Csm16/Csm16.bin
+%endif
 make -C BaseTools
 
 # build key encollment boot iso
