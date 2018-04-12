@@ -41,52 +41,60 @@ BuildRequires:	qemu-kvm
 %description
 EFI Development Kit II
 
+
 %package tools
 Summary:	EFI Development Kit II Tools
 %description tools
 EFI Development Kit II Tools
+
 
 %ifarch x86_64
 %package ovmf-ia32
 Summary:	Open Virtual Machine Firmware
 License:	BSD License (no advertising) with restrictions on use and redistribution
 BuildArch:      noarch
+
 %description ovmf-ia32
 EFI Development Kit II
 Open Virtual Machine Firmware
 32bit version
-%endif
 
-%ifarch x86_64
+
 %package ovmf-x64
 Summary:	Open Virtual Machine Firmware
 License:	BSD License (no advertising) with restrictions on use and redistribution
 BuildArch:      noarch
+
 %description ovmf-x64
 EFI Development Kit II
 Open Virtual Machine Firmware
 64bit version
 %endif
 
+
 %ifarch %{arm}
 %package arm
 Summary:	Open Virtual Machine Firmware
 License:	BSD License (no advertising) with restrictions on use and redistribution
 BuildArch:      noarch
+
 %description arm
 EFI Development Kit II
 ARM UEFI Firmware
 %endif
+
 
 %ifarch aarch64
 %package aarch64
 Summary:	Open Virtual Machine Firmware
 License:	BSD License (no advertising) with restrictions on use and redistribution
 BuildArch:      noarch
+
 %description aarch64
 EFI Development Kit II
 AARCH64 UEFI Firmware
 %endif
+
 
 %prep
 %setup -q -n %{name}
@@ -98,6 +106,7 @@ AARCH64 UEFI Firmware
 %patch12 -p1
 %patch20 -p1
 %patch30 -p1
+
 
 %build
 source ./edksetup.sh
@@ -125,9 +134,6 @@ elif [ -n "%{?jobs}" ]; then
 fi
 
 # prepare
-%ifarch x86_64
-cp /usr/share/seabios.git-csm/bios-csm.bin OvmfPkg/Csm/Csm16/Csm16.bin
-%endif
 make -C BaseTools
 
 # build key encollment boot iso
@@ -174,6 +180,7 @@ build_iso()
 
 %ifarch x86_64
 # build ovmf
+cp /usr/share/seabios.git-csm/bios-csm.bin OvmfPkg/Csm/Csm16/Csm16.bin
 for cfg in pure-efi with-csm need-smm; do
 	OVMF_FLAGS="$CC_FLAGS -D HTTP_BOOT_ENABLE -D FD_SIZE_2MB"
 
@@ -304,9 +311,7 @@ cp -a aarch64 %{buildroot}/usr/share/%{name}
 %doc OvmfPkg/README
 %dir /usr/share/%{name}
 /usr/share/%{name}/ovmf-ia32
-%endif
 
-%ifarch x86_64
 %files ovmf-x64
 %doc OvmfPkg/README
 %dir /usr/share/%{name}
