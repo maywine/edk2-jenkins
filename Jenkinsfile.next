@@ -54,6 +54,7 @@ def RPMBuildSource() {
         unset WORKSPACE
 
         # build source package
+        rm -f rpms/src/*.src.rpm
         rpmbuild                                     \
             --define "_specdir ${WS}"                \
             --define "_sourcedir ${WS}"              \
@@ -75,9 +76,6 @@ def RPMBuildBinary(arch) {
         # edk2 build uses WORKSPACE too ...
         WS="$WORKSPACE"
         unset WORKSPACE
-
-	# debugging ...
-	ls rpms/src
 
         # build binary package
         rpmbuild                                     \
