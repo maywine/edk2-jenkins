@@ -131,30 +131,36 @@ pipeline {
 	    }
 	}
 
-	stage ("rpm x86_64") {
-	    steps {
-		RPMBuildBinary('x86_64')
-		RPMCleanup()
-	    }
-	}
+	stage ("rpms") {
+	    parallel {
 
-	stage ("rpm arm") {
-	    agent {
-		node 'sys-fedora-arm'
-	    }
-	    steps {
-		RPMBuildBinary('armv7hl')
-		RPMCleanup()
-	    }
-	}
+		stage ("x86_64") {
+		    steps {
+			RPMBuildBinary('x86_64')
+			RPMCleanup()
+		    }
+		}
 
-	stage ("rpm aarch64") {
-	    agent {
-		node 'sys-fedora-a64'
-	    }
-	    steps {
-		RPMBuildBinary('aarch64')
-		RPMCleanup()
+		stage ("rpm arm") {
+		    agent {
+			node 'sys-fedora-arm'
+		    }
+		    steps {
+			RPMBuildBinary('armv7hl')
+			RPMCleanup()
+		    }
+		}
+
+		stage ("rpm aarch64") {
+		    agent {
+			node 'sys-fedora-a64'
+		    }
+		    steps {
+			RPMBuildBinary('aarch64')
+			RPMCleanup()
+		    }
+		}
+
 	    }
 	}
     }
