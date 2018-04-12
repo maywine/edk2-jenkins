@@ -141,7 +141,7 @@ pipeline {
 		    }
 		}
 
-		stage ("rpm arm") {
+		stage ("arm") {
 		    agent {
 			node 'sys-fedora-arm'
 		    }
@@ -151,7 +151,7 @@ pipeline {
 		    }
 		}
 
-		stage ("rpm aarch64") {
+		stage ("aarch64") {
 		    agent {
 			node 'sys-fedora-a64'
 		    }
