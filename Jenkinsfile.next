@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-def RPMSource() {
+def RPMFetchSource() {
     dir ('source') {
 	checkout([
 	    $class: 'GitSCM',
@@ -108,10 +108,6 @@ def RPMCleanup() {
 }
 
 pipeline {
-    agent {
-	node 'sys-fedora-x64'
-    }
-
     options {
 	buildDiscarder(logRotator(numToKeepStr: '3'))
 	disableConcurrentBuilds()
@@ -123,26 +119,23 @@ pipeline {
 
     stages {
 
-	stage ('git') {
-	    steps {
-		RPMSource();
+	stage ('git+srpm') {
+	    agent {
+		node 'sys-fedora-x64'
 	    }
-	}
-
-	stage ("srpm") {
 	    steps {
+		RPMFetchSource();
 		RPMBuildSource()
+		RPMCleanup()
 	    }
 	}
 
 	stage ("rpm x86_64") {
+	    agent {
+		node 'sys-fedora-x64'
+	    }
 	    steps {
 		RPMBuildBinary('x86_64')
-	    }
-	}
-
-	stage ("cleanup") {
-	    steps {
 		RPMCleanup()
 	    }
 	}
