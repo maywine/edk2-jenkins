@@ -108,7 +108,9 @@ def RPMCleanup() {
 }
 
 pipeline {
-    agent any
+    agent {
+	node 'sys-fedora-x64'
+    }
 
     options {
 	buildDiscarder(logRotator(numToKeepStr: '3'))
