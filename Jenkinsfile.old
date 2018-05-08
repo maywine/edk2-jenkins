@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-def RPMFetchSource() {
+def RPMSource() {
     dir ('source') {
 	checkout([
 	    $class: 'GitSCM',
@@ -22,10 +22,7 @@ def RPMFetchSource() {
     }
 }
 
-def RPMBuildSource() {
-    dir ("rpms") {
-	deleteDir()
-    }
+def RPMBuild() {
     sh '''
         # figure version
         ghash="g$(cd source; git show --format='format:%h' | head -1)"
@@ -44,56 +41,45 @@ def RPMBuildSource() {
         rm "openssl.tar"
         gzip "${tarball%.gz}"
 
-        # generate spec file from template
-        sed -e "s/\\(Version:[ \\t]\\+\\)\\(.*\\)/\\1${version}/" \
+        # tweak spec file
+        sed -i.orig \
+            -e "s/\\(Version:[ \\t]\\+\\)\\(.*\\)/\\1${version}/" \
             -e "s/\\(Release:[ \\t]\\+\\)\\(.*\\)/\\1${gcnt}.${BUILD_NUMBER}.${ghash}/" \
             -e "s/\\(Source0:[ \\t]\\+\\)\\(.*\\)/\\1${tarball}/" \
             -e "s/\\(%setup\\)\\(.*\\)/\\1 -n ${tarball%.tar.gz}/" \
-            < edk2.git.spec.template > edk2.git.spec
-        diff -u edk2.git.spec.template edk2.git.spec || true
+            *.spec
+        diff -u *.spec.orig *.spec || true
 
         # edk2 build uses WORKSPACE too ...
         WS="$WORKSPACE"
         unset WORKSPACE
 
-        # build source package
-        rpmbuild                                     \
+        # build package
+        rpmbuild                                            \
             --define "_specdir ${WS}"                \
             --define "_sourcedir ${WS}"              \
             --define "_rpmdir ${WS}/rpms"            \
             --define "_srcrpmdir ${WS}/rpms/src"     \
-            --define "_builddir ${WS}/rpms/build"    \
-            --define "_buildrootdir ${WS}/rpms/root" \
-            -bs *.spec
+            --define "_builddir ${WS}/build"         \
+            --define "_buildrootdir ${WS}/buildroot" \
+            -ba *.spec
 
-        # drop spec file changes
+        # revert spec file tweaks
         git reset --hard
+
+        # create rpm package repo
+	createrepo rpms
 	'''
-    archiveArtifacts 'rpms/src/*.src.rpm'
-    stash name: 'srpm', includes: 'rpms/src/*.src.rpm'
+    archiveArtifacts 'rpms/*/*'
 }
 
-def RPMBuildBinary(arch) {
-    dir ("rpms") {
+def RPMCleanup() {
+    dir ("build") {
 	deleteDir()
     }
-    unstash 'srpm'
-    sh '''
-        # edk2 build uses WORKSPACE too ...
-        WS="$WORKSPACE"
-        unset WORKSPACE
-
-        # build binary package
-        rpmbuild                                     \
-            --define "_specdir ${WS}"                \
-            --define "_sourcedir ${WS}"              \
-            --define "_rpmdir ${WS}/rpms"            \
-            --define "_srcrpmdir ${WS}/rpms/src"     \
-            --define "_builddir ${WS}/rpms/build"    \
-            --define "_buildrootdir ${WS}/rpms/root" \
-            --rebuild rpms/src/*.src.rpm
-	'''
-    archiveArtifacts "rpms/$arch/*,rpms/noarch/*"
+    dir ("buildroot") {
+	deleteDir()
+    }
     dir ("rpms") {
 	deleteDir()
     }
@@ -115,40 +101,21 @@ pipeline {
 
     stages {
 
-	stage ('git+srpm') {
+	stage ('Prepare') {
 	    steps {
-		RPMFetchSource();
-		RPMBuildSource()
+		RPMSource();
 	    }
 	}
 
-	stage ("rpms") {
-	    parallel {
+	stage ("RPM Build") {
+	    steps {
+		RPMBuild()
+	    }
+	}
 
-		stage ("x86_64") {
-		    steps {
-			RPMBuildBinary('x86_64')
-		    }
-		}
-
-		stage ("arm") {
-		    agent {
-			node 'sys-fedora-arm'
-		    }
-		    steps {
-			RPMBuildBinary('armv7hl')
-		    }
-		}
-
-		stage ("aarch64") {
-		    agent {
-			node 'sys-fedora-a64'
-		    }
-		    steps {
-			RPMBuildBinary('aarch64')
-		    }
-		}
-
+	stage ("Cleanup") {
+	    steps {
+		RPMCleanup()
 	    }
 	}
     }
@@ -156,7 +123,7 @@ pipeline {
     post {
 	failure {
 	    emailext([
-		to: 'kraxel@gmail.com',
+		to: 'kraxel@gmail.com lersek@redhat.com',
 		subject: "${JOB_NAME} - build #${BUILD_NUMBER} - FAILED!",
 		body: "${BUILD_URL}\n",
 		attachLog: true,
