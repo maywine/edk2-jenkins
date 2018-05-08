@@ -105,6 +105,7 @@ case "$GCCVER" in
 5.*)	CC_FLAGS="-t GCC5";;
 6.*)	CC_FLAGS="-t GCC5";;
 7.*)	CC_FLAGS="-t GCC5";;
+8.*)	CC_FLAGS="-t GCC5";;
 esac
 
 CROSSGCCVER=$(arm-linux-gnu-gcc --version | awk '{ print $3; exit}')
@@ -118,7 +119,7 @@ case "$CROSSGCCVER" in
         export GCC49_ARM_PREFIX="arm-linux-gnu-"
         export GCC49_AARCH64_PREFIX="aarch64-linux-gnu-"
         ;;
-5.* | 6.* | 7.*)
+5.* | 6.* | 7.* | 8.*)
 	CROSS_CC_FLAGS="-t GCC5"
         export GCC5_ARM_PREFIX="arm-linux-gnu-"
         export GCC5_AARCH64_PREFIX="aarch64-linux-gnu-"
