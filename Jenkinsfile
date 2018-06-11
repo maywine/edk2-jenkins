@@ -161,12 +161,9 @@ pipeline {
 		body: "${BUILD_URL}\n",
 		attachLog: true,
 	    ])
-            ([
-		$class: 'Mailer',
-		notifyEveryUnstableBuild: true,
-		recipients: 'builds@kraxel.org',
-		sendToIndividuals: false,
-	    ])
+	    mail to: 'builds@kraxel.org',
+		subject: "Status of pipeline: ${currentBuild.fullDisplayName}",
+		body: "${env.BUILD_URL} has result ${currentBuild.result}"
 	}
     }
 }
