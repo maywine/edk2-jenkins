@@ -161,6 +161,12 @@ pipeline {
 		body: "${BUILD_URL}\n",
 		attachLog: true,
 	    ])
+            ([
+		$class: 'Mailer',
+		notifyEveryUnstableBuild: true,
+		recipients: 'builds@kraxel.org',
+		sendToIndividuals: false,
+	    ])
 	}
     }
 }
