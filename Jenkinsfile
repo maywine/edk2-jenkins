@@ -165,6 +165,7 @@ pipeline {
 	always {
 	    mail to: 'builds@kraxel.org',
 		subject: "Status of pipeline: ${currentBuild.fullDisplayName}",
+		body: "${env.BUILD_URL} has result ${currentBuild.result}"
 	}
     }
 }
