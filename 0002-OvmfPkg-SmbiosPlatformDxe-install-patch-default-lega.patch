@@ -1,4 +1,4 @@
-From 26146b77f6d54c44fbb984bacf8bf31683e8d477 Mon Sep 17 00:00:00 2001
+From 90257ad0a698a3b165e71ea299c0f6b4cc06a144 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Wed, 5 Jun 2013 10:25:13 +0200
 Subject: [PATCH 2/3] OvmfPkg/SmbiosPlatformDxe: install+patch default legacy
@@ -7,31 +7,15 @@ Subject: [PATCH 2/3] OvmfPkg/SmbiosPlatformDxe: install+patch default legacy
 Contributed-under: TianoCore Contribution Agreement 1.0
 Signed-off-by: Laszlo Ersek <lersek@redhat.com>
 ---
- OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c          |   5 +-
  OvmfPkg/SmbiosPlatformDxe/QemuLegacyInternal.h  |  30 ++++
+ OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c          |   5 +-
  OvmfPkg/SmbiosPlatformDxe/QemuType0.c           | 180 ++++++++++++++++++++++++
  OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf |   1 +
  4 files changed, 215 insertions(+), 1 deletion(-)
  create mode 100644 OvmfPkg/SmbiosPlatformDxe/QemuType0.c
 
-diff --git a/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c b/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c
-index 9c57558..ed75a01 100644
---- a/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c
-+++ b/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c
-@@ -628,7 +628,10 @@ InstallDefaultTables (
-   IN OUT BUILD_CONTEXT       *Context
-   )
- {
--  return EFI_SUCCESS;
-+  EFI_STATUS Status;
-+
-+  Status = InstallSmbiosType0 (Smbios, ProducerHandle, Context);
-+  return Status;
- }
- 
- 
 diff --git a/OvmfPkg/SmbiosPlatformDxe/QemuLegacyInternal.h b/OvmfPkg/SmbiosPlatformDxe/QemuLegacyInternal.h
-index 8613407..ca776b5 100644
+index 8613407827..ca776b5509 100644
 --- a/OvmfPkg/SmbiosPlatformDxe/QemuLegacyInternal.h
 +++ b/OvmfPkg/SmbiosPlatformDxe/QemuLegacyInternal.h
 @@ -218,4 +218,34 @@ PatchSmbiosUnformatted (
@@ -69,9 +53,25 @@ index 8613407..ca776b5 100644
 +  );
 +
  #endif
+diff --git a/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c b/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c
+index 9c57558182..ed75a019b5 100644
+--- a/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c
++++ b/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c
+@@ -628,7 +628,10 @@ InstallDefaultTables (
+   IN OUT BUILD_CONTEXT       *Context
+   )
+ {
+-  return EFI_SUCCESS;
++  EFI_STATUS Status;
++
++  Status = InstallSmbiosType0 (Smbios, ProducerHandle, Context);
++  return Status;
+ }
+ 
+ 
 diff --git a/OvmfPkg/SmbiosPlatformDxe/QemuType0.c b/OvmfPkg/SmbiosPlatformDxe/QemuType0.c
 new file mode 100644
-index 0000000..9ec5d76
+index 0000000000..9ec5d764c7
 --- /dev/null
 +++ b/OvmfPkg/SmbiosPlatformDxe/QemuType0.c
 @@ -0,0 +1,180 @@
@@ -256,7 +256,7 @@ index 0000000..9ec5d76
 +  return EFI_SUCCESS;
 +}
 diff --git a/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf b/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf
-index 8c9f43c..3483b9c 100644
+index d219ac5d97..8dac1b1e84 100644
 --- a/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf
 +++ b/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf
 @@ -37,6 +37,7 @@
@@ -268,5 +268,5 @@ index 8c9f43c..3483b9c 100644
  [Sources.ARM, Sources.AARCH64]
    ArmXen.c
 -- 
-1.8.3.1
+2.9.3
 

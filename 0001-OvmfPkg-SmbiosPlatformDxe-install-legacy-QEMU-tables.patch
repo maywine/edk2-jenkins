@@ -1,4 +1,4 @@
-From 0e182f2305a84fdf62ff2631de6e363a5a881287 Mon Sep 17 00:00:00 2001
+From 0a98b35ab2b026393916cc1672894bcf14aebd0f Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Wed, 5 Jun 2013 10:14:34 +0200
 Subject: [PATCH 1/3] OvmfPkg/SmbiosPlatformDxe: install legacy QEMU tables and
@@ -13,19 +13,304 @@ Introduce basic legacy SMBIOS machinery for the QEMU platform:
 Contributed-under: TianoCore Contribution Agreement 1.0
 Signed-off-by: Laszlo Ersek <lersek@redhat.com>
 ---
- OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c          | 694 ++++++++++++++++++++++++
  OvmfPkg/SmbiosPlatformDxe/QemuLegacy.h          |  52 ++
  OvmfPkg/SmbiosPlatformDxe/QemuLegacyInternal.h  | 221 ++++++++
+ OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c          | 694 ++++++++++++++++++++++++
  OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.c   |  17 +-
  OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf |   2 +
  5 files changed, 983 insertions(+), 3 deletions(-)
- create mode 100644 OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c
  create mode 100644 OvmfPkg/SmbiosPlatformDxe/QemuLegacy.h
  create mode 100644 OvmfPkg/SmbiosPlatformDxe/QemuLegacyInternal.h
+ create mode 100644 OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c
 
+diff --git a/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.h b/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.h
+new file mode 100644
+index 0000000000..40d5ad3e68
+--- /dev/null
++++ b/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.h
+@@ -0,0 +1,52 @@
++/** @file
++  This header file provides QEMU-specific public prototypes for the main driver
++  file, "SmbiosPlatformDxe.c".
++
++  Copyright (C) 2013, Red Hat, Inc.
++
++  This program and the accompanying materials are licensed and made available
++  under the terms and conditions of the BSD License which accompanies this
++  distribution.  The full text of the license may be found at
++  http://opensource.org/licenses/bsd-license.php
++
++  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS, WITHOUT
++  WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
++**/
++
++#ifndef _QEMU_LEGACY_H_
++#define _QEMU_LEGACY_H_
++
++#include <Protocol/Smbios.h>
++
++
++/**
++  Fetch and install SMBIOS tables on the QEMU hypervisor.
++
++  First, tables provided by QEMU in entirety are installed verbatim.
++
++  Then the function prepares some of the remaining tables required by the
++  SMBIOS-2.7.1 specification. For each such table,
++  - if QEMU provides any fields for the table, they take effect verbatim,
++  - remaining fields are set by this function.
++
++  @param[in] Smbios       The EFI_SMBIOS_PROTOCOL instance used for installing
++                          the SMBIOS tables.
++  @param[in] ImageHandle  The image handle of the calling module, passed as
++                          ProducerHandle to the Smbios->Add() call.
++
++  @retval EFI_SUCCESS            All tables have been installed.
++  @retval EFI_UNSUPPORTED        The pair (Smbios->MajorVersion,
++                                 Smbios->MinorVersion) precedes (2, 3)
++                                 lexicographically.
++  @return                        Error codes returned by Smbios->Add() or
++                                 internal functions. Some tables may not have
++                                 been installed or fully patched.
++**/
++EFI_STATUS
++EFIAPI
++InstallQemuSmbiosTables (
++  IN EFI_SMBIOS_PROTOCOL *Smbios,
++  IN EFI_HANDLE          ImageHandle
++  );
++
++#endif
+diff --git a/OvmfPkg/SmbiosPlatformDxe/QemuLegacyInternal.h b/OvmfPkg/SmbiosPlatformDxe/QemuLegacyInternal.h
+new file mode 100644
+index 0000000000..8613407827
+--- /dev/null
++++ b/OvmfPkg/SmbiosPlatformDxe/QemuLegacyInternal.h
+@@ -0,0 +1,221 @@
++/** @file
++  This header provides common includes, and communicates internal types,
++  function prototypes and macros between "Qemu.c" and "QemuTypeXX.c", that
++  relate to the installation and patching of SMBIOS tables on the QEMU
++  platform.
++
++  Copyright (C) 2013, Red Hat, Inc.
++
++  This program and the accompanying materials are licensed and made available
++  under the terms and conditions of the BSD License which accompanies this
++  distribution.  The full text of the license may be found at
++  http://opensource.org/licenses/bsd-license.php
++
++  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS, WITHOUT
++  WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
++**/
++
++#ifndef _QEMU_LEGACY_INTERNAL_H_
++#define _QEMU_LEGACY_INTERNAL_H_
++
++#include <IndustryStandard/SmBios.h>
++#include <Library/BaseLib.h>
++#include <Library/BaseMemoryLib.h>
++#include <Library/DebugLib.h>
++#include <Library/QemuFwCfgLib.h>
++#include <Protocol/Smbios.h>
++
++
++//
++// Type identifiers of all tables mandated by the SMBIOS-2.7.1 specification
++// fall strictly under this limit.
++//
++#define TABLE_TYPE_LIMIT (EFI_SMBIOS_TYPE_SYSTEM_BOOT_INFORMATION + 1)
++
++
++//
++// Track a patch in dynamic memory, originating from a QEMU SMBIOS firmware
++// configuration entry with ET_FIELD type.
++//
++typedef struct {
++  UINT8  *Base;
++  UINT16 Size;
++} PATCH;
++
++
++#define FIELD_OFFSET_MINIMUM  ((INT32) sizeof(SMBIOS_STRUCTURE))
++#define PATCH_SUBSCRIPT_LIMIT (255 - FIELD_OFFSET_MINIMUM)
++
++//
++// The following structure tracks the installation of each SMBIOS table with a
++// type below TABLE_TYPE_LIMIT, and captures QEMU SMBIOS firmware configuration
++// entries with ET_FIELD type that target the default table for the same type.
++//
++typedef struct {
++  BOOLEAN Installed; // at least one instance of the type has been installed
++
++  PATCH Patch[PATCH_SUBSCRIPT_LIMIT]; // Patches indexed by the field offset
++                                      // that they target in this specific
++                                      // table type. Patching the SMBIOS table
++                                      // header is not allowed, hence we can
++                                      // shift down field offsets. An unused
++                                      // element has zeroed-out fields.
++} TABLE_CONTEXT;
++
++
++//
++// Track the installation of, and stored patches for, all table types below
++// TABLE_TYPE_LIMIT.
++//
++typedef struct {
++  TABLE_CONTEXT Table[TABLE_TYPE_LIMIT];
++} BUILD_CONTEXT;
++
++
++//
++// Convenience / safety macro for defining C structure types for default SMBIOS
++// tables.
++//
++// Rules of use:
++// - Use only within #pragma pack(1).
++// - This macro depends on the macro
++//   "OVMF_TYPE ## TableType ## _STRINGS" specifying the text strings
++//   (unformatted area) for TableType. Each "QemuTypeXX.c" file needs to
++//   provide said macro before using the one below.
++//
++#define OVMF_SMBIOS(TableType)                                                \
++          typedef struct {                                                    \
++            SMBIOS_TABLE_TYPE##TableType Base;                                \
++            UINT8             Strings[sizeof OVMF_TYPE##TableType##_STRINGS]; \
++          } OVMF_TYPE##TableType
++
++
++//
++// Convenience / safety macro for patching a field in the formatted area of
++// an SMBIOS table.
++//
++#define PATCH_FORMATTED(Context, TableType, OvmfTablePtr, FieldName)      \
++          PatchSmbiosFormatted (                                          \
++            Context,                                                      \
++            TableType,                                                    \
++            (UINT16) OFFSET_OF (SMBIOS_TABLE_TYPE##TableType, FieldName), \
++            (UINT16) sizeof (OvmfTablePtr)->Base.FieldName,               \
++            (UINT8 *) (OvmfTablePtr)                                      \
++            )
++
++
++/**
++  Apply a saved patch to a field located in the formatted are of a not yet
++  installed SMBIOS table.
++
++  The patch is looked up based on (Context, TableType, FieldOffset).
++
++  @param[in]  Context      The BUILD_CONTEXT object storing saved patches.
++  @param[in]  TableType    Selects the table type for which the patch has been
++                           saved. It is assumed that the caller has validated
++                           TableType against TABLE_TYPE_LIMIT (upper
++                           exclusive).
++  @param[in]  FieldOffset  Selects the SMBIOS field for which the patch has
++                           been saved. It is assumed that the caller has
++                           validated FieldOffset against FIELD_OFFSET_MINIMUM
++                           (lower inclusive) and 255 (upper exclusive).
++  @param[in]  FieldSize    The caller supplies the size of the field to patch
++                           in FieldSize. The patch saved for
++                           TableType:FieldOffset, if any, is only applied if
++                           its size equals FieldSize.
++  @param[out] TableBase    Base of the SMBIOS table of type TableType in which
++                           the field starting at FieldOffset needs to be
++                           patched.
++
++  @retval EFI_NOT_FOUND          No patch found for TableType:FieldOffset in
++                                 Context. This return value is considered
++                                 informative (ie. non-fatal).
++  @retval EFI_INVALID_PARAMETER  Patch found for TableType:FieldOffset, but its
++                                 size doesn't match FieldSize. This result is
++                                 considered a fatal error of the patch origin.
++  @retval EFI_SUCCESS            The SMBIOS table at TableBase has been patched
++                                 starting at FieldOffset for a length of
++                                 FieldSize.
++**/
++EFI_STATUS
++EFIAPI
++PatchSmbiosFormatted (
++  IN  BUILD_CONTEXT *Context,
++  IN  UINT8         TableType,
++  IN  UINT16        FieldOffset,
++  IN  UINT16        FieldSize,
++  OUT UINT8         *TableBase
++  );
++
++
++//
++// Convenience / safety macro for patching a string in the unformatted area of
++// an SMBIOS table.
++//
++#define PATCH_UNFORMATTED(Smbios, SmbiosHandle, Context, TableType,       \
++          OvmfTablePtr, FieldName)                                        \
++                                                                          \
++          PatchSmbiosUnformatted (                                        \
++            Smbios,                                                       \
++            SmbiosHandle,                                                 \
++            Context,                                                      \
++            TableType,                                                    \
++            (UINT16) OFFSET_OF (SMBIOS_TABLE_TYPE##TableType, FieldName), \
++            (UINT8 *) (OvmfTablePtr)                                      \
++            )
++
++
++/**
++  Apply a saved patch to a text string located in the unformatted area of an
++  already installed SMBIOS table.
++
++  The patch is looked up based on (Context, TableType, FieldOffset).
++
++  @param[in]  Smbios        The EFI_SMBIOS_PROTOCOL instance used previously
++                            for installing the SMBIOS table.
++  @param[in]  SmbiosHandle  The EFI_SMBIOS_HANDLE previously returned by
++                            Smbios->Add().
++  @param[in]  Context       The BUILD_CONTEXT object storing saved patches.
++  @param[in]  TableType     Selects the table type for which the patch has been
++                            saved. It is assumed that the caller has validated
++                            TableType against TABLE_TYPE_LIMIT (upper
++                            exclusive).
++  @param[in]  FieldOffset   Selects the SMBIOS field for which the patch has
++                            been saved. It is assumed that the caller has
++                            validated FieldOffset against FIELD_OFFSET_MINIMUM
++                            (lower inclusive) and 255 (upper exclusive).
++                            It is also assumed that TableBase[FieldOffset]
++                            accesses a field of type SMBIOS_TABLE_STRING, ie. a
++                            field in the formatted area that identifies an
++                            existent text string in the unformatted area. Text
++                            string identifiers are one-based.
++  @param[out] TableBase     Base of the SMBIOS table of type TableType in which
++                            the SMBIOS_TABLE_STRING field at FieldOffset
++                            identifies the existent text string to update.
++
++  @retval EFI_NOT_FOUND          No patch found for TableType:FieldOffset in
++                                 Context. This return value is considered
++                                 informative (ie. non-fatal).
++  @retval EFI_INVALID_PARAMETER  Patch found for TableType:FieldOffset, but it
++                                 doesn't end with a NUL character. This result
++                                 is considered a fatal error of the patch
++                                 origin.
++  @retval EFI_SUCCESS            The text string identified by
++                                 TableBase[FieldOffset] has been replaced in
++                                 the installed SMBIOS table under SmbiosHandle.
++  @return                        Error codes returned by
++                                 Smbios->UpdateString(). EFI_NOT_FOUND shall
++                                 not be returned.
++**/
++EFI_STATUS
++EFIAPI
++PatchSmbiosUnformatted (
++  IN  EFI_SMBIOS_PROTOCOL *Smbios,
++  IN  EFI_SMBIOS_HANDLE   SmbiosHandle,
++  IN  BUILD_CONTEXT       *Context,
++  IN  UINT8               TableType,
++  IN  UINT16              FieldOffset,
++  IN  UINT8               *TableBase
++  );
++
++#endif
 diff --git a/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c b/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c
 new file mode 100644
-index 0000000..9c57558
+index 0000000000..9c57558182
 --- /dev/null
 +++ b/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.c
 @@ -0,0 +1,694 @@
@@ -723,293 +1008,8 @@ index 0000000..9c57558
 +  UninitSmbiosContext (Context);
 +  return Status;
 +}
-diff --git a/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.h b/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.h
-new file mode 100644
-index 0000000..40d5ad3
---- /dev/null
-+++ b/OvmfPkg/SmbiosPlatformDxe/QemuLegacy.h
-@@ -0,0 +1,52 @@
-+/** @file
-+  This header file provides QEMU-specific public prototypes for the main driver
-+  file, "SmbiosPlatformDxe.c".
-+
-+  Copyright (C) 2013, Red Hat, Inc.
-+
-+  This program and the accompanying materials are licensed and made available
-+  under the terms and conditions of the BSD License which accompanies this
-+  distribution.  The full text of the license may be found at
-+  http://opensource.org/licenses/bsd-license.php
-+
-+  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS, WITHOUT
-+  WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
-+**/
-+
-+#ifndef _QEMU_LEGACY_H_
-+#define _QEMU_LEGACY_H_
-+
-+#include <Protocol/Smbios.h>
-+
-+
-+/**
-+  Fetch and install SMBIOS tables on the QEMU hypervisor.
-+
-+  First, tables provided by QEMU in entirety are installed verbatim.
-+
-+  Then the function prepares some of the remaining tables required by the
-+  SMBIOS-2.7.1 specification. For each such table,
-+  - if QEMU provides any fields for the table, they take effect verbatim,
-+  - remaining fields are set by this function.
-+
-+  @param[in] Smbios       The EFI_SMBIOS_PROTOCOL instance used for installing
-+                          the SMBIOS tables.
-+  @param[in] ImageHandle  The image handle of the calling module, passed as
-+                          ProducerHandle to the Smbios->Add() call.
-+
-+  @retval EFI_SUCCESS            All tables have been installed.
-+  @retval EFI_UNSUPPORTED        The pair (Smbios->MajorVersion,
-+                                 Smbios->MinorVersion) precedes (2, 3)
-+                                 lexicographically.
-+  @return                        Error codes returned by Smbios->Add() or
-+                                 internal functions. Some tables may not have
-+                                 been installed or fully patched.
-+**/
-+EFI_STATUS
-+EFIAPI
-+InstallQemuSmbiosTables (
-+  IN EFI_SMBIOS_PROTOCOL *Smbios,
-+  IN EFI_HANDLE          ImageHandle
-+  );
-+
-+#endif
-diff --git a/OvmfPkg/SmbiosPlatformDxe/QemuLegacyInternal.h b/OvmfPkg/SmbiosPlatformDxe/QemuLegacyInternal.h
-new file mode 100644
-index 0000000..8613407
---- /dev/null
-+++ b/OvmfPkg/SmbiosPlatformDxe/QemuLegacyInternal.h
-@@ -0,0 +1,221 @@
-+/** @file
-+  This header provides common includes, and communicates internal types,
-+  function prototypes and macros between "Qemu.c" and "QemuTypeXX.c", that
-+  relate to the installation and patching of SMBIOS tables on the QEMU
-+  platform.
-+
-+  Copyright (C) 2013, Red Hat, Inc.
-+
-+  This program and the accompanying materials are licensed and made available
-+  under the terms and conditions of the BSD License which accompanies this
-+  distribution.  The full text of the license may be found at
-+  http://opensource.org/licenses/bsd-license.php
-+
-+  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS, WITHOUT
-+  WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
-+**/
-+
-+#ifndef _QEMU_LEGACY_INTERNAL_H_
-+#define _QEMU_LEGACY_INTERNAL_H_
-+
-+#include <IndustryStandard/SmBios.h>
-+#include <Library/BaseLib.h>
-+#include <Library/BaseMemoryLib.h>
-+#include <Library/DebugLib.h>
-+#include <Library/QemuFwCfgLib.h>
-+#include <Protocol/Smbios.h>
-+
-+
-+//
-+// Type identifiers of all tables mandated by the SMBIOS-2.7.1 specification
-+// fall strictly under this limit.
-+//
-+#define TABLE_TYPE_LIMIT (EFI_SMBIOS_TYPE_SYSTEM_BOOT_INFORMATION + 1)
-+
-+
-+//
-+// Track a patch in dynamic memory, originating from a QEMU SMBIOS firmware
-+// configuration entry with ET_FIELD type.
-+//
-+typedef struct {
-+  UINT8  *Base;
-+  UINT16 Size;
-+} PATCH;
-+
-+
-+#define FIELD_OFFSET_MINIMUM  ((INT32) sizeof(SMBIOS_STRUCTURE))
-+#define PATCH_SUBSCRIPT_LIMIT (255 - FIELD_OFFSET_MINIMUM)
-+
-+//
-+// The following structure tracks the installation of each SMBIOS table with a
-+// type below TABLE_TYPE_LIMIT, and captures QEMU SMBIOS firmware configuration
-+// entries with ET_FIELD type that target the default table for the same type.
-+//
-+typedef struct {
-+  BOOLEAN Installed; // at least one instance of the type has been installed
-+
-+  PATCH Patch[PATCH_SUBSCRIPT_LIMIT]; // Patches indexed by the field offset
-+                                      // that they target in this specific
-+                                      // table type. Patching the SMBIOS table
-+                                      // header is not allowed, hence we can
-+                                      // shift down field offsets. An unused
-+                                      // element has zeroed-out fields.
-+} TABLE_CONTEXT;
-+
-+
-+//
-+// Track the installation of, and stored patches for, all table types below
-+// TABLE_TYPE_LIMIT.
-+//
-+typedef struct {
-+  TABLE_CONTEXT Table[TABLE_TYPE_LIMIT];
-+} BUILD_CONTEXT;
-+
-+
-+//
-+// Convenience / safety macro for defining C structure types for default SMBIOS
-+// tables.
-+//
-+// Rules of use:
-+// - Use only within #pragma pack(1).
-+// - This macro depends on the macro
-+//   "OVMF_TYPE ## TableType ## _STRINGS" specifying the text strings
-+//   (unformatted area) for TableType. Each "QemuTypeXX.c" file needs to
-+//   provide said macro before using the one below.
-+//
-+#define OVMF_SMBIOS(TableType)                                                \
-+          typedef struct {                                                    \
-+            SMBIOS_TABLE_TYPE##TableType Base;                                \
-+            UINT8             Strings[sizeof OVMF_TYPE##TableType##_STRINGS]; \
-+          } OVMF_TYPE##TableType
-+
-+
-+//
-+// Convenience / safety macro for patching a field in the formatted area of
-+// an SMBIOS table.
-+//
-+#define PATCH_FORMATTED(Context, TableType, OvmfTablePtr, FieldName)      \
-+          PatchSmbiosFormatted (                                          \
-+            Context,                                                      \
-+            TableType,                                                    \
-+            (UINT16) OFFSET_OF (SMBIOS_TABLE_TYPE##TableType, FieldName), \
-+            (UINT16) sizeof (OvmfTablePtr)->Base.FieldName,               \
-+            (UINT8 *) (OvmfTablePtr)                                      \
-+            )
-+
-+
-+/**
-+  Apply a saved patch to a field located in the formatted are of a not yet
-+  installed SMBIOS table.
-+
-+  The patch is looked up based on (Context, TableType, FieldOffset).
-+
-+  @param[in]  Context      The BUILD_CONTEXT object storing saved patches.
-+  @param[in]  TableType    Selects the table type for which the patch has been
-+                           saved. It is assumed that the caller has validated
-+                           TableType against TABLE_TYPE_LIMIT (upper
-+                           exclusive).
-+  @param[in]  FieldOffset  Selects the SMBIOS field for which the patch has
-+                           been saved. It is assumed that the caller has
-+                           validated FieldOffset against FIELD_OFFSET_MINIMUM
-+                           (lower inclusive) and 255 (upper exclusive).
-+  @param[in]  FieldSize    The caller supplies the size of the field to patch
-+                           in FieldSize. The patch saved for
-+                           TableType:FieldOffset, if any, is only applied if
-+                           its size equals FieldSize.
-+  @param[out] TableBase    Base of the SMBIOS table of type TableType in which
-+                           the field starting at FieldOffset needs to be
-+                           patched.
-+
-+  @retval EFI_NOT_FOUND          No patch found for TableType:FieldOffset in
-+                                 Context. This return value is considered
-+                                 informative (ie. non-fatal).
-+  @retval EFI_INVALID_PARAMETER  Patch found for TableType:FieldOffset, but its
-+                                 size doesn't match FieldSize. This result is
-+                                 considered a fatal error of the patch origin.
-+  @retval EFI_SUCCESS            The SMBIOS table at TableBase has been patched
-+                                 starting at FieldOffset for a length of
-+                                 FieldSize.
-+**/
-+EFI_STATUS
-+EFIAPI
-+PatchSmbiosFormatted (
-+  IN  BUILD_CONTEXT *Context,
-+  IN  UINT8         TableType,
-+  IN  UINT16        FieldOffset,
-+  IN  UINT16        FieldSize,
-+  OUT UINT8         *TableBase
-+  );
-+
-+
-+//
-+// Convenience / safety macro for patching a string in the unformatted area of
-+// an SMBIOS table.
-+//
-+#define PATCH_UNFORMATTED(Smbios, SmbiosHandle, Context, TableType,       \
-+          OvmfTablePtr, FieldName)                                        \
-+                                                                          \
-+          PatchSmbiosUnformatted (                                        \
-+            Smbios,                                                       \
-+            SmbiosHandle,                                                 \
-+            Context,                                                      \
-+            TableType,                                                    \
-+            (UINT16) OFFSET_OF (SMBIOS_TABLE_TYPE##TableType, FieldName), \
-+            (UINT8 *) (OvmfTablePtr)                                      \
-+            )
-+
-+
-+/**
-+  Apply a saved patch to a text string located in the unformatted area of an
-+  already installed SMBIOS table.
-+
-+  The patch is looked up based on (Context, TableType, FieldOffset).
-+
-+  @param[in]  Smbios        The EFI_SMBIOS_PROTOCOL instance used previously
-+                            for installing the SMBIOS table.
-+  @param[in]  SmbiosHandle  The EFI_SMBIOS_HANDLE previously returned by
-+                            Smbios->Add().
-+  @param[in]  Context       The BUILD_CONTEXT object storing saved patches.
-+  @param[in]  TableType     Selects the table type for which the patch has been
-+                            saved. It is assumed that the caller has validated
-+                            TableType against TABLE_TYPE_LIMIT (upper
-+                            exclusive).
-+  @param[in]  FieldOffset   Selects the SMBIOS field for which the patch has
-+                            been saved. It is assumed that the caller has
-+                            validated FieldOffset against FIELD_OFFSET_MINIMUM
-+                            (lower inclusive) and 255 (upper exclusive).
-+                            It is also assumed that TableBase[FieldOffset]
-+                            accesses a field of type SMBIOS_TABLE_STRING, ie. a
-+                            field in the formatted area that identifies an
-+                            existent text string in the unformatted area. Text
-+                            string identifiers are one-based.
-+  @param[out] TableBase     Base of the SMBIOS table of type TableType in which
-+                            the SMBIOS_TABLE_STRING field at FieldOffset
-+                            identifies the existent text string to update.
-+
-+  @retval EFI_NOT_FOUND          No patch found for TableType:FieldOffset in
-+                                 Context. This return value is considered
-+                                 informative (ie. non-fatal).
-+  @retval EFI_INVALID_PARAMETER  Patch found for TableType:FieldOffset, but it
-+                                 doesn't end with a NUL character. This result
-+                                 is considered a fatal error of the patch
-+                                 origin.
-+  @retval EFI_SUCCESS            The text string identified by
-+                                 TableBase[FieldOffset] has been replaced in
-+                                 the installed SMBIOS table under SmbiosHandle.
-+  @return                        Error codes returned by
-+                                 Smbios->UpdateString(). EFI_NOT_FOUND shall
-+                                 not be returned.
-+**/
-+EFI_STATUS
-+EFIAPI
-+PatchSmbiosUnformatted (
-+  IN  EFI_SMBIOS_PROTOCOL *Smbios,
-+  IN  EFI_SMBIOS_HANDLE   SmbiosHandle,
-+  IN  BUILD_CONTEXT       *Context,
-+  IN  UINT8               TableType,
-+  IN  UINT16              FieldOffset,
-+  IN  UINT8               *TableBase
-+  );
-+
-+#endif
 diff --git a/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.c b/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.c
-index 29948a4..b7c1d0d 100644
+index 29948a4b42..b7c1d0d179 100644
 --- a/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.c
 +++ b/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.c
 @@ -1,6 +1,7 @@
@@ -1060,7 +1060,7 @@ index 29948a4..b7c1d0d 100644
  
      //
 diff --git a/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf b/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf
-index 3b90aac..8c9f43c 100644
+index 9b0410d343..d219ac5d97 100644
 --- a/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf
 +++ b/OvmfPkg/SmbiosPlatformDxe/SmbiosPlatformDxe.inf
 @@ -1,6 +1,7 @@
@@ -1069,7 +1069,7 @@ index 3b90aac..8c9f43c 100644
  #
 +#  Copyright (C) 2013, Red Hat, Inc.
  #  Copyright (c) 2011, Bei Guan <gbtju85@gmail.com>
- #  Copyright (c) 2011, Intel Corporation. All rights reserved.<BR>
+ #  Copyright (c) 2011 - 2018, Intel Corporation. All rights reserved.<BR>
  #
 @@ -35,6 +36,7 @@
  
@@ -1080,5 +1080,5 @@ index 3b90aac..8c9f43c 100644
  [Sources.ARM, Sources.AARCH64]
    ArmXen.c
 -- 
-1.8.3.1
+2.9.3
 
