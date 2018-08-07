@@ -1,4 +1,4 @@
-From 56daa7a65a15c973d5e38ec45c0dbb6fb20c608c Mon Sep 17 00:00:00 2001
+From 6ed13a202631ed49475c07bdbe25951ba99d3834 Mon Sep 17 00:00:00 2001
 From: Laszlo Ersek <lersek@redhat.com>
 Date: Wed, 29 Jan 2014 13:13:11 +0100
 Subject: [PATCH] tools_def.template: take GCC4?_(IA32|X64) prefixes from the
@@ -22,12 +22,12 @@ Signed-off-by: Laszlo Ersek <lersek@redhat.com>
  1 file changed, 12 insertions(+), 12 deletions(-)
 
 diff --git a/BaseTools/Conf/tools_def.template b/BaseTools/Conf/tools_def.template
-index fd9eccb..f80bc45 100644
+index a22b96c0b8..228cd256bb 100755
 --- a/BaseTools/Conf/tools_def.template
 +++ b/BaseTools/Conf/tools_def.template
-@@ -179,23 +179,23 @@ DEFINE CYGWIN_BINIA32          = c:/cygwin/opt/tiano/i386-tiano-pe/i386-tiano-pe
+@@ -187,23 +187,23 @@ DEFINE CYGWIN_BIN              = c:/cygwin/bin
+ DEFINE CYGWIN_BINIA32          = c:/cygwin/opt/tiano/i386-tiano-pe/i386-tiano-pe/bin/
  DEFINE CYGWIN_BINX64           = c:/cygwin/opt/tiano/x86_64-pc-mingw64/x86_64-pc-mingw64/bin/
- DEFINE CYGWIN_BINIPF           = c:/cygwin/opt/tiano/gcc/ipf/bin/ia64-pc-elf-
  
 -DEFINE GCC44_IA32_PREFIX       = ENV(GCC44_BIN)
 -DEFINE GCC44_X64_PREFIX        = ENV(GCC44_BIN)
@@ -62,5 +62,5 @@ index fd9eccb..f80bc45 100644
  DEFINE GCC5_IA32_PREFIX        = ENV(GCC5_BIN)
  DEFINE GCC5_X64_PREFIX         = ENV(GCC5_BIN)
 -- 
-1.8.3.1
+2.9.3
 
