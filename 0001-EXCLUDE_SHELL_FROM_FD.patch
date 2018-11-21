@@ -1,4 +1,4 @@
-From 100739935e1a52c286571cff734eadfc45c52382 Mon Sep 17 00:00:00 2001
+From b2e1ce6df473ae0e40b730440299200f8c488d22 Mon Sep 17 00:00:00 2001
 From: Gerd Hoffmann <kraxel@redhat.com>
 Date: Thu, 18 Feb 2016 10:52:44 +0100
 Subject: [PATCH] EXCLUDE_SHELL_FROM_FD
@@ -10,58 +10,46 @@ Subject: [PATCH] EXCLUDE_SHELL_FROM_FD
  3 files changed, 6 insertions(+)
 
 diff --git a/OvmfPkg/OvmfPkgIa32.fdf b/OvmfPkg/OvmfPkgIa32.fdf
-index ba980834d7..2fd7eef888 100644
+index f7f9ab06bb..32f7bd5f95 100644
 --- a/OvmfPkg/OvmfPkgIa32.fdf
 +++ b/OvmfPkg/OvmfPkgIa32.fdf
-@@ -284,12 +284,14 @@ INF  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResour
+@@ -288,8 +288,10 @@ INF  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResour
  INF  FatPkg/EnhancedFatDxe/Fat.inf
  INF  MdeModulePkg/Universal/Disk/UdfDxe/UdfDxe.inf
  
 +!ifndef $(EXCLUDE_SHELL_FROM_FD)
- !ifndef $(USE_OLD_SHELL)
  INF  ShellPkg/DynamicCommand/TftpDynamicCommand/TftpDynamicCommand.inf
  INF  ShellPkg/Application/Shell/Shell.inf
- !else
- INF  RuleOverride = BINARY EdkShellBinPkg/FullShell/FullShell.inf
- !endif
 +!endif
  
  INF MdeModulePkg/Logo/LogoDxe.inf
  
 diff --git a/OvmfPkg/OvmfPkgIa32X64.fdf b/OvmfPkg/OvmfPkgIa32X64.fdf
-index 72ac82e76b..0c0dbb9197 100644
+index 067ea1993e..7f35ce4daf 100644
 --- a/OvmfPkg/OvmfPkgIa32X64.fdf
 +++ b/OvmfPkg/OvmfPkgIa32X64.fdf
-@@ -285,12 +285,14 @@ INF  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResour
+@@ -289,8 +289,10 @@ INF  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResour
  INF  FatPkg/EnhancedFatDxe/Fat.inf
  INF  MdeModulePkg/Universal/Disk/UdfDxe/UdfDxe.inf
  
 +!ifndef $(EXCLUDE_SHELL_FROM_FD)
- !ifndef $(USE_OLD_SHELL)
  INF  ShellPkg/DynamicCommand/TftpDynamicCommand/TftpDynamicCommand.inf
  INF  ShellPkg/Application/Shell/Shell.inf
- !else
- INF  RuleOverride = BINARY USE = X64 EdkShellBinPkg/FullShell/FullShell.inf
- !endif
 +!endif
  
  INF MdeModulePkg/Logo/LogoDxe.inf
  
 diff --git a/OvmfPkg/OvmfPkgX64.fdf b/OvmfPkg/OvmfPkgX64.fdf
-index 2fc17810eb..d8292c97e6 100644
+index 067ea1993e..7f35ce4daf 100644
 --- a/OvmfPkg/OvmfPkgX64.fdf
 +++ b/OvmfPkg/OvmfPkgX64.fdf
-@@ -285,12 +285,14 @@ INF  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResour
+@@ -289,8 +289,10 @@ INF  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResour
  INF  FatPkg/EnhancedFatDxe/Fat.inf
  INF  MdeModulePkg/Universal/Disk/UdfDxe/UdfDxe.inf
  
 +!ifndef $(EXCLUDE_SHELL_FROM_FD)
- !ifndef $(USE_OLD_SHELL)
  INF  ShellPkg/DynamicCommand/TftpDynamicCommand/TftpDynamicCommand.inf
  INF  ShellPkg/Application/Shell/Shell.inf
- !else
- INF  RuleOverride = BINARY EdkShellBinPkg/FullShell/FullShell.inf
- !endif
 +!endif
  
  INF MdeModulePkg/Logo/LogoDxe.inf
