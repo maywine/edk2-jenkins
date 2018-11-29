@@ -1,4 +1,4 @@
-From b2e1ce6df473ae0e40b730440299200f8c488d22 Mon Sep 17 00:00:00 2001
+From 35231600372fcb5d8f9f695a2f5f731a686a1be2 Mon Sep 17 00:00:00 2001
 From: Gerd Hoffmann <kraxel@redhat.com>
 Date: Thu, 18 Feb 2016 10:52:44 +0100
 Subject: [PATCH] EXCLUDE_SHELL_FROM_FD
@@ -10,45 +10,51 @@ Subject: [PATCH] EXCLUDE_SHELL_FROM_FD
  3 files changed, 6 insertions(+)
 
 diff --git a/OvmfPkg/OvmfPkgIa32.fdf b/OvmfPkg/OvmfPkgIa32.fdf
-index f7f9ab06bb..32f7bd5f95 100644
+index e013099136..f1ede8b9db 100644
 --- a/OvmfPkg/OvmfPkgIa32.fdf
 +++ b/OvmfPkg/OvmfPkgIa32.fdf
-@@ -288,8 +288,10 @@ INF  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResour
+@@ -288,10 +288,12 @@ INF  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResour
  INF  FatPkg/EnhancedFatDxe/Fat.inf
  INF  MdeModulePkg/Universal/Disk/UdfDxe/UdfDxe.inf
  
 +!ifndef $(EXCLUDE_SHELL_FROM_FD)
+ !if $(TOOL_CHAIN_TAG) != "XCODE5"
  INF  ShellPkg/DynamicCommand/TftpDynamicCommand/TftpDynamicCommand.inf
+ !endif
  INF  ShellPkg/Application/Shell/Shell.inf
 +!endif
  
  INF MdeModulePkg/Logo/LogoDxe.inf
  
 diff --git a/OvmfPkg/OvmfPkgIa32X64.fdf b/OvmfPkg/OvmfPkgIa32X64.fdf
-index 067ea1993e..7f35ce4daf 100644
+index afaa334384..383b8fef67 100644
 --- a/OvmfPkg/OvmfPkgIa32X64.fdf
 +++ b/OvmfPkg/OvmfPkgIa32X64.fdf
-@@ -289,8 +289,10 @@ INF  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResour
+@@ -289,10 +289,12 @@ INF  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResour
  INF  FatPkg/EnhancedFatDxe/Fat.inf
  INF  MdeModulePkg/Universal/Disk/UdfDxe/UdfDxe.inf
  
 +!ifndef $(EXCLUDE_SHELL_FROM_FD)
+ !if $(TOOL_CHAIN_TAG) != "XCODE5"
  INF  ShellPkg/DynamicCommand/TftpDynamicCommand/TftpDynamicCommand.inf
+ !endif
  INF  ShellPkg/Application/Shell/Shell.inf
 +!endif
  
  INF MdeModulePkg/Logo/LogoDxe.inf
  
 diff --git a/OvmfPkg/OvmfPkgX64.fdf b/OvmfPkg/OvmfPkgX64.fdf
-index 067ea1993e..7f35ce4daf 100644
+index afaa334384..383b8fef67 100644
 --- a/OvmfPkg/OvmfPkgX64.fdf
 +++ b/OvmfPkg/OvmfPkgX64.fdf
-@@ -289,8 +289,10 @@ INF  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResour
+@@ -289,10 +289,12 @@ INF  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResour
  INF  FatPkg/EnhancedFatDxe/Fat.inf
  INF  MdeModulePkg/Universal/Disk/UdfDxe/UdfDxe.inf
  
 +!ifndef $(EXCLUDE_SHELL_FROM_FD)
+ !if $(TOOL_CHAIN_TAG) != "XCODE5"
  INF  ShellPkg/DynamicCommand/TftpDynamicCommand/TftpDynamicCommand.inf
+ !endif
  INF  ShellPkg/Application/Shell/Shell.inf
 +!endif
  
