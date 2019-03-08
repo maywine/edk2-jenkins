@@ -69,7 +69,7 @@ def RPMBuildSource() {
         # drop spec file changes
         git reset --hard
 	'''
-    archiveArtifacts 'rpms/src/*.src.rpm'
+//    archiveArtifacts 'rpms/src/*.src.rpm'
     stash name: 'srpm', includes: 'rpms/src/*.src.rpm'
 }
 
