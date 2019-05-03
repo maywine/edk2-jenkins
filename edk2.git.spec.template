@@ -20,8 +20,6 @@ Patch10:	0001-OvmfPkg-SmbiosPlatformDxe-install-legacy-QEMU-tables.patch
 Patch11:	0002-OvmfPkg-SmbiosPlatformDxe-install-patch-default-lega.patch
 Patch12:	0003-OvmfPkg-SmbiosPlatformDxe-install-patch-default-lega.patch
 
-Patch20:	0001-OvmfPkg-EnrollDefaultKeys-application-for-enrolling-.patch
-
 Patch30:	0001-tools_def.template-take-GCC4-_-IA32-X64-prefixes-fro.patch
 
 %ifarch x86_64
@@ -104,7 +102,6 @@ AARCH64 UEFI Firmware
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
-%patch20 -p1
 %patch30 -p1
 
 
