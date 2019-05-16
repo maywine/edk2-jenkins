@@ -121,6 +121,7 @@ case "$GCCVER" in
 6.*)	CC_FLAGS="-t GCC5";;
 7.*)	CC_FLAGS="-t GCC5";;
 8.*)	CC_FLAGS="-t GCC5";;
+9.*)	CC_FLAGS="-t GCC5";;
 esac
 
 # parallel builds
