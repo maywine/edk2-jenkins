@@ -43,7 +43,8 @@ def RPMBuildSource() {
         (cd source/ArmPkg/Library/ArmSoftFloatLib/berkeley-softfloat-3; git archive --format=tar \
 		--prefix="${tarball%.tar.gz}/ArmPkg/Library/ArmSoftFloatLib/berkeley-softfloat-3/" \
                 HEAD) > "softfloat.tar"
-        tar --concatenate --file "${tarball%.gz}" "openssl.tar" "softfloat.tar"
+        tar --concatenate --file "${tarball%.gz}" "openssl.tar"
+        tar --concatenate --file "${tarball%.gz}" "softfloat.tar"
         rm "openssl.tar"
         gzip "${tarball%.gz}"
 
