@@ -40,7 +40,10 @@ def RPMBuildSource() {
         (cd source/CryptoPkg/Library/OpensslLib/openssl; git archive --format=tar \
 		--prefix="${tarball%.tar.gz}/CryptoPkg/Library/OpensslLib/openssl/" \
                 HEAD) > "openssl.tar"
-        tar --concatenate --file "${tarball%.gz}" "openssl.tar"
+        (cd source/ArmPkg/Library/ArmSoftFloatLib/berkeley-softfloat-3; git archive --format=tar \
+		--prefix="${tarball%.tar.gz}/ArmPkg/Library/ArmSoftFloatLib/berkeley-softfloat-3/" \
+                HEAD) > "softfloat.tar"
+        tar --concatenate --file "${tarball%.gz}" "openssl.tar" "softfloat.tar"
         rm "openssl.tar"
         gzip "${tarball%.gz}"
 
