@@ -94,7 +94,7 @@ write_file($dest . "80-ovmf-ia32-git-needs-smm.json",
 
 write_file($dest . "81-ovmf-ia32-git-pure-efi.json",
 	   "UEFI Firmware (git, ia32)",
-	   $x64,
+	   $ia32,
 	   $base . "ovmf-ia32/OVMF_CODE-pure-efi.fd",
 	   $base . "ovmf-ia32/OVMF_VARS-pure-efi.fd",
 	   [ 'acpi-s3' ]);
