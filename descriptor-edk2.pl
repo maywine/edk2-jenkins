@@ -6,6 +6,7 @@ use JSON;
 my $dest = shift;
 $dest = "/usr/share/qemu/firmware/" unless defined($dest);
 
+my $arch = `uname -m`;
 my $base = "/usr/share/edk2.git/";
 my $json = JSON->new->allow_nonref;
 
@@ -65,6 +66,24 @@ $arm->{'machines'} = [ 'virt-*' ];
 $aa64->{'architecture'} = 'aarch64';
 $aa64->{'machines'} = [ 'virt-*' ];
 
+if ($arch eq "aarch64") {
+	write_file($dest . "80-uefi-a64-git.json",
+		   "UEFI Firmware (git, a64)",
+		   $aa64,
+		   $base . "aarch64/QEMU_EFI-pflash.raw",
+		   $base . "aarch64/vars-template-pflash.raw");
+	exit;
+}
+
+if ($arch eq "armhfp") {
+	write_file($dest . "80-uefi-arm-git.json",
+		   "UEFI Firmware (git, arm)",
+		   $arm,
+		   $base . "arm/QEMU_EFI-pflash.raw",
+		   $base . "arm/vars-template-pflash.raw");
+	exit;
+}
+
 # ia32
 write_file($dest . "80-ovmf-ia32-git-needs-smm.json",
 	   "UEFI Firmware, supports secure boot (git, ia32)",
@@ -110,17 +129,3 @@ write_file($dest . "82-ovmf-x64-git-with-csm.json",
 	   $base . "ovmf-x64/OVMF_VARS-with-csm.fd",
 	   [ 'acpi-s3' ],
 	   [ 'uefi', 'bios' ]);
-
-# arm
-write_file($dest . "80-uefi-arm-git.json",
-	   "UEFI Firmware (git, arm)",
-	   $arm,
-	   $base . "arm/QEMU_EFI-pflash.raw",
-	   $base . "arm/vars-template-pflash.raw");
-
-# a64
-write_file($dest . "80-uefi-a64-git.json",
-	   "UEFI Firmware (git, a64)",
-	   $aa64,
-	   $base . "aarch64/QEMU_EFI-pflash.raw",
-	   $base . "aarch64/vars-template-pflash.raw");
