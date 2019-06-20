@@ -10,6 +10,7 @@ License:	BSD and OpenSSL
 URL:		http://sourceforge.net/apps/mediawiki/tianocore/index.php?title=EDK2
 Source0:	edk2.git-g9b141c5.tar.xz
 Source1:	qemu-boot-kernel
+Source9:	descriptor-edk2.pl
 
 Patch3:         0001-OvmfPkg-don-t-lock-lock-umb-when-running-csm.patch
 Patch4:		0001-MdeModulePkg-TerminalDxe-add-other-text-resolutions.patch
@@ -275,6 +276,9 @@ mkdir -p %{buildroot}/usr/share/%{name}
 #cp -a ovmf-* arm aarch64 coreboot-* %{buildroot}/usr/share/%{name}
 cp -a ovmf-* arm aarch64 %{buildroot}/usr/share/%{name}
 
+mkdir -p %{buildroot}/usr/share/qemu/firmware
+%{SOURCE9} %{buildroot}/usr/share/qemu/firmware
+
 %files
 %dir /usr/share/%{name}
 
@@ -287,18 +291,22 @@ cp -a ovmf-* arm aarch64 %{buildroot}/usr/share/%{name}
 %doc OvmfPkg/README
 %dir /usr/share/%{name}
 /usr/share/%{name}/ovmf-ia32
+/usr/share/qemu/firmware/90-ovmf-ia32-git-*.json
 
 %files ovmf-x64
 %doc OvmfPkg/README
 %dir /usr/share/%{name}
 /usr/share/%{name}/ovmf-x64
+/usr/share/qemu/firmware/90-ovmf-x64-git-*.json
 
 %files arm
 %dir /usr/share/%{name}
 /usr/share/%{name}/arm
+/usr/share/qemu/firmware/90-uefi-arm-git.json
 
 %files aarch64
 %dir /usr/share/%{name}
 /usr/share/%{name}/aarch64
+/usr/share/qemu/firmware/90-uefi-a64-git.json
 
 %changelog
