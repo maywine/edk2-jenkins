@@ -7,6 +7,8 @@ my $dest = shift;
 $dest = "/usr/share/qemu/firmware/" unless defined($dest);
 
 my $arch = `uname -m`;
+chomp($arch);
+
 my $base = "/usr/share/edk2.git/";
 my $json = JSON->new->allow_nonref;
 
