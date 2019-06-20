@@ -299,7 +299,7 @@ cp -a aarch64 %{buildroot}/usr/share/%{name}
 %endif
 
 mkdir -p %{buildroot}/usr/share/qemu/firmware
-%{SOURCE9} %{buildroot}/usr/share/qemu/firmware
+%{SOURCE9} %{buildroot}/usr/share/qemu/firmware/
 
 %files
 %dir /usr/share/%{name}

@@ -33,6 +33,7 @@ sub write_file {
 	$info->{'features'}                                  = $features;
 	$info->{'tags'}                                      = [ 'git master autobuild' ];
 
+	printf "writing: %s\n", "$file";
 	open FILE, ">", $file or die "open $file: $!";
 	print FILE $json->pretty->encode($info);
 	close FILE;

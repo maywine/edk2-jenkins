@@ -277,7 +277,7 @@ mkdir -p %{buildroot}/usr/share/%{name}
 cp -a ovmf-* arm aarch64 %{buildroot}/usr/share/%{name}
 
 mkdir -p %{buildroot}/usr/share/qemu/firmware
-%{SOURCE9} %{buildroot}/usr/share/qemu/firmware
+%{SOURCE9} %{buildroot}/usr/share/qemu/firmware/
 
 %files
 %dir /usr/share/%{name}
