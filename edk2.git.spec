@@ -291,22 +291,22 @@ mkdir -p %{buildroot}/usr/share/qemu/firmware
 %doc OvmfPkg/README
 %dir /usr/share/%{name}
 /usr/share/%{name}/ovmf-ia32
-/usr/share/qemu/firmware/90-ovmf-ia32-git-*.json
+/usr/share/qemu/firmware/*-ia32-*.json
 
 %files ovmf-x64
 %doc OvmfPkg/README
 %dir /usr/share/%{name}
 /usr/share/%{name}/ovmf-x64
-/usr/share/qemu/firmware/90-ovmf-x64-git-*.json
+/usr/share/qemu/firmware/*-x64-*.json
 
 %files arm
 %dir /usr/share/%{name}
 /usr/share/%{name}/arm
-/usr/share/qemu/firmware/90-uefi-arm-git.json
+/usr/share/qemu/firmware/*-arm-*.json
 
 %files aarch64
 %dir /usr/share/%{name}
 /usr/share/%{name}/aarch64
-/usr/share/qemu/firmware/90-uefi-a64-git.json
+/usr/share/qemu/firmware/*-a64-*.json
 
 %changelog
