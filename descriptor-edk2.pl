@@ -77,7 +77,7 @@ if ($arch eq "aarch64") {
 	exit;
 }
 
-if ($arch eq "armhfp") {
+if ($arch =~ m/armv7/) {
 	write_file($dest . "80-uefi-arm-git.json",
 		   "UEFI Firmware (git, arm)",
 		   $arm,
