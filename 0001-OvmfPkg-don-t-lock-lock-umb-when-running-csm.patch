@@ -1,16 +1,16 @@
-From e4659d5bc55ca8b0a9202f0af17ecd70749d150b Mon Sep 17 00:00:00 2001
+From 34626780a6ddaa2fb950293be596568d00c1f73a Mon Sep 17 00:00:00 2001
 From: Gerd Hoffmann <kraxel@redhat.com>
 Date: Tue, 20 Aug 2013 14:00:55 +0200
 Subject: [PATCH] OvmfPkg: don't lock lock umb when running csm
 
 ---
- IntelFrameworkModulePkg/Csm/LegacyBiosDxe/LegacyBootSupport.c | 4 ++--
+ OvmfPkg/Csm/LegacyBiosDxe/LegacyBootSupport.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/IntelFrameworkModulePkg/Csm/LegacyBiosDxe/LegacyBootSupport.c b/IntelFrameworkModulePkg/Csm/LegacyBiosDxe/LegacyBootSupport.c
-index 6c2688b..a391a05 100644
---- a/IntelFrameworkModulePkg/Csm/LegacyBiosDxe/LegacyBootSupport.c
-+++ b/IntelFrameworkModulePkg/Csm/LegacyBiosDxe/LegacyBootSupport.c
+diff --git a/OvmfPkg/Csm/LegacyBiosDxe/LegacyBootSupport.c b/OvmfPkg/Csm/LegacyBiosDxe/LegacyBootSupport.c
+index cd4cd24f4246..a38698717221 100644
+--- a/OvmfPkg/Csm/LegacyBiosDxe/LegacyBootSupport.c
++++ b/OvmfPkg/Csm/LegacyBiosDxe/LegacyBootSupport.c
 @@ -1234,8 +1234,8 @@ GenericLegacyBoot (
    //
    Private->LegacyRegion->Lock (
@@ -23,5 +23,5 @@ index 6c2688b..a391a05 100644
                             );
  
 -- 
-1.8.3.1
+2.18.1
 
