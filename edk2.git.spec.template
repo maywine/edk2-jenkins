@@ -13,7 +13,6 @@ Source0:	edk2.git-g9b141c5.tar.xz
 Source1:	qemu-boot-kernel
 Source9:	descriptor-edk2.pl
 
-Patch3:         0001-OvmfPkg-don-t-lock-lock-umb-when-running-csm.patch
 Patch4:		0001-MdeModulePkg-TerminalDxe-add-other-text-resolutions.patch
 Patch5:		0001-EXCLUDE_SHELL_FROM_FD.patch
 
@@ -97,7 +96,6 @@ AARCH64 UEFI Firmware
 
 %prep
 %setup -q -n %{name}
-%patch3 -p1
 %patch4 -p1
 %patch5 -p1
 %patch10 -p1
