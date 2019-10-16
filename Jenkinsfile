@@ -105,7 +105,7 @@ def RPMBuildBinary(arch) {
 
 pipeline {
     agent {
-	node 'sys-fedora-x64'
+	node 'dist-fedora-x86_64'
     }
 
     options {
@@ -137,7 +137,7 @@ pipeline {
 
 		stage ("arm") {
 		    agent {
-			node 'sys-fedora-arm'
+			node 'dist-fedora-armv7hl'
 		    }
 		    steps {
 			RPMBuildBinary('armv7hl')
@@ -146,7 +146,7 @@ pipeline {
 
 		stage ("aarch64") {
 		    agent {
-			node 'sys-fedora-a64'
+			node 'dist-fedora-aarch64'
 		    }
 		    steps {
 			RPMBuildBinary('aarch64')
