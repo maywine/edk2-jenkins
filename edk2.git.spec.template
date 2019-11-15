@@ -1,5 +1,6 @@
 # -*-rpm-spec-*-
 %global debug_package %{nil}
+%define _binary_payload w2.xzdio
 
 Name:		edk2.git
 Version:	0
