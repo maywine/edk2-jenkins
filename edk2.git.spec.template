@@ -15,6 +15,7 @@ Source0:	edk2.git-g9b141c5.tar.xz
 Source1:	qemu-boot-kernel
 Source9:	descriptor-edk2.pl
 
+Patch1:		0001-drop-brotli-dependency.patch
 Patch4:		0001-MdeModulePkg-TerminalDxe-add-other-text-resolutions.patch
 Patch5:		0001-EXCLUDE_SHELL_FROM_FD.patch
 
@@ -98,6 +99,7 @@ AARCH64 UEFI Firmware
 
 %prep
 %setup -q -n %{name}
+%patch1 -p1
 %patch4 -p1
 %patch5 -p1
 %patch10 -p1

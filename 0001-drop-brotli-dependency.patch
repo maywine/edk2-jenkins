@@ -1,0 +1,37 @@
+From fb88a07bf546bcca47801622dc6035ff92b228b6 Mon Sep 17 00:00:00 2001
+From: Gerd Hoffmann <kraxel@redhat.com>
+Date: Wed, 22 Apr 2020 12:56:12 +0200
+Subject: [PATCH] drop brotli dependency
+
+---
+ BaseTools/Source/C/GNUmakefile | 1 -
+ MdeModulePkg/MdeModulePkg.dec  | 1 -
+ 2 files changed, 2 deletions(-)
+
+diff --git a/BaseTools/Source/C/GNUmakefile b/BaseTools/Source/C/GNUmakefile
+index df4eb64ea95e..52777eaff160 100644
+--- a/BaseTools/Source/C/GNUmakefile
++++ b/BaseTools/Source/C/GNUmakefile
+@@ -45,7 +45,6 @@ all: makerootdir subdirs
+ LIBRARIES = Common
+ VFRAUTOGEN = VfrCompile/VfrLexer.h
+ APPLICATIONS = \
+-  BrotliCompress \
+   VfrCompile \
+   EfiRom \
+   GenFfs \
+diff --git a/MdeModulePkg/MdeModulePkg.dec b/MdeModulePkg/MdeModulePkg.dec
+index 4f44af694862..5d2c8aacf7fa 100644
+--- a/MdeModulePkg/MdeModulePkg.dec
++++ b/MdeModulePkg/MdeModulePkg.dec
+@@ -25,7 +25,6 @@
+   Include
+ 
+ [Includes.Common.Private]
+-  Library/BrotliCustomDecompressLib/brotli/c/include
+ 
+ [LibraryClasses]
+   ##  @libraryclass  Defines a set of methods to reset whole system.
+-- 
+2.18.2
+
