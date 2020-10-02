@@ -1,4 +1,4 @@
-From 33c8d464684841c2865f4bd41711db8686970167 Mon Sep 17 00:00:00 2001
+From 735c5ac12ccd8ba6d343b2bff14406ab92f7845b Mon Sep 17 00:00:00 2001
 From: Gerd Hoffmann <kraxel@redhat.com>
 Date: Thu, 18 Feb 2016 10:52:44 +0100
 Subject: [PATCH] EXCLUDE_SHELL_FROM_FD
@@ -10,16 +10,17 @@ Subject: [PATCH] EXCLUDE_SHELL_FROM_FD
  3 files changed, 6 insertions(+)
 
 diff --git a/OvmfPkg/OvmfPkgIa32.fdf b/OvmfPkg/OvmfPkgIa32.fdf
-index e2b759aa8d05..4b39bdb2ca95 100644
+index c07b775d0a2d..6987249e264d 100644
 --- a/OvmfPkg/OvmfPkgIa32.fdf
 +++ b/OvmfPkg/OvmfPkgIa32.fdf
-@@ -288,11 +288,13 @@ INF  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResour
+@@ -291,12 +291,14 @@ INF  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResour
  INF  FatPkg/EnhancedFatDxe/Fat.inf
  INF  MdeModulePkg/Universal/Disk/UdfDxe/UdfDxe.inf
  
 +!ifndef $(EXCLUDE_SHELL_FROM_FD)
  !if $(TOOL_CHAIN_TAG) != "XCODE5"
  INF  ShellPkg/DynamicCommand/TftpDynamicCommand/TftpDynamicCommand.inf
+ INF  ShellPkg/DynamicCommand/HttpDynamicCommand/HttpDynamicCommand.inf
  INF  OvmfPkg/LinuxInitrdDynamicShellCommand/LinuxInitrdDynamicShellCommand.inf
  !endif
  INF  ShellPkg/Application/Shell/Shell.inf
@@ -28,16 +29,17 @@ index e2b759aa8d05..4b39bdb2ca95 100644
  INF MdeModulePkg/Logo/LogoDxe.inf
  
 diff --git a/OvmfPkg/OvmfPkgIa32X64.fdf b/OvmfPkg/OvmfPkgIa32X64.fdf
-index bfca1eff9e83..c03a09d52109 100644
+index 9adf1525c135..2381529b4b5b 100644
 --- a/OvmfPkg/OvmfPkgIa32X64.fdf
 +++ b/OvmfPkg/OvmfPkgIa32X64.fdf
-@@ -289,11 +289,13 @@ INF  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResour
+@@ -292,12 +292,14 @@ INF  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResour
  INF  FatPkg/EnhancedFatDxe/Fat.inf
  INF  MdeModulePkg/Universal/Disk/UdfDxe/UdfDxe.inf
  
 +!ifndef $(EXCLUDE_SHELL_FROM_FD)
  !if $(TOOL_CHAIN_TAG) != "XCODE5"
  INF  ShellPkg/DynamicCommand/TftpDynamicCommand/TftpDynamicCommand.inf
+ INF  ShellPkg/DynamicCommand/HttpDynamicCommand/HttpDynamicCommand.inf
  INF  OvmfPkg/LinuxInitrdDynamicShellCommand/LinuxInitrdDynamicShellCommand.inf
  !endif
  INF  ShellPkg/Application/Shell/Shell.inf
@@ -46,16 +48,17 @@ index bfca1eff9e83..c03a09d52109 100644
  INF MdeModulePkg/Logo/LogoDxe.inf
  
 diff --git a/OvmfPkg/OvmfPkgX64.fdf b/OvmfPkg/OvmfPkgX64.fdf
-index bfca1eff9e83..c03a09d52109 100644
+index 17ba9e177ac3..1e83fbd3986b 100644
 --- a/OvmfPkg/OvmfPkgX64.fdf
 +++ b/OvmfPkg/OvmfPkgX64.fdf
-@@ -289,11 +289,13 @@ INF  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResour
+@@ -301,12 +301,14 @@ INF  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResour
  INF  FatPkg/EnhancedFatDxe/Fat.inf
  INF  MdeModulePkg/Universal/Disk/UdfDxe/UdfDxe.inf
  
 +!ifndef $(EXCLUDE_SHELL_FROM_FD)
  !if $(TOOL_CHAIN_TAG) != "XCODE5"
  INF  ShellPkg/DynamicCommand/TftpDynamicCommand/TftpDynamicCommand.inf
+ INF  ShellPkg/DynamicCommand/HttpDynamicCommand/HttpDynamicCommand.inf
  INF  OvmfPkg/LinuxInitrdDynamicShellCommand/LinuxInitrdDynamicShellCommand.inf
  !endif
  INF  ShellPkg/Application/Shell/Shell.inf
@@ -64,5 +67,5 @@ index bfca1eff9e83..c03a09d52109 100644
  INF MdeModulePkg/Logo/LogoDxe.inf
  
 -- 
-2.18.4
+2.27.0
 
