@@ -52,7 +52,7 @@ def RPMBuildSource() {
         sed -e "s/\\(Version:[ \\t]\\+\\)\\(.*\\)/\\1${version}/" \
             -e "s/\\(Release:[ \\t]\\+\\)\\(.*\\)/\\1${gcnt}.${BUILD_NUMBER}.${ghash}/" \
             -e "s/\\(Source0:[ \\t]\\+\\)\\(.*\\)/\\1${tarball}/" \
-            -e "s/\\(%setup\\)\\(.*\\)/\\1 -n ${tarball%.tar.gz}/" \
+            -e "s/\\(%setup\\)\\(.*\\)/\\1 -q -n ${tarball%.tar.gz}/" \
             < edk2.git.spec.template > edk2.git.spec
         diff -u edk2.git.spec.template edk2.git.spec || true
 
