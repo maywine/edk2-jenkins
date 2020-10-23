@@ -111,22 +111,8 @@ AARCH64 UEFI Firmware
 %build
 source ./edksetup.sh
 
-# figure tools switch
-GCCVER=$(gcc --version | awk '{ print $3; exit}')
-case "$GCCVER" in
-4.4*)	CC_FLAGS="-t GCC44";;
-4.5*)	CC_FLAGS="-t GCC45";;
-4.6*)	CC_FLAGS="-t GCC46";;
-4.7*)	CC_FLAGS="-t GCC47";;
-4.8*)	CC_FLAGS="-t GCC48";;
-4.9*)	CC_FLAGS="-t GCC49";;
-5.*)	CC_FLAGS="-t GCC5";;
-6.*)	CC_FLAGS="-t GCC5";;
-7.*)	CC_FLAGS="-t GCC5";;
-8.*)	CC_FLAGS="-t GCC5";;
-9.*)	CC_FLAGS="-t GCC5";;
-1?.*)	CC_FLAGS="-t GCC5";;
-esac
+# gcc setup
+CC_FLAGS="-t GCC5"
 
 # parallel builds
 SMP_MFLAGS="%{?_smp_mflags}"
