@@ -17,7 +17,7 @@ def RPMFetchSource() {
 		]
 	    ],
 	    userRemoteConfigs: [
-		[ url: 'git://github.com/tianocore/edk2.git' ]
+		[ url: 'git://spunk.home.kraxel.org/edk2' ]
 	    ]])
     }
 }
