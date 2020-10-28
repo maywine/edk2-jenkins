@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: fedora-rpmbuild
+    image: quay.xeni.kraxel.org/kraxel/rpm-package-builder:fedora
+    imagePullPolicy: Always
+    env:
+    - name: "FEDORA_MIRROR"
+      value: "http://spunk.home.kraxel.org/fedora/"
+    tty: true
+    command: [ "cat" ]

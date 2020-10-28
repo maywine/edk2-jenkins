@@ -60,6 +60,10 @@ def RPMBuildSource() {
         WS="$WORKSPACE"
         unset WORKSPACE
 
+	# install deps
+	/usr/local/bin/configure-mirror
+	dnf builddep -y *.spec
+
         # build source package
         rpmbuild                                     \
             --define "_specdir ${WS}"                \
@@ -98,14 +102,16 @@ def RPMBuildBinary(arch) {
             --rebuild rpms/src/*.src.rpm
 	'''
     archiveArtifacts "rpms/$arch/*,rpms/noarch/*"
-    dir ("rpms") {
-	deleteDir()
-    }
 }
 
 pipeline {
     agent {
-	node 'dist-fedora-x86_64'
+	kubernetes {
+	    yamlFile 'fedora-rpmbuild.yaml'
+	    defaultContainer 'fedora-rpmbuild'
+	    slaveConnectTimeout '3600'
+	    nodeSelector 'kubernetes.io/os=linux,kubernetes.io/arch=amd64'
+	}
     }
 
     options {
@@ -127,32 +133,8 @@ pipeline {
 	}
 
 	stage ("rpms") {
-	    parallel {
-
-		stage ("x86_64") {
-		    steps {
-			RPMBuildBinary('x86_64')
-		    }
-		}
-
-//		stage ("arm") {
-//		    agent {
-//			node 'dist-fedora-armv7hl'
-//		    }
-//		    steps {
-//			RPMBuildBinary('armv7hl')
-//		    }
-//		}
-
-		stage ("aarch64") {
-		    agent {
-			node 'dist-fedora-aarch64'
-		    }
-		    steps {
-			RPMBuildBinary('aarch64')
-		    }
-		}
-
+	    steps {
+		RPMBuildBinary('x86_64')
 	    }
 	}
     }
