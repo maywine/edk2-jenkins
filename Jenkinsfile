@@ -83,9 +83,6 @@ def RPMBuildSource() {
 }
 
 def RPMBuildBinary(arch) {
-    dir ("rpms") {
-	deleteDir()
-    }
     unstash 'srpm'
     sh '''
         # edk2 build uses WORKSPACE too ...
