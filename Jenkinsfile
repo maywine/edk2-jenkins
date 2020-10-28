@@ -62,6 +62,7 @@ def RPMBuildSource() {
 
 	# install deps
 	/usr/local/bin/configure-mirror
+	cp firmware.repo /etc/yum.repos.d
 	dnf builddep -y *.spec
 
         # build source package
