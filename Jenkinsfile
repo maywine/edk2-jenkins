@@ -157,19 +157,19 @@ pipeline {
 	}
     }
 
-    post {
-	failure {
-	    emailext([
-		to: 'builds@kraxel.org,lersek@redhat.com',
-		subject: "${JOB_NAME} - build #${BUILD_NUMBER} - FAILED!",
-		body: "${BUILD_URL}\n",
-		attachLog: true,
-	    ])
-	}
-	always {
-	    mail to: 'builds@kraxel.org',
-		subject: "Status of pipeline: ${currentBuild.fullDisplayName}",
-		body: "${env.BUILD_URL} has result ${currentBuild.result}"
-	}
-    }
+//    post {
+//	failure {
+//	    emailext([
+//		to: 'builds@kraxel.org,lersek@redhat.com',
+//		subject: "${JOB_NAME} - build #${BUILD_NUMBER} - FAILED!",
+//		body: "${BUILD_URL}\n",
+//		attachLog: true,
+//	    ])
+//	}
+//	always {
+//	    mail to: 'builds@kraxel.org',
+//		subject: "Status of pipeline: ${currentBuild.fullDisplayName}",
+//		body: "${env.BUILD_URL} has result ${currentBuild.result}"
+//	}
+//    }
 }
