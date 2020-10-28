@@ -25,16 +25,22 @@ Patch12:	0003-OvmfPkg-SmbiosPlatformDxe-install-patch-default-lega.patch
 
 Patch30:	0001-tools_def.template-take-GCC4-_-IA32-X64-prefixes-fro.patch
 
-%ifarch x86_64
+Exclusivearch:  x86_64
+
 BuildRequires:	mtools
 BuildRequires:	dosfstools
 BuildRequires:	genisoimage
 BuildRequires:	nasm
 BuildRequires:	seabios.git-csm
-%endif
 BuildRequires:	iasl
 BuildRequires:	python
 BuildRequires:	libuuid-devel
+BuildRequires:	make gcc binutils glibc-devel
+
+BuildRequires:  gcc-arm-linux-gnu
+BuildRequires:  binutils-arm-linux-gnu
+BuildRequires:  gcc-aarch64-linux-gnu
+BuildRequires:  binutils-aarch64-linux-gnu
 
 # for check
 BuildRequires:	qemu-kvm
@@ -49,7 +55,6 @@ Summary:	EFI Development Kit II Tools
 EFI Development Kit II Tools
 
 
-%ifarch x86_64
 %package ovmf-ia32
 Summary:	Open Virtual Machine Firmware
 License:	BSD License (no advertising) with restrictions on use and redistribution
@@ -70,10 +75,8 @@ BuildArch:      noarch
 EFI Development Kit II
 Open Virtual Machine Firmware
 64bit version
-%endif
 
 
-%ifarch %{arm}
 %package arm
 Summary:	Open Virtual Machine Firmware
 License:	BSD License (no advertising) with restrictions on use and redistribution
@@ -82,10 +85,8 @@ BuildArch:      noarch
 %description arm
 EFI Development Kit II
 ARM UEFI Firmware
-%endif
 
 
-%ifarch aarch64
 %package aarch64
 Summary:	Open Virtual Machine Firmware
 License:	BSD License (no advertising) with restrictions on use and redistribution
@@ -94,7 +95,6 @@ BuildArch:      noarch
 %description aarch64
 EFI Development Kit II
 AARCH64 UEFI Firmware
-%endif
 
 
 %prep
@@ -113,6 +113,8 @@ source ./edksetup.sh
 
 # gcc setup
 CC_FLAGS="-t GCC5"
+GCC5_ARM_PREFIX="arm-linux-gnu-"
+GCC5_AARCH64_PREFIX="aarch64-linux-gnu-"
 
 # parallel builds
 SMP_MFLAGS="%{?_smp_mflags}"
@@ -167,7 +169,6 @@ build_iso()
 		-o "$ISO_IMAGE" -- "$UEFI_SHELL_IMAGE"
 }
 
-%ifarch x86_64
 # build ovmf
 cp /usr/share/seabios.git-csm/bios-csm.bin OvmfPkg/Csm/Csm16/Csm16.bin
 for cfg in pure-efi with-csm need-smm; do
@@ -207,9 +208,7 @@ for cfg in pure-efi with-csm need-smm; do
 	fi
 	rm -rf Build/OvmfX64
 done
-%endif
 
-%ifarch %{arm}
 # build arm firmware
 build $CC_FLAGS -a ARM \
     -D DEBUG_PRINT_ERROR_LEVEL=0x8040004F \
@@ -217,9 +216,7 @@ build $CC_FLAGS -a ARM \
     -p ArmVirtPkg/ArmVirtQemu.dsc
 mkdir -p "arm"
 cp Build/ArmVirtQemu-ARM/DEBUG_*/FV/*.fd arm
-%endif
 
-%ifarch aarch64
 # build aarch64 firmware
 build $CC_FLAGS -a AARCH64 \
     -D DEBUG_PRINT_ERROR_LEVEL=0x8040004F \
@@ -227,9 +224,7 @@ build $CC_FLAGS -a AARCH64 \
     -p ArmVirtPkg/ArmVirtQemu.dsc
 mkdir -p "aarch64"
 cp Build/ArmVirtQemu-AARCH64/DEBUG_*/FV/*.fd aarch64
-%endif
 
-%ifarch %{arm} aarch64
 # build raw pflash images
 for fd in */QEMU_EFI.fd; do
 	code="${fd%.fd}-pflash.raw"
@@ -239,12 +234,9 @@ for fd in */QEMU_EFI.fd; do
 	dd of="$vars" if="/dev/zero" bs=1M count=64
 	dd of="$vars" if="${fd//QEMU_EFI/QEMU_VARS}" conv=notrunc
 done
-%endif
 
 
 %check
-
-%ifarch x86_64
 
 # x86 pc
 for cfg in pure-efi with-csm; do
@@ -266,9 +258,6 @@ for cfg in pure-efi with-csm need-smm; do
 	done
 done
 
-%endif
-
-
 %install
 mkdir -p %{buildroot}%{_bindir}
 install	--strip \
@@ -277,15 +266,9 @@ install	--strip \
 	%{buildroot}%{_bindir}
 
 mkdir -p %{buildroot}/usr/share/%{name}
-%ifarch x86_64
 cp -a ovmf-* %{buildroot}/usr/share/%{name}
-%endif
-%ifarch %{arm}
 cp -a arm %{buildroot}/usr/share/%{name}
-%endif
-%ifarch aarch64
 cp -a aarch64 %{buildroot}/usr/share/%{name}
-%endif
 
 mkdir -p %{buildroot}/usr/share/qemu/firmware
 %{SOURCE9} %{buildroot}/usr/share/qemu/firmware/
@@ -298,7 +281,6 @@ mkdir -p %{buildroot}/usr/share/qemu/firmware
 %doc BaseTools/UserManuals/VolInfo_Utility_Man_Page.rtf
 %{_bindir}/*
 
-%ifarch x86_64
 %files ovmf-ia32
 %doc OvmfPkg/README
 %dir /usr/share/%{name}
@@ -310,20 +292,15 @@ mkdir -p %{buildroot}/usr/share/qemu/firmware
 %dir /usr/share/%{name}
 /usr/share/%{name}/ovmf-x64
 /usr/share/qemu/firmware/*-x64-*.json
-%endif
 
-%ifarch %{arm}
 %files arm
 %dir /usr/share/%{name}
 /usr/share/%{name}/arm
 /usr/share/qemu/firmware/*-arm-*.json
-%endif
 
-%ifarch aarch64
 %files aarch64
 %dir /usr/share/%{name}
 /usr/share/%{name}/aarch64
 /usr/share/qemu/firmware/*-a64-*.json
-%endif
 
 %changelog
