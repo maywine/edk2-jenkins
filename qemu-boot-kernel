@@ -17,6 +17,9 @@ done
 
 # figure kernel
 kernel="/boot/vmlinuz-$(uname -r)"
+if test ! -f "$kernel"; then
+	kernel=$(ls -t /boot/vmlinuz-* | head -n 1)
+fi
 
 # logfiles
 kernellog=$(mktemp /tmp/kernel-XXXXXX.log)
