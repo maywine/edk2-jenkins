@@ -45,6 +45,7 @@ BuildRequires:  binutils-aarch64-linux-gnu
 
 # for check
 BuildRequires:	qemu-kvm
+BuildRequires:	kernel
 
 %description
 EFI Development Kit II
