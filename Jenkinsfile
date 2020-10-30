@@ -79,11 +79,11 @@ def RPMBuildSource() {
         git reset --hard
 	'''
 //    archiveArtifacts 'rpms/src/*.src.rpm'
-    stash name: 'srpm', includes: 'rpms/src/*.src.rpm'
+//    stash name: 'srpm', includes: 'rpms/src/*.src.rpm'
 }
 
 def RPMBuildBinary(arch) {
-    unstash 'srpm'
+//    unstash 'srpm'
     sh '''
         # edk2 build uses WORKSPACE too ...
         WS="$WORKSPACE"
