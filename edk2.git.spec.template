@@ -34,6 +34,7 @@ BuildRequires:	nasm
 BuildRequires:	seabios.git-csm
 BuildRequires:	iasl
 BuildRequires:	python
+BuildRequires:	perl perl(JSON)
 BuildRequires:	libuuid-devel
 BuildRequires:	make gcc binutils glibc-devel
 
