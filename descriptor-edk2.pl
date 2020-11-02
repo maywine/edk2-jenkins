@@ -68,23 +68,17 @@ $arm->{'machines'} = [ 'virt-*' ];
 $aa64->{'architecture'} = 'aarch64';
 $aa64->{'machines'} = [ 'virt-*' ];
 
-if ($arch eq "aarch64") {
-	write_file($dest . "80-uefi-a64-git.json",
-		   "UEFI Firmware (git, a64)",
-		   $aa64,
-		   $base . "aarch64/QEMU_EFI-pflash.raw",
-		   $base . "aarch64/vars-template-pflash.raw");
-	exit;
-}
+write_file($dest . "80-uefi-a64-git.json",
+	   "UEFI Firmware (git, a64)",
+	   $aa64,
+	   $base . "aarch64/QEMU_EFI-pflash.raw",
+	   $base . "aarch64/vars-template-pflash.raw");
 
-if ($arch =~ m/armv7/) {
-	write_file($dest . "80-uefi-arm-git.json",
-		   "UEFI Firmware (git, arm)",
-		   $arm,
-		   $base . "arm/QEMU_EFI-pflash.raw",
-		   $base . "arm/vars-template-pflash.raw");
-	exit;
-}
+write_file($dest . "80-uefi-arm-git.json",
+	   "UEFI Firmware (git, arm)",
+	   $arm,
+	   $base . "arm/QEMU_EFI-pflash.raw",
+	   $base . "arm/vars-template-pflash.raw");
 
 # ia32
 write_file($dest . "80-ovmf-ia32-git-needs-smm.json",
