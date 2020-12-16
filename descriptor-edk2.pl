@@ -81,11 +81,11 @@ write_file($dest . "80-uefi-arm-git.json",
 	   $base . "arm/vars-template-pflash.raw");
 
 # ia32
-write_file($dest . "80-ovmf-ia32-git-needs-smm.json",
+write_file($dest . "80-ovmf-ia32-git-need-smm.json",
 	   "UEFI Firmware, supports secure boot (git, ia32)",
 	   $ia32smm,
-	   $base . "ovmf-ia32/OVMF_CODE-needs-smm.fd",
-	   $base . "ovmf-ia32/OVMF_VARS-needs-smm.fd",
+	   $base . "ovmf-ia32/OVMF_CODE-need-smm.fd",
+	   $base . "ovmf-ia32/OVMF_VARS-need-smm.fd",
 	   [ 'acpi-s3', 'requires-smm', 'secure-boot' ]);
 
 write_file($dest . "81-ovmf-ia32-git-pure-efi.json",
@@ -104,11 +104,11 @@ write_file($dest . "82-ovmf-ia32-git-with-csm.json",
 	   [ 'uefi', 'bios' ]);
 
 # x64
-write_file($dest . "80-ovmf-x64-git-needs-smm.json",
+write_file($dest . "80-ovmf-x64-git-need-smm.json",
 	   "UEFI Firmware, supports secure boot (git, x64)",
 	   $x64smm,
-	   $base . "ovmf-x64/OVMF_CODE-needs-smm.fd",
-	   $base . "ovmf-x64/OVMF_VARS-needs-smm.fd",
+	   $base . "ovmf-x64/OVMF_CODE-need-smm.fd",
+	   $base . "ovmf-x64/OVMF_VARS-need-smm.fd",
 	   [ 'acpi-s3', 'requires-smm', 'secure-boot' ]);
 
 write_file($dest . "81-ovmf-x64-git-pure-efi.json",
