@@ -135,14 +135,14 @@ pipeline {
 		    }
 		}
 
-//		stage ("arm") {
-//		    agent {
-//			node 'dist-fedora-armv7hl'
-//		    }
-//		    steps {
-//			RPMBuildBinary('armv7hl')
-//		    }
-//		}
+		stage ("arm") {
+		    agent {
+			node 'dist-fedora-armv7hl'
+		    }
+		    steps {
+			RPMBuildBinary('armv7hl')
+		    }
+		}
 
 		stage ("aarch64") {
 		    agent {
