@@ -1,4 +1,4 @@
-From 735c5ac12ccd8ba6d343b2bff14406ab92f7845b Mon Sep 17 00:00:00 2001
+From 95b1f2e0b561ec0bd87a923a6b4e970ce2781fcb Mon Sep 17 00:00:00 2001
 From: Gerd Hoffmann <kraxel@redhat.com>
 Date: Thu, 18 Feb 2016 10:52:44 +0100
 Subject: [PATCH] EXCLUDE_SHELL_FROM_FD
@@ -10,12 +10,12 @@ Subject: [PATCH] EXCLUDE_SHELL_FROM_FD
  3 files changed, 6 insertions(+)
 
 diff --git a/OvmfPkg/OvmfPkgIa32.fdf b/OvmfPkg/OvmfPkgIa32.fdf
-index c07b775d0a2d..6987249e264d 100644
+index f400c845b9c9..d0a40e331a88 100644
 --- a/OvmfPkg/OvmfPkgIa32.fdf
 +++ b/OvmfPkg/OvmfPkgIa32.fdf
-@@ -291,12 +291,14 @@ INF  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResour
- INF  FatPkg/EnhancedFatDxe/Fat.inf
+@@ -292,12 +292,14 @@ INF  FatPkg/EnhancedFatDxe/Fat.inf
  INF  MdeModulePkg/Universal/Disk/UdfDxe/UdfDxe.inf
+ INF  OvmfPkg/VirtioFsDxe/VirtioFsDxe.inf
  
 +!ifndef $(EXCLUDE_SHELL_FROM_FD)
  !if $(TOOL_CHAIN_TAG) != "XCODE5"
@@ -29,12 +29,12 @@ index c07b775d0a2d..6987249e264d 100644
  INF MdeModulePkg/Logo/LogoDxe.inf
  
 diff --git a/OvmfPkg/OvmfPkgIa32X64.fdf b/OvmfPkg/OvmfPkgIa32X64.fdf
-index 9adf1525c135..2381529b4b5b 100644
+index d055552fd09f..0e35c153a275 100644
 --- a/OvmfPkg/OvmfPkgIa32X64.fdf
 +++ b/OvmfPkg/OvmfPkgIa32X64.fdf
-@@ -292,12 +292,14 @@ INF  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResour
- INF  FatPkg/EnhancedFatDxe/Fat.inf
+@@ -293,12 +293,14 @@ INF  FatPkg/EnhancedFatDxe/Fat.inf
  INF  MdeModulePkg/Universal/Disk/UdfDxe/UdfDxe.inf
+ INF  OvmfPkg/VirtioFsDxe/VirtioFsDxe.inf
  
 +!ifndef $(EXCLUDE_SHELL_FROM_FD)
  !if $(TOOL_CHAIN_TAG) != "XCODE5"
@@ -48,12 +48,12 @@ index 9adf1525c135..2381529b4b5b 100644
  INF MdeModulePkg/Logo/LogoDxe.inf
  
 diff --git a/OvmfPkg/OvmfPkgX64.fdf b/OvmfPkg/OvmfPkgX64.fdf
-index 17ba9e177ac3..1e83fbd3986b 100644
+index 1a2ef5bf2ae3..3f9f263dd8ec 100644
 --- a/OvmfPkg/OvmfPkgX64.fdf
 +++ b/OvmfPkg/OvmfPkgX64.fdf
-@@ -301,12 +301,14 @@ INF  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResour
- INF  FatPkg/EnhancedFatDxe/Fat.inf
+@@ -302,12 +302,14 @@ INF  FatPkg/EnhancedFatDxe/Fat.inf
  INF  MdeModulePkg/Universal/Disk/UdfDxe/UdfDxe.inf
+ INF  OvmfPkg/VirtioFsDxe/VirtioFsDxe.inf
  
 +!ifndef $(EXCLUDE_SHELL_FROM_FD)
  !if $(TOOL_CHAIN_TAG) != "XCODE5"
