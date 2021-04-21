@@ -23,9 +23,6 @@ def RPMFetchSource() {
 }
 
 def RPMBuildSource() {
-    dir ("rpms") {
-	deleteDir()
-    }
     sh '''
         # figure version
         ghash="g$(cd source; git show --format='format:%h' | head -1)"
