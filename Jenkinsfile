@@ -17,7 +17,7 @@ def RPMFetchSource() {
 		]
 	    ],
 	    userRemoteConfigs: [
-		[ url: 'git://spunk.home.kraxel.org/edk2' ]
+		[ url: 'git://git.kraxel.org/mirror/edk2.git' ]
 	    ]])
     }
 }
@@ -104,12 +104,10 @@ def RPMBuildBinary(arch) {
 
 pipeline {
     agent {
-	kubernetes {
-	    yamlFile 'fedora-rpmbuild.yaml'
-	    defaultContainer 'fedora-rpmbuild'
-	    slaveConnectTimeout '3600'
-	    nodeSelector 'kubernetes.io/os=linux,kubernetes.io/arch=amd64'
-	}
+        docker {
+            image 'registry.gitlab.com/kraxel/rpm-package-builder:fedora'
+            args '-u root'
+        }
     }
 
     options {
