@@ -25,7 +25,7 @@ def RPMFetchSource() {
 def RPMBuildSource() {
     sh '''
         # cleanup
-        rm -rf rpms
+        rm -rf "${WORKSPACE}/rpms" "${WORKSPACE}/build" "${WORKSPACE}/buildroot"
 
         # figure version
         ghash="g$(cd source; git show --format='format:%h' | head -1)"
