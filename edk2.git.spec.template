@@ -19,10 +19,6 @@ Patch1:		0001-drop-brotli-dependency.patch
 Patch4:		0001-MdeModulePkg-TerminalDxe-add-other-text-resolutions.patch
 Patch5:		0001-EXCLUDE_SHELL_FROM_FD.patch
 
-Patch10:	0001-OvmfPkg-SmbiosPlatformDxe-install-legacy-QEMU-tables.patch
-Patch11:	0002-OvmfPkg-SmbiosPlatformDxe-install-patch-default-lega.patch
-Patch12:	0003-OvmfPkg-SmbiosPlatformDxe-install-patch-default-lega.patch
-
 Patch30:	0001-tools_def.template-take-GCC4-_-IA32-X64-prefixes-fro.patch
 
 Exclusivearch:  x86_64
