@@ -100,9 +100,6 @@ AARCH64 UEFI Firmware
 %patch1 -p1
 %patch4 -p1
 %patch5 -p1
-%patch10 -p1
-%patch11 -p1
-%patch12 -p1
 %patch30 -p1
 
 
