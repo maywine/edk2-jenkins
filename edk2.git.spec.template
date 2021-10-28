@@ -196,15 +196,22 @@ for cfg in pure-efi with-csm need-smm; do
 	fi
 	rm -rf Build/OvmfIa32
 
-	build $OVMF_FLAGS -a X64 -p OvmfPkg/OvmfPkgX64.dsc
-	mkdir -p "ovmf-x64"
-	cp Build/OvmfX64/DEBUG_*/FV/OVMF.fd ovmf-x64/OVMF-${cfg}.fd
-	cp Build/OvmfX64/DEBUG_*/FV/OVMF_CODE.fd ovmf-x64/OVMF_CODE-${cfg}.fd
-	cp Build/OvmfX64/DEBUG_*/FV/OVMF_VARS.fd ovmf-x64/OVMF_VARS-${cfg}.fd
 	if [ "$cfg" = need-smm ]; then
+		build $OVMF_FLAGS -a IA32 -a X64 -p OvmfPkg/OvmfPkgIa32X64.dsc
+		mkdir -p "ovmf-x64"
+		cp Build/Ovmf3264/DEBUG_*/FV/OVMF.fd ovmf-x64/OVMF-${cfg}.fd
+		cp Build/Ovmf3264/DEBUG_*/FV/OVMF_CODE.fd ovmf-x64/OVMF_CODE-${cfg}.fd
+		cp Build/Ovmf3264/DEBUG_*/FV/OVMF_VARS.fd ovmf-x64/OVMF_VARS-${cfg}.fd
 		build_iso X64
+		rm -rf Build/Ovmf3264
+	else
+		build $OVMF_FLAGS -a X64 -p OvmfPkg/OvmfPkgX64.dsc
+		mkdir -p "ovmf-x64"
+		cp Build/OvmfX64/DEBUG_*/FV/OVMF.fd ovmf-x64/OVMF-${cfg}.fd
+		cp Build/OvmfX64/DEBUG_*/FV/OVMF_CODE.fd ovmf-x64/OVMF_CODE-${cfg}.fd
+		cp Build/OvmfX64/DEBUG_*/FV/OVMF_VARS.fd ovmf-x64/OVMF_VARS-${cfg}.fd
+		rm -rf Build/OvmfX64
 	fi
-	rm -rf Build/OvmfX64
 done
 
 # build arm firmware
