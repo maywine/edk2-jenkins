@@ -127,7 +127,7 @@ build_iso()
 {
 	local ARCH="$1"
 	local UEFI_BINDIR=$(
-		echo -n Build/Ovmf${ARCH}/DEBUG_*/
+		echo -n Build/Ovmf*/DEBUG_*/
 		echo $ARCH | tr '[:lower:'] '[:upper:]'
 	)
 	local UEFI_SHELL_BINARY=$UEFI_BINDIR/Shell.efi
