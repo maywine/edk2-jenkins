@@ -1,7 +1,7 @@
-From 95b1f2e0b561ec0bd87a923a6b4e970ce2781fcb Mon Sep 17 00:00:00 2001
+From 93eed39a982c6c51b5d45d1d0482b800c062f0e3 Mon Sep 17 00:00:00 2001
 From: Gerd Hoffmann <kraxel@redhat.com>
 Date: Thu, 18 Feb 2016 10:52:44 +0100
-Subject: [PATCH] EXCLUDE_SHELL_FROM_FD
+Subject: [PATCH 1/1] EXCLUDE_SHELL_FROM_FD
 
 ---
  OvmfPkg/OvmfPkgIa32.fdf    | 2 ++
@@ -10,10 +10,10 @@ Subject: [PATCH] EXCLUDE_SHELL_FROM_FD
  3 files changed, 6 insertions(+)
 
 diff --git a/OvmfPkg/OvmfPkgIa32.fdf b/OvmfPkg/OvmfPkgIa32.fdf
-index f400c845b9c9..d0a40e331a88 100644
+index cc73180729b6..4c0e080a2d79 100644
 --- a/OvmfPkg/OvmfPkgIa32.fdf
 +++ b/OvmfPkg/OvmfPkgIa32.fdf
-@@ -292,12 +292,14 @@ INF  FatPkg/EnhancedFatDxe/Fat.inf
+@@ -289,12 +289,14 @@ [FV.DXEFV]
  INF  MdeModulePkg/Universal/Disk/UdfDxe/UdfDxe.inf
  INF  OvmfPkg/VirtioFsDxe/VirtioFsDxe.inf
  
@@ -29,10 +29,10 @@ index f400c845b9c9..d0a40e331a88 100644
  INF MdeModulePkg/Logo/LogoDxe.inf
  
 diff --git a/OvmfPkg/OvmfPkgIa32X64.fdf b/OvmfPkg/OvmfPkgIa32X64.fdf
-index d055552fd09f..0e35c153a275 100644
+index ad4b1590fa8d..dfa75743a7f8 100644
 --- a/OvmfPkg/OvmfPkgIa32X64.fdf
 +++ b/OvmfPkg/OvmfPkgIa32X64.fdf
-@@ -293,12 +293,14 @@ INF  FatPkg/EnhancedFatDxe/Fat.inf
+@@ -293,12 +293,14 @@ [FV.DXEFV]
  INF  MdeModulePkg/Universal/Disk/UdfDxe/UdfDxe.inf
  INF  OvmfPkg/VirtioFsDxe/VirtioFsDxe.inf
  
@@ -48,10 +48,10 @@ index d055552fd09f..0e35c153a275 100644
  INF MdeModulePkg/Logo/LogoDxe.inf
  
 diff --git a/OvmfPkg/OvmfPkgX64.fdf b/OvmfPkg/OvmfPkgX64.fdf
-index 1a2ef5bf2ae3..3f9f263dd8ec 100644
+index 1420ae880221..90741c484454 100644
 --- a/OvmfPkg/OvmfPkgX64.fdf
 +++ b/OvmfPkg/OvmfPkgX64.fdf
-@@ -302,12 +302,14 @@ INF  FatPkg/EnhancedFatDxe/Fat.inf
+@@ -315,12 +315,14 @@ [FV.DXEFV]
  INF  MdeModulePkg/Universal/Disk/UdfDxe/UdfDxe.inf
  INF  OvmfPkg/VirtioFsDxe/VirtioFsDxe.inf
  
@@ -67,5 +67,5 @@ index 1a2ef5bf2ae3..3f9f263dd8ec 100644
  INF MdeModulePkg/Logo/LogoDxe.inf
  
 -- 
-2.27.0
+2.33.1
 

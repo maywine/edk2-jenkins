@@ -1,30 +1,18 @@
-From fb88a07bf546bcca47801622dc6035ff92b228b6 Mon Sep 17 00:00:00 2001
+From e25d8fcb31b65055493285f76547a92b14a660bd Mon Sep 17 00:00:00 2001
 From: Gerd Hoffmann <kraxel@redhat.com>
 Date: Wed, 22 Apr 2020 12:56:12 +0200
-Subject: [PATCH] drop brotli dependency
+Subject: [PATCH 1/1] drop brotli dependency
 
 ---
- BaseTools/Source/C/GNUmakefile | 1 -
  MdeModulePkg/MdeModulePkg.dec  | 1 -
+ BaseTools/Source/C/GNUmakefile | 1 -
  2 files changed, 2 deletions(-)
 
-diff --git a/BaseTools/Source/C/GNUmakefile b/BaseTools/Source/C/GNUmakefile
-index df4eb64ea95e..52777eaff160 100644
---- a/BaseTools/Source/C/GNUmakefile
-+++ b/BaseTools/Source/C/GNUmakefile
-@@ -45,7 +45,6 @@ all: makerootdir subdirs
- LIBRARIES = Common
- VFRAUTOGEN = VfrCompile/VfrLexer.h
- APPLICATIONS = \
--  BrotliCompress \
-   VfrCompile \
-   EfiRom \
-   GenFfs \
 diff --git a/MdeModulePkg/MdeModulePkg.dec b/MdeModulePkg/MdeModulePkg.dec
-index 4f44af694862..5d2c8aacf7fa 100644
+index 463e889e9a68..a8775cc218fc 100644
 --- a/MdeModulePkg/MdeModulePkg.dec
 +++ b/MdeModulePkg/MdeModulePkg.dec
-@@ -25,7 +25,6 @@
+@@ -25,7 +25,6 @@ [Includes]
    Include
  
  [Includes.Common.Private]
@@ -32,6 +20,18 @@ index 4f44af694862..5d2c8aacf7fa 100644
  
  [LibraryClasses]
    ##  @libraryclass  Defines a set of methods to reset whole system.
+diff --git a/BaseTools/Source/C/GNUmakefile b/BaseTools/Source/C/GNUmakefile
+index 8c191e0c3817..3eae824a1c31 100644
+--- a/BaseTools/Source/C/GNUmakefile
++++ b/BaseTools/Source/C/GNUmakefile
+@@ -48,7 +48,6 @@ all: makerootdir subdirs
+ LIBRARIES = Common
+ VFRAUTOGEN = VfrCompile/VfrLexer.h
+ APPLICATIONS = \
+-  BrotliCompress \
+   VfrCompile \
+   EfiRom \
+   GenFfs \
 -- 
-2.18.2
+2.33.1
 
