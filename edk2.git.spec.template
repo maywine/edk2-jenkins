@@ -214,6 +214,14 @@ for cfg in pure-efi with-csm need-smm; do
 	fi
 done
 
+# build microvm firmware
+build $CC_FLAGS -a X64 \
+    -D FD_SIZE_4MB \
+    -D NETWORK_HTTP_BOOT_ENABLE \
+    -D NETWORK_IP6_ENABLE \
+    -p OvmfPkg/Microvm/MicrovmX64.dsc
+cp Build/MicrovmX64/DEBUG_*/FV/MICROVM.fd ovmf-x64
+
 # build arm firmware
 build $CC_FLAGS -a ARM \
     -D DEBUG_PRINT_ERROR_LEVEL=0x8040004F \
